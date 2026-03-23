@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: shop-kardi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: shop_kardi
+      POSTGRES_USER: shop_kardi
+      POSTGRES_PASSWORD: shop_kardi
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:4
+    container_name: shop-kardi-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
