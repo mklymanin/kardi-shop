@@ -14,3 +14,4 @@ tmp
 uploads
 .home
 .config
+backend/.strapi-updater.json
