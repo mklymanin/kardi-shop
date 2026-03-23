@@ -17,22 +17,9 @@ cp backend/.env.example backend/.env
 
 ## 3. База данных
 
-По умолчанию локальный запуск использует `SQLite`, чтобы проект стартовал без Docker и отдельной настройки БД.
+Локальный запуск использует `PostgreSQL` (как в ТЗ).
 
-Для этого достаточно:
-
-```bash
-cp backend/.env.example backend/.env
-```
-
-и оставить:
-
-```bash
-DATABASE_CLIENT=sqlite
-DATABASE_FILENAME=.tmp/data.db
-```
-
-Если нужен именно `PostgreSQL`, можно поднять его через Docker:
+Поднять БД через Docker:
 
 ```bash
 npm run db:up
@@ -40,16 +27,10 @@ npm run db:up
 
 Это поднимет:
 
-- `PostgreSQL` на `localhost:5432`
+- `PostgreSQL` на `localhost:5433`
 - `Adminer` на `http://localhost:8080`
 
-Тогда в `backend/.env` нужно переключить:
-
-```bash
-DATABASE_CLIENT=postgres
-```
-
-Параметры базы уже совпадают с шаблоном:
+Параметры базы уже совпадают с `backend/.env.example`:
 
 - database: `shop_kardi`
 - user: `shop_kardi`
@@ -80,7 +61,7 @@ npm run db:down
 - монорепо с `frontend` и `backend`
 - страницы сайта по ТЗ
 - базовые content types для `Strapi`
-- локальная dev-база через `SQLite` по умолчанию
+- локальная dev-база через `PostgreSQL`
 - env-шаблоны
 
 ## Что еще нужно сделать
