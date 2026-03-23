@@ -6,6 +6,26 @@ type StrapiListResponse<T> =
   | { data: T[] }
   | { data: Array<{ id: number; attributes?: T } & T> };
 
+function extractMediaUrl(media: unknown): string | undefined {
+  if (!media || typeof media !== "object") {
+    return undefined;
+  }
+
+  const mediaRecord = media as Record<string, unknown>;
+  const data = mediaRecord.data as Record<string, unknown> | null | undefined;
+
+  if (!data || typeof data !== "object") {
+    return undefined;
+  }
+
+  const url = data.url;
+  if (typeof url !== "string" || !url.trim()) {
+    return undefined;
+  }
+
+  return url.startsWith("http") ? url : `${STRAPI_URL}${url}`;
+}
+
 function toProductPrice(value: unknown) {
   if (typeof value === "number") {
     return `${value.toLocaleString("ru-RU")} ₽`;
@@ -50,7 +70,7 @@ async function fetchFromStrapi<T>(path: string): Promise<T | null> {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const payload = await fetchFromStrapi<StrapiListResponse<any>>("/api/products?populate=category&sort=createdAt:desc");
+  const payload = await fetchFromStrapi<StrapiListResponse<any>>("/api/products?populate=category,image&sort=createdAt:desc");
   const items = normalizeItems(payload);
 
   if (!items.length) {
@@ -63,6 +83,7 @@ export async function getProducts(): Promise<Product[]> {
     title: String(item.title ?? "Без названия"),
     subtitle: String(item.excerpt ?? item.description ?? ""),
     price: toProductPrice(item.price),
+    imageUrl: extractMediaUrl(item.image) ?? featuredProducts[index % featuredProducts.length]?.imageUrl,
     category:
       typeof item.category === "object" && item.category
         ? String((item.category as Record<string, unknown>).title ?? "Без категории")
@@ -72,7 +93,7 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   const payload = await fetchFromStrapi<StrapiListResponse<any>>(
-    `/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=category`
+    `/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=category,image`
   );
   const item = normalizeItems(payload)[0];
 
@@ -86,6 +107,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     title: String(item.title ?? "Без названия"),
     subtitle: String(item.excerpt ?? item.description ?? ""),
     price: toProductPrice(item.price),
+    imageUrl: extractMediaUrl(item.image),
     category:
       typeof item.category === "object" && item.category
         ? String((item.category as Record<string, unknown>).title ?? "Без категории")

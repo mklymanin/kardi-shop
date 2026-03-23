@@ -2,10 +2,10 @@ import Link from "next/link";
 
 import { ProductCard } from "@/components/product-card";
 import { categories } from "@/lib/site-data";
-import { getArticles, getProducts } from "@/lib/strapi";
+import { getProducts } from "@/lib/strapi";
 
 export default async function HomePage() {
-  const [products, articles] = await Promise.all([getProducts(), getArticles()]);
+  const products = await getProducts();
   const reasons = [
     "Высокое качество регистрации ЭКГ",
     "Автоматическая оценка исследования",
@@ -85,7 +85,7 @@ export default async function HomePage() {
       <section className="mt-14 grid gap-6 md:grid-cols-[1fr_1fr]">
         <div className="rounded-[30px] bg-[#0f5b50] p-8 text-white">
           <div className="text-sm uppercase tracking-[0.24em] text-white/70">Почему мы</div>
-          <h2 className="mt-3 text-3xl font-semibold">Привычная логика действующего магазина, но в более аккуратной подаче</h2>
+          <h2 className="mt-3 text-3xl font-semibold">Преимущества приборов КардиРу</h2>
           <ul className="mt-6 grid gap-3 text-sm leading-6 text-white/82">
             {reasons.map((reason) => (
               <li key={reason} className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3">
@@ -95,8 +95,8 @@ export default async function HomePage() {
           </ul>
         </div>
         <div className="rounded-[30px] border border-[#dceae5] bg-white p-8">
-          <div className="text-sm uppercase tracking-[0.24em] text-pine">Особенности приборов</div>
-          <h2 className="mt-3 text-3xl font-semibold">Простая подача преимуществ и сценариев использования</h2>
+          <div className="text-sm uppercase tracking-[0.24em] text-pine">Выберите свой прибор КардиРу</div>
+          <h2 className="mt-3 text-3xl font-semibold">Ключевые возможности линейки</h2>
           <ul className="mt-6 grid gap-3 text-sm leading-6 text-ink/72">
             {deviceHighlights.map((item) => (
               <li key={item} className="rounded-2xl bg-[#f2f8f6] px-4 py-3">
@@ -121,18 +121,45 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mt-14">
-        <div className="mb-6 border-b border-[#dceae5] pb-4">
-          <div className="text-sm uppercase tracking-[0.24em] text-pine">Статьи</div>
-          <h2 className="mt-2 text-3xl font-semibold">Материалы для покупателей и врачей</h2>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {articles.map((article) => (
-            <article key={article.slug} className="rounded-[24px] border border-[#dceae5] bg-white p-6">
-              <h3 className="text-xl font-semibold">{article.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-ink/68">{article.excerpt}</p>
-            </article>
-          ))}
+      <section className="mt-14 grid gap-6 md:grid-cols-2">
+        <article className="rounded-[30px] border border-[#dceae5] bg-white p-8">
+          <div className="text-sm uppercase tracking-[0.24em] text-pine">Способ доставки</div>
+          <h3 className="mt-2 text-2xl font-semibold">Доставка по Москве и России</h3>
+          <div className="mt-4 space-y-3 text-sm leading-7 text-ink/72">
+            <p>По Москве курьером: 350 руб. Обычно доставка на следующий день после оформления заказа.</p>
+            <p>
+              По России: 500 руб (Почта России), срок от 3 до 7 дней. Возможна ускоренная отправка другой службой по
+              согласованию.
+            </p>
+            <p>Самовывоз в Москве доступен после подтверждения менеджером.</p>
+          </div>
+        </article>
+        <article className="rounded-[30px] border border-[#dceae5] bg-white p-8">
+          <div className="text-sm uppercase tracking-[0.24em] text-pine">Способ оплаты</div>
+          <h3 className="mt-2 text-2xl font-semibold">Банковская карта или счет</h3>
+          <div className="mt-4 space-y-3 text-sm leading-7 text-ink/72">
+            <p>Оплата банковской картой при оформлении заказа на сайте.</p>
+            <p>Оплата по счету банковским переводом для юрлиц и клиник.</p>
+            <p>Для региональных заказов оборудование отправляется после подтверждения оплаты.</p>
+          </div>
+        </article>
+      </section>
+
+      <section className="mt-14 rounded-[30px] border border-[#dceae5] bg-white p-8">
+        <div className="text-sm uppercase tracking-[0.24em] text-pine">Разделы сайта</div>
+        <div className="mt-4 flex flex-wrap gap-3 text-sm">
+          <Link href="/catalog?section=pribory" className="rounded-full bg-[#eef7f4] px-4 py-2 text-pine">
+            Приборы
+          </Link>
+          <Link href="/catalog?section=accessories" className="rounded-full bg-[#eef7f4] px-4 py-2 text-pine">
+            Аксессуары
+          </Link>
+          <Link href="/catalog?section=arenda" className="rounded-full bg-[#eef7f4] px-4 py-2 text-pine">
+            Аренда
+          </Link>
+          <Link href="/faq" className="rounded-full bg-[#eef7f4] px-4 py-2 text-pine">
+            Вопрос-ответ
+          </Link>
         </div>
       </section>
     </div>

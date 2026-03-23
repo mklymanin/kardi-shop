@@ -1,12 +1,10 @@
 import Link from "next/link";
 
 const navItems = [
-  { href: "/catalog", label: "Приборы" },
-  { href: "/catalog", label: "Аксессуары" },
-  { href: "/contact", label: "Аренда" },
-  { href: "/articles", label: "Статьи" },
-  { href: "/about", label: "О нас" },
-  { href: "/contact", label: "Контакты" }
+  { href: "/catalog?section=pribory", label: "Приборы" },
+  { href: "/catalog?section=accessories", label: "Аксессуары" },
+  { href: "/catalog?section=arenda", label: "Аренда" },
+  { href: "/faq", label: "Вопрос-ответ" }
 ];
 
 export function Header() {
@@ -23,7 +21,7 @@ export function Header() {
             <Link href="/contact" className="font-medium text-pine">
               WhatsApp
             </Link>
-            <Link href="/cart">Корзина</Link>
+            <Link href="/cart">Товаров в корзине: 0</Link>
           </div>
         </div>
       </div>
@@ -41,6 +39,9 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            <a href="https://www.kardi.ru/" className="transition hover:text-pine" target="_blank" rel="noreferrer">
+              Выйти из магазина
+            </a>
           </nav>
           <div className="flex items-center gap-3 text-sm">
             <Link href="/search" className="rounded-full border border-pine/20 px-4 py-2">

@@ -1,10 +1,18 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import type { Product } from "@/lib/site-data";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="overflow-hidden rounded-[24px] border border-[#d8e6e2] bg-white shadow-[0_18px_40px_rgba(16,33,43,0.06)]">
+      {product.imageUrl ? (
+        <div className="relative h-48 w-full bg-[#f2f8f6]">
+          <Image src={product.imageUrl} alt={product.title} fill className="object-cover" />
+        </div>
+      ) : (
+        <div className="h-48 w-full bg-[#f2f8f6]" />
+      )}
       <div className="bg-[#f2f8f6] px-6 py-4">
         <div className="text-xs uppercase tracking-[0.22em] text-pine">{product.category}</div>
       </div>

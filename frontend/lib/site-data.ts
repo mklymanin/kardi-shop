@@ -5,6 +5,7 @@ export type Product = {
   subtitle: string;
   price: string;
   category: string;
+  imageUrl?: string;
 };
 
 export const categories = [
@@ -18,26 +19,29 @@ export const featuredProducts: Product[] = [
   {
     id: 1,
     slug: "ecg-monitor-pro",
-    title: "ECG Monitor Pro",
-    subtitle: "Компактный монитор для экспресс-диагностики",
-    price: "89 000 ₽",
-    category: "Диагностика"
+    title: "КардиРу-BLE Портативный кардиограф",
+    subtitle: "Портативный кардиограф для самостоятельной регистрации ЭКГ",
+    price: "48 500 ₽",
+    category: "Приборы",
+    imageUrl: "https://shop.kardi.ru/upload/iblock/81b/81bbbb75065f3ef7765b0d04fbc4d4b5.jpg"
   },
   {
     id: 2,
     slug: "cardio-rehab-kit",
-    title: "Cardio Rehab Kit",
-    subtitle: "Набор для восстановительных программ",
-    price: "46 500 ₽",
-    category: "Реабилитация"
+    title: "КардиРу-12-клиника",
+    subtitle: "Прибор для дистанционного мониторинга ЭКГ пациентов",
+    price: "120 000 ₽",
+    category: "Приборы",
+    imageUrl: "https://shop.kardi.ru/upload/iblock/a09/a098180029526207af1ea6395671de82.png"
   },
   {
     id: 3,
     slug: "smart-pressure-plus",
-    title: "Smart Pressure Plus",
-    subtitle: "Точный тонометр для кабинета и дома",
-    price: "14 900 ₽",
-    category: "Кардиология"
+    title: "Электрокардиограф компьютерный КАРДи",
+    subtitle: "Профессиональный электрокардиограф для клиник",
+    price: "180 000 ₽",
+    category: "Приборы",
+    imageUrl: "https://shop.kardi.ru/upload/iblock/cbf/cbf617679bb03e6d81de68230510b3d9.png"
   }
 ];
 
