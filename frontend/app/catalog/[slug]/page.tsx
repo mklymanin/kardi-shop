@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { getProductBySlug } from "@/lib/strapi";
 
 export default async function ProductPage({
@@ -28,7 +29,7 @@ export default async function ProductPage({
           <aside className="rounded-[28px] border border-black/10 bg-sand p-6">
             <div className="text-sm text-ink/60">Цена</div>
             <div className="mt-2 text-3xl font-semibold">{product.price}</div>
-            <button className="mt-6 w-full rounded-full bg-ink px-5 py-3 text-white">Добавить в корзину</button>
+            <AddToCartButton product={product} />
           </aside>
         </div>
       </div>

@@ -21,7 +21,7 @@ export function Header() {
             <Link href="/contact" className="font-medium text-pine">
               WhatsApp
             </Link>
-            <Link href="/cart">Товаров в корзине: 0</Link>
+            <Link href="/cart">Корзина</Link>
           </div>
         </div>
       </div>

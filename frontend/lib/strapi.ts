@@ -6,6 +6,19 @@ type StrapiListResponse<T> =
   | { data: T[] }
   | { data: Array<{ id: number; attributes?: T } & T> };
 
+function toNumericPrice(value: unknown): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    const numeric = Number(value.replace(/\s/g, "").replace(",", "."));
+    return Number.isNaN(numeric) ? 0 : numeric;
+  }
+
+  return 0;
+}
+
 function extractMediaUrl(media: unknown): string | undefined {
   if (!media || typeof media !== "object") {
     return undefined;
@@ -82,6 +95,7 @@ export async function getProducts(): Promise<Product[]> {
     slug: String(item.slug ?? `product-${index + 1}`),
     title: String(item.title ?? "Без названия"),
     subtitle: String(item.excerpt ?? item.description ?? ""),
+    priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
     imageUrl: extractMediaUrl(item.image) ?? featuredProducts[index % featuredProducts.length]?.imageUrl,
     category:
@@ -106,6 +120,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     slug: String(item.slug ?? slug),
     title: String(item.title ?? "Без названия"),
     subtitle: String(item.excerpt ?? item.description ?? ""),
+    priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
     imageUrl: extractMediaUrl(item.image),
     category:
@@ -128,4 +143,51 @@ export async function getArticles(): Promise<ArticlePreview[]> {
     title: String(item.title ?? "Без названия"),
     excerpt: String(item.excerpt ?? "")
   }));
+}
+
+export type OrderPayload = {
+  customerName: string;
+  phone: string;
+  email?: string;
+  comment?: string;
+  itemsRaw: Array<{
+    slug: string;
+    title: string;
+    quantity: number;
+    price: number;
+  }>;
+  total: number;
+};
+
+export async function submitOrder(payload: OrderPayload): Promise<{ id: number | string }> {
+  const response = await fetch(`${STRAPI_URL}/api/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      data: {
+        customerName: payload.customerName,
+        phone: payload.phone,
+        email: payload.email || undefined,
+        comment: payload.comment || undefined,
+        itemsRaw: payload.itemsRaw,
+        total: payload.total,
+        status: "new"
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Не удалось оформить заказ");
+  }
+
+  const result = (await response.json()) as { data?: { id?: number; documentId?: string } };
+  const orderId = result.data?.id ?? result.data?.documentId;
+
+  if (!orderId) {
+    throw new Error("Заказ создан, но идентификатор не получен");
+  }
+
+  return { id: orderId };
 }

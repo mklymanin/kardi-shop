@@ -4,6 +4,7 @@ export type Product = {
   title: string;
   subtitle: string;
   price: string;
+  priceValue?: number;
   category: string;
   imageUrl?: string;
 };
@@ -22,6 +23,7 @@ export const featuredProducts: Product[] = [
     title: "КардиРу-BLE Портативный кардиограф",
     subtitle: "Портативный кардиограф для самостоятельной регистрации ЭКГ",
     price: "48 500 ₽",
+    priceValue: 48500,
     category: "Приборы",
     imageUrl: "https://shop.kardi.ru/upload/iblock/81b/81bbbb75065f3ef7765b0d04fbc4d4b5.jpg"
   },
@@ -31,6 +33,7 @@ export const featuredProducts: Product[] = [
     title: "КардиРу-12-клиника",
     subtitle: "Прибор для дистанционного мониторинга ЭКГ пациентов",
     price: "120 000 ₽",
+    priceValue: 120000,
     category: "Приборы",
     imageUrl: "https://shop.kardi.ru/upload/iblock/a09/a098180029526207af1ea6395671de82.png"
   },
@@ -40,6 +43,7 @@ export const featuredProducts: Product[] = [
     title: "Электрокардиограф компьютерный КАРДи",
     subtitle: "Профессиональный электрокардиограф для клиник",
     price: "180 000 ₽",
+    priceValue: 180000,
     category: "Приборы",
     imageUrl: "https://shop.kardi.ru/upload/iblock/cbf/cbf617679bb03e6d81de68230510b3d9.png"
   }
