@@ -8,7 +8,7 @@ export function Footer() {
         </div>
         <div>
           <div className="font-semibold text-ink">Разделы</div>
-          <p>Каталог, статьи, формы заявок, корзина, SEO-страницы.</p>
+          <p>Каталог, формы заявок, корзина, SEO-страницы.</p>
         </div>
         <div>
           <div className="font-semibold text-ink">Интеграции</div>
@@ -18,4 +18,3 @@ export function Footer() {
     </footer>
   );
 }
-

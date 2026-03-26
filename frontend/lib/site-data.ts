@@ -48,22 +48,3 @@ export const featuredProducts: Product[] = [
     imageUrl: "https://shop.kardi.ru/upload/iblock/cbf/cbf617679bb03e6d81de68230510b3d9.png"
   }
 ];
-
-export const articles = [
-  {
-    slug: "how-to-choose-monitor",
-    title: "Как выбрать монитор пациента для частной клиники",
-    excerpt: "Критерии подбора оборудования для амбулаторной и стационарной практики."
-  },
-  {
-    slug: "rehab-routes",
-    title: "Оснащение кардиореабилитации: базовый контур",
-    excerpt: "Какие позиции действительно нужны на первом этапе запуска направления."
-  }
-];
-
-export type ArticlePreview = {
-  slug: string;
-  title: string;
-  excerpt: string;
-};

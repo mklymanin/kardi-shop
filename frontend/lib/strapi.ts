@@ -1,4 +1,4 @@
-import { articles as fallbackArticles, featuredProducts, type ArticlePreview, type Product } from "@/lib/site-data";
+import { featuredProducts, type Product } from "@/lib/site-data";
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
 
@@ -128,21 +128,6 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
         ? String((item.category as Record<string, unknown>).title ?? "Без категории")
         : "Без категории"
   };
-}
-
-export async function getArticles(): Promise<ArticlePreview[]> {
-  const payload = await fetchFromStrapi<StrapiListResponse<any>>("/api/articles?sort=createdAt:desc");
-  const items = normalizeItems(payload);
-
-  if (!items.length) {
-    return fallbackArticles;
-  }
-
-  return items.map((item) => ({
-    slug: String(item.slug ?? ""),
-    title: String(item.title ?? "Без названия"),
-    excerpt: String(item.excerpt ?? "")
-  }));
 }
 
 export type OrderPayload = {
