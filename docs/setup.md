@@ -58,11 +58,20 @@ npm run db:down
 
 ## CI-синхронизация backend в Strapi Cloud
 
-После `git push origin main` GitLab CI автоматически:
+После `git push origin main` зеркало обновляет репозиторий `kardi-shop` на GitHub,
+а GitHub Actions автоматически:
 
 - выделяет папку `backend` из монорепозитория;
 - пушит ее в репозиторий `kardi-shop-backend` на GitHub;
 - запускает автодеплой в Strapi Cloud (если в Strapi Cloud включен Auto Deploy для `main`).
+
+Требуется один секрет в GitHub репозитории `kardi-shop`:
+
+- `BACKEND_SYNC_TOKEN` — GitHub PAT с правом записи в `kardi-shop-backend`.
+
+Опционально можно задать переменную репозитория:
+
+- `BACKEND_SYNC_REPO` — `owner/repo` для backend-репозитория (по умолчанию `mklymanin/kardi-shop-backend`).
 
 ## Что уже подготовлено
 

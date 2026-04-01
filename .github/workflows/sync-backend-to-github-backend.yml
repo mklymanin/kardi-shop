@@ -1,0 +1,42 @@
+name: Sync Backend To GitHub Backend Repo
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sync-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate required secret
+        run: |
+          if [ -z "${{ secrets.BACKEND_SYNC_TOKEN }}" ]; then
+            echo "BACKEND_SYNC_TOKEN is not set"
+            exit 1
+          fi
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Split backend subtree
+        id: split
+        run: |
+          BACKEND_SHA="$(git subtree split --prefix backend "$GITHUB_SHA")"
+          echo "backend_sha=${BACKEND_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Push backend subtree to backend repo
+        env:
+          BACKEND_SHA: ${{ steps.split.outputs.backend_sha }}
+          BACKEND_REPO: ${{ vars.BACKEND_SYNC_REPO }}
+        run: |
+          TARGET_REPO="${BACKEND_REPO:-mklymanin/kardi-shop-backend}"
+          git push "https://x-access-token:${{ secrets.BACKEND_SYNC_TOKEN }}@github.com/${TARGET_REPO}.git" "${BACKEND_SHA}:main" --force
