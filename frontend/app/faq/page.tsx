@@ -120,8 +120,7 @@ export default function FaqPage() {
         <div className="text-sm uppercase tracking-[0.24em] text-pine">Вопрос-ответ</div>
         <h1 className="mt-2 text-4xl font-semibold">Частые вопросы по приборам КардиРу</h1>
         <p className="mt-3 text-sm leading-7 text-ink/65">
-          Раздел расширен по структуре исходного FAQ и покрывает основные вопросы по моделям, подключению, отчетам,
-          оплате и поддержке.
+          Основные вопросы по моделям, подключению, отчетам, оплате и поддержке.
         </p>
       </div>
       <div className="grid gap-4">

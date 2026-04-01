@@ -12,7 +12,7 @@ export function Footer() {
         </div>
         <div>
           <div className="font-semibold text-ink">Интеграции</div>
-          <p>Email-уведомления, аналитика, CAPTCHA, миграция контента.</p>
+          <p>Email-уведомления, аналитика и CAPTCHA.</p>
         </div>
       </div>
     </footer>

@@ -23,8 +23,8 @@ export default async function ProductPage({
         <p className="mt-4 max-w-2xl text-ink/70">{product.subtitle}</p>
         <div className="mt-8 grid gap-8 md:grid-cols-[1fr_320px]">
           <div className="space-y-4 text-sm leading-7 text-ink/80">
-            <p>Карточка товара будет получать описание, характеристики, изображения и SEO-поля из Strapi.</p>
-            <p>Следующим этапом сюда добавятся остатки, связанные товары, форма быстрого запроса и блок документов.</p>
+            <p>Подробная карточка товара с описанием и характеристиками.</p>
+            <p>Для уточнения комплектации и сроков поставки свяжитесь с менеджером.</p>
           </div>
           <aside className="rounded-[28px] border border-black/10 bg-sand p-6">
             <div className="text-sm text-ink/60">Цена</div>

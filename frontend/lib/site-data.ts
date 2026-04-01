@@ -25,7 +25,7 @@ export const featuredProducts: Product[] = [
     price: "48 500 ₽",
     priceValue: 48500,
     category: "Приборы",
-    imageUrl: "https://shop.kardi.ru/upload/iblock/81b/81bbbb75065f3ef7765b0d04fbc4d4b5.jpg"
+    imageUrl: "https://shop.kardi.ru/upload/iblock/db0/a7bge1maegd6f8ldzb0rttf9nnadw35y.jpg"
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ export const featuredProducts: Product[] = [
     price: "120 000 ₽",
     priceValue: 120000,
     category: "Приборы",
-    imageUrl: "https://shop.kardi.ru/upload/iblock/a09/a098180029526207af1ea6395671de82.png"
+    imageUrl: "https://shop.kardi.ru/upload/iblock/749/e318ljrepq8afvjov8e2riaaavzsu6hi.jpg"
   },
   {
     id: 3,
@@ -45,6 +45,6 @@ export const featuredProducts: Product[] = [
     price: "180 000 ₽",
     priceValue: 180000,
     category: "Приборы",
-    imageUrl: "https://shop.kardi.ru/upload/iblock/cbf/cbf617679bb03e6d81de68230510b3d9.png"
+    imageUrl: "https://shop.kardi.ru/upload/iblock/4e1/p8am8nw6fqpxsjgt0jp4qxhn7g0ss0j8.jpg"
   }
 ];

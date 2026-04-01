@@ -47,9 +47,6 @@ export function Header() {
             <Link href="/search" className="rounded-full border border-pine/20 px-4 py-2">
               Поиск
             </Link>
-            <Link href="/contact" className="rounded-full bg-pine px-4 py-2 font-medium text-white">
-              Купить в 1 клик
-            </Link>
           </div>
         </div>
       </div>

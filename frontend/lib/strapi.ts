@@ -144,6 +144,45 @@ export type OrderPayload = {
   total: number;
 };
 
+export type LeadPayload = {
+  name: string;
+  phone: string;
+  email?: string;
+  message?: string;
+  source?: string;
+};
+
+export async function submitLead(payload: LeadPayload): Promise<{ id: number | string }> {
+  const response = await fetch(`${STRAPI_URL}/api/leads`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      data: {
+        name: payload.name,
+        phone: payload.phone,
+        email: payload.email || undefined,
+        message: payload.message || undefined,
+        source: payload.source || "site"
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Не удалось отправить заявку");
+  }
+
+  const result = (await response.json()) as { data?: { id?: number; documentId?: string } };
+  const leadId = result.data?.id ?? result.data?.documentId;
+
+  if (!leadId) {
+    throw new Error("Заявка создана, но идентификатор не получен");
+  }
+
+  return { id: leadId };
+}
+
 export async function submitOrder(payload: OrderPayload): Promise<{ id: number | string }> {
   const response = await fetch(`${STRAPI_URL}/api/orders`, {
     method: "POST",

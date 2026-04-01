@@ -1,7 +1,7 @@
 import Link from "next/link";
 
+import { LeadForm } from "@/components/lead/lead-form";
 import { ProductCard } from "@/components/product-card";
-import { categories } from "@/lib/site-data";
 import { getProducts } from "@/lib/strapi";
 
 export default async function HomePage() {
@@ -29,12 +29,8 @@ export default async function HomePage() {
             shop.kardi.ru
           </div>
           <h1 className="max-w-2xl text-4xl font-semibold leading-tight text-ink md:text-5xl">
-            Кардиографы и оборудование для регистрации ЭКГ с понятной витриной и быстрой заявкой.
+            Кардиографы и оборудование для регистрации ЭКГ
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-ink/68">
-            Сохраняем узнаваемую структуру действующего магазина: приборы, аксессуары, быстрый заказ, преимущества
-            продукции и понятные карточки товаров.
-          </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/catalog" className="rounded-full bg-pine px-6 py-3 font-medium text-white">
               Перейти к приборам
@@ -51,16 +47,6 @@ export default async function HomePage() {
             <p className="mt-3 text-sm leading-6 text-ink/70">
               Рабочие дни с 10:00 до 18:00. Подскажем по выбору прибора, доставке и условиям оплаты.
             </p>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[24px] border border-[#dceae5] p-5">
-              <div className="text-sm text-ink/55">Категорий</div>
-              <div className="mt-2 text-4xl font-semibold text-pine">{categories.length}</div>
-            </div>
-            <div className="rounded-[24px] border border-[#dceae5] p-5">
-              <div className="text-sm text-ink/55">Формат заказа</div>
-              <div className="mt-2 text-lg font-semibold">Корзина и заявка в 1 клик</div>
-            </div>
           </div>
         </div>
       </section>
@@ -109,14 +95,7 @@ export default async function HomePage() {
             <p className="mt-2 text-sm leading-6 text-ink/68">
               Оставьте номер телефона, и менеджер свяжется с вами в рабочее время для уточнения заказа.
             </p>
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-              <input
-                type="text"
-                placeholder="+7 (___) ___-__-__"
-                className="h-12 flex-1 rounded-full border border-[#d8e6e2] bg-white px-5 outline-none placeholder:text-ink/35"
-              />
-              <button className="h-12 rounded-full bg-pine px-6 font-medium text-white">Отправить</button>
-            </div>
+            <LeadForm source="home-quick" compact />
           </div>
         </div>
       </section>
