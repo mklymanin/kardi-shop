@@ -12,6 +12,7 @@
     "dev:frontend": "npm --workspace frontend run dev",
     "dev:backend": "npm --workspace backend run develop",
     "build:frontend": "npm --workspace frontend run build",
-    "build:backend": "npm --workspace backend run build"
+    "build:backend": "npm --workspace backend run build",
+    "deploy:backend-cloud": "BACKEND_SHA=$(git subtree split --prefix backend HEAD) && git push github-backend ${BACKEND_SHA}:main --force"
   }
 }
