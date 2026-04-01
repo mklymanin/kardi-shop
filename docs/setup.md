@@ -56,6 +56,14 @@ npm run dev:backend
 npm run db:down
 ```
 
+## CI-синхронизация backend в Strapi Cloud
+
+После `git push origin main` GitLab CI автоматически:
+
+- выделяет папку `backend` из монорепозитория;
+- пушит ее в репозиторий `kardi-shop-backend` на GitHub;
+- запускает автодеплой в Strapi Cloud (если в Strapi Cloud включен Auto Deploy для `main`).
+
 ## Что уже подготовлено
 
 - монорепо с `frontend` и `backend`
