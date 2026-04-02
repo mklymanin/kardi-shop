@@ -14,6 +14,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Validate required secret
         run: |
@@ -37,6 +38,7 @@ jobs:
         env:
           BACKEND_SHA: ${{ steps.split.outputs.backend_sha }}
           BACKEND_REPO: ${{ vars.BACKEND_SYNC_REPO }}
+          BACKEND_SYNC_TOKEN: ${{ secrets.BACKEND_SYNC_TOKEN }}
         run: |
           TARGET_REPO="${BACKEND_REPO:-mklymanin/kardi-shop-backend}"
-          git push "https://x-access-token:${{ secrets.BACKEND_SYNC_TOKEN }}@github.com/${TARGET_REPO}.git" "${BACKEND_SHA}:main" --force
+          git push "https://x-access-token:${BACKEND_SYNC_TOKEN}@github.com/${TARGET_REPO}.git" "${BACKEND_SHA}:main" --force
