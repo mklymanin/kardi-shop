@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { CartLink } from "@/components/cart/cart-link";
+
 const navItems = [
   { href: "/catalog?section=pribory", label: "Приборы" },
   { href: "/catalog?section=accessories", label: "Аксессуары" },
@@ -21,7 +23,7 @@ export function Header() {
             <Link href="/contact" className="font-medium text-pine">
               WhatsApp
             </Link>
-            <Link href="/cart">Корзина</Link>
+            <CartLink />
           </div>
         </div>
       </div>

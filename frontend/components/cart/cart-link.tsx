@@ -7,6 +7,19 @@ import { useCart } from "@/components/cart/cart-provider";
 export function CartLink() {
   const { totalItems } = useCart();
 
-  return <Link href="/cart">Товаров в корзине: {totalItems}</Link>;
+  return (
+    <Link
+      href="/cart"
+      className="relative inline-flex items-center gap-2 rounded-full border border-pine/20 px-4 py-2 text-sm font-medium transition hover:border-pine/40 hover:text-pine"
+    >
+      <span className="hidden sm:inline">Корзина</span>
+      {totalItems > 0 && (
+        <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-pine px-1 text-[11px] font-bold leading-none text-white shadow-sm">
+          {totalItems > 99 ? "99+" : totalItems}
+        </span>
+      )}
+    </Link>
+  );
 }
+
 
