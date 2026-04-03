@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useCart } from "@/components/cart/cart-provider";
+import { ButtonLink, Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { PageContainer } from "@/components/ui/page-container";
+import { formatRub } from "@/lib/format";
 import { submitOrder } from "@/lib/strapi";
-
-function formatRub(value: number) {
-  return `${value.toLocaleString("ru-RU")} ₽`;
-}
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -55,24 +55,24 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
+    <PageContainer size="md">
       <h1 className="text-4xl font-semibold">Оформление заказа</h1>
       {items.length === 0 ? (
-        <div className="mt-6 rounded-3xl border border-[#dceae5] bg-white p-8">
+        <Card className="mt-6 rounded-3xl">
           <p className="text-ink/70">В корзине нет товаров. Добавьте позиции перед оформлением заказа.</p>
-          <Link href="/catalog" className="mt-4 inline-block rounded-full bg-pine px-5 py-3 font-medium text-white">
+          <ButtonLink href="/catalog" className="mt-4">
             Перейти в каталог
-          </Link>
-        </div>
+          </ButtonLink>
+        </Card>
       ) : (
         <div className="mt-8 grid gap-6 md:grid-cols-[1fr_320px]">
-          <form onSubmit={handleSubmit} className="rounded-3xl border border-[#dceae5] bg-white p-6">
+          <form onSubmit={handleSubmit} className="rounded-3xl border border-border-subtle bg-surface p-6">
             <h2 className="text-xl font-semibold">Контактные данные</h2>
             <div className="mt-5 grid gap-4">
               <label className="grid gap-2 text-sm">
                 <span>Имя *</span>
                 <input
-                  className="h-11 rounded-xl border border-[#cfe3dd] px-4 outline-none"
+                  className="h-11 rounded-xl border border-border-strong px-4 outline-none"
                   value={customerName}
                   onChange={(event) => setCustomerName(event.target.value)}
                   placeholder="Иван Иванов"
@@ -81,7 +81,7 @@ export default function CheckoutPage() {
               <label className="grid gap-2 text-sm">
                 <span>Телефон *</span>
                 <input
-                  className="h-11 rounded-xl border border-[#cfe3dd] px-4 outline-none"
+                  className="h-11 rounded-xl border border-border-strong px-4 outline-none"
                   value={phone}
                   onChange={(event) => setPhone(event.target.value)}
                   placeholder="+7 (999) 123-45-67"
@@ -90,7 +90,7 @@ export default function CheckoutPage() {
               <label className="grid gap-2 text-sm">
                 <span>Email</span>
                 <input
-                  className="h-11 rounded-xl border border-[#cfe3dd] px-4 outline-none"
+                  className="h-11 rounded-xl border border-border-strong px-4 outline-none"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="mail@example.com"
@@ -100,7 +100,7 @@ export default function CheckoutPage() {
               <label className="grid gap-2 text-sm">
                 <span>Комментарий</span>
                 <textarea
-                  className="min-h-24 rounded-xl border border-[#cfe3dd] px-4 py-3 outline-none"
+                  className="min-h-24 rounded-xl border border-border-strong px-4 py-3 outline-none"
                   value={comment}
                   onChange={(event) => setComment(event.target.value)}
                   placeholder="Комментарий к заказу"
@@ -108,15 +108,11 @@ export default function CheckoutPage() {
               </label>
             </div>
             {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
-            <button
-              type="submit"
-              disabled={!isValid || submitting}
-              className="mt-6 rounded-full bg-pine px-6 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
+            <Button type="submit" disabled={!isValid || submitting} className="mt-6">
               {submitting ? "Отправка..." : "Подтвердить заказ"}
-            </button>
+            </Button>
           </form>
-          <aside className="h-fit rounded-3xl border border-[#dceae5] bg-white p-6">
+          <Card className="h-fit rounded-3xl">
             <h2 className="text-lg font-semibold">Ваш заказ</h2>
             <div className="mt-4 space-y-3">
               {items.map((item) => (
@@ -132,9 +128,9 @@ export default function CheckoutPage() {
               <div className="text-sm text-ink/65">Итого</div>
               <div className="text-3xl font-semibold text-pine">{formatRub(totalPrice)}</div>
             </div>
-          </aside>
+          </Card>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
