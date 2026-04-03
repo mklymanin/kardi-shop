@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.git
+*.log
+package.json
+package-lock.json
+public
+*.gen.ts
+frontend/.next
+backend/dist

@@ -13,6 +13,13 @@
     "dev:backend": "npm --workspace backend run develop",
     "build:frontend": "npm --workspace frontend run build",
     "build:backend": "npm --workspace backend run build",
+    "format:frontend": "prettier --write \"frontend/**/*.{js,jsx,ts,tsx,css,scss,md,mdx}\"",
+    "format:backend": "prettier --write \"backend/**/*.{js,jsx,ts,tsx,md,mdx}\"",
+    "format": "npm run format:frontend && npm run format:backend",
     "deploy:backend-cloud": "BACKEND_SHA=$(git subtree split --prefix backend HEAD) && git push github-backend ${BACKEND_SHA}:main --force"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11"
   }
 }
