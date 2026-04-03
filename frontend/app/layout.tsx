@@ -4,6 +4,7 @@ import { Manrope } from "next/font/google";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import "./globals.css";
+import "./theme.css";
 
 const manrope = Manrope({
   subsets: ["latin", "cyrillic"],

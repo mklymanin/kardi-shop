@@ -1,0 +1,35 @@
+:root {
+  /* Brand & text */
+  --color-ink: 16 33 43; /* #10212b */
+  --color-pine: 30 90 78; /* #1e5a4e */
+
+  /* Page & structural backgrounds */
+  --color-bg-page-top: 230 244 241; /* #e6f4f1 */
+  --color-bg-page-bottom: 247 251 250; /* #f7fbfa */
+  --color-bg-header: 230 244 241; /* #e6f4f1 */
+
+  /* Surfaces */
+  --color-surface: 255 255 255; /* #ffffff */
+  --color-surface-soft: 248 252 251; /* #f8fcfb */
+  --color-surface-accent: 242 248 246; /* #f2f8f6 */
+
+  /* Pills / chips */
+  --color-pill-bg: 238 247 244; /* #eef7f4 */
+
+  /* Borders */
+  --color-border-subtle: 220 234 229; /* #dceae5 */
+  --color-border-strong: 207 227 221; /* #cfe3dd */
+  --color-border-soft: 216 230 226; /* #d8e6e2 */
+
+  /* Dark surfaces */
+  --color-surface-strong: 15 91 80; /* #0f5b50 */
+
+  /* Radii */
+  --radius-card-lg: 24px;
+  --radius-card-xl: 30px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card-elevated: 0 22px 60px rgba(16, 33, 43, 0.06);
+}
+

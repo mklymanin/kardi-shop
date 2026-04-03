@@ -8,11 +8,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#10212b",
+        ink: "rgb(var(--color-ink) / <alpha-value>)",
         sand: "#f4ede3",
         rust: "#c65b3d",
-        pine: "#1e5a4e",
-        mist: "#dae6e2"
+        pine: "rgb(var(--color-pine) / <alpha-value>)",
+        mist: "#dae6e2",
+        surface: "rgb(var(--color-surface) / <alpha-value>)",
+        "surface-soft": "rgb(var(--color-surface-soft) / <alpha-value>)",
+        "surface-accent": "rgb(var(--color-surface-accent) / <alpha-value>)",
+        "border-subtle": "rgb(var(--color-border-subtle) / <alpha-value>)",
+        "border-strong": "rgb(var(--color-border-strong) / <alpha-value>)",
+        "surface-strong": "rgb(var(--color-surface-strong) / <alpha-value>)",
+        "pill-bg": "rgb(var(--color-pill-bg) / <alpha-value>)"
       },
       fontFamily: {
         sans: ["var(--font-manrope)", "sans-serif"]
