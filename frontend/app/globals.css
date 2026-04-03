@@ -4,14 +4,13 @@
 
 body {
   margin: 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(var(--color-bg-page-top) / 0.92) 0,
-      rgba(var(--color-bg-page-top) / 0.92) 88px,
-      rgb(var(--color-bg-page-bottom)) 88px,
-      rgb(var(--color-bg-page-bottom)) 100%
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(var(--color-bg-page-top) / 0.92) 0,
+    rgba(var(--color-bg-page-top) / 0.92) 88px,
+    rgb(var(--color-bg-page-bottom)) 88px,
+    rgb(var(--color-bg-page-bottom)) 100%
+  );
   color: rgb(var(--color-ink));
 }
 

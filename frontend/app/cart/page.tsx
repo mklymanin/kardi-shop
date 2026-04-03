@@ -9,14 +9,17 @@ import { PageContainer } from "@/components/ui/page-container";
 import { formatRub } from "@/lib/format";
 
 export default function CartPage() {
-  const { items, totalItems, totalPrice, setQuantity, removeItem, clearCart } = useCart();
+  const { items, totalItems, totalPrice, setQuantity, removeItem, clearCart } =
+    useCart();
 
   return (
     <PageContainer size="md">
       <h1 className="text-4xl font-semibold">Корзина</h1>
       {items.length === 0 ? (
         <Card className="mt-6 rounded-3xl">
-          <p className="text-ink/70">Корзина пока пуста. Добавьте товары из каталога.</p>
+          <p className="text-ink/70">
+            Корзина пока пуста. Добавьте товары из каталога.
+          </p>
           <ButtonLink href="/catalog" className="mt-4">
             Перейти в каталог
           </ButtonLink>
@@ -29,11 +32,13 @@ export default function CartPage() {
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div>
                     <h2 className="text-xl font-semibold">{item.title}</h2>
-                    <div className="mt-2 text-sm text-ink/65">{item.priceLabel} за шт.</div>
+                    <div className="text-ink/65 mt-2 text-sm">
+                      {item.priceLabel} за шт.
+                    </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <button
-                      className="h-9 w-9 rounded-full border border-border-strong"
+                      className="border-border-strong h-9 w-9 rounded-full border"
                       onClick={() => setQuantity(item.slug, item.quantity - 1)}
                       type="button"
                     >
@@ -41,7 +46,7 @@ export default function CartPage() {
                     </button>
                     <span className="w-7 text-center">{item.quantity}</span>
                     <button
-                      className="h-9 w-9 rounded-full border border-border-strong"
+                      className="border-border-strong h-9 w-9 rounded-full border"
                       onClick={() => setQuantity(item.slug, item.quantity + 1)}
                       type="button"
                     >
@@ -51,27 +56,31 @@ export default function CartPage() {
                 </div>
                 <div className="mt-4 flex items-center justify-between">
                   <button
-                    className="text-sm text-ink/55 underline"
+                    className="text-ink/55 text-sm underline"
                     onClick={() => removeItem(item.slug)}
                     type="button"
                   >
                     Удалить
                   </button>
-                  <div className="text-lg font-semibold">{formatRub(item.priceValue * item.quantity)}</div>
+                  <div className="text-lg font-semibold">
+                    {formatRub(item.priceValue * item.quantity)}
+                  </div>
                 </div>
               </Card>
             ))}
           </div>
           <Card className="h-fit rounded-3xl">
-            <div className="text-sm text-ink/60">Товаров</div>
+            <div className="text-ink/60 text-sm">Товаров</div>
             <div className="mt-1 text-2xl font-semibold">{totalItems}</div>
-            <div className="mt-4 text-sm text-ink/60">Сумма</div>
-            <div className="mt-1 text-3xl font-semibold text-pine">{formatRub(totalPrice)}</div>
+            <div className="text-ink/60 mt-4 text-sm">Сумма</div>
+            <div className="text-pine mt-1 text-3xl font-semibold">
+              {formatRub(totalPrice)}
+            </div>
             <ButtonLink href="/checkout" fullWidth className="mt-6">
               Перейти к оформлению
             </ButtonLink>
             <button
-              className="mt-3 w-full rounded-full border border-border-strong px-5 py-3 text-sm"
+              className="border-border-strong mt-3 w-full rounded-full border px-5 py-3 text-sm"
               onClick={clearCart}
               type="button"
             >
@@ -83,4 +92,3 @@ export default function CartPage() {
     </PageContainer>
   );
 }
-

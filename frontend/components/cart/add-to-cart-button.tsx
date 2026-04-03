@@ -11,7 +11,7 @@ export function AddToCartButton({ product }: { product: Product }) {
 
   return (
     <button
-      className="mt-6 w-full rounded-full bg-ink px-5 py-3 text-white"
+      className="bg-ink mt-6 w-full rounded-full px-5 py-3 text-white"
       onClick={() => {
         addItem(product, 1);
         setAdded(true);
@@ -23,4 +23,3 @@ export function AddToCartButton({ product }: { product: Product }) {
     </button>
   );
 }
-

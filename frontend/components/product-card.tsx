@@ -5,28 +5,41 @@ import type { Product } from "@/lib/site-data";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <article className="overflow-hidden rounded-[24px] border border-border-soft bg-surface shadow-[0_18px_40px_rgba(16,33,43,0.06)]">
+    <article className="border-border-soft bg-surface overflow-hidden rounded-[24px] border shadow-[0_18px_40px_rgba(16,33,43,0.06)]">
       {product.imageUrl ? (
-        <div className="relative h-48 w-full bg-surface-accent">
-          <Image src={product.imageUrl} alt={product.title} fill className="object-cover" />
+        <div className="bg-surface-accent relative h-48 w-full">
+          <Image
+            src={product.imageUrl}
+            alt={product.title}
+            fill
+            className="object-cover"
+          />
         </div>
       ) : (
-        <div className="h-48 w-full bg-surface-accent" />
+        <div className="bg-surface-accent h-48 w-full" />
       )}
       <div className="bg-surface-accent px-6 py-4">
-        <div className="text-xs uppercase tracking-[0.22em] text-pine">{product.category}</div>
+        <div className="text-pine text-xs uppercase tracking-[0.22em]">
+          {product.category}
+        </div>
       </div>
       <div className="p-6">
-        <h3 className="min-h-14 text-xl font-semibold leading-snug">{product.title}</h3>
-        <p className="mt-3 min-h-16 text-sm leading-6 text-ink/68">{product.subtitle}</p>
+        <h3 className="min-h-14 text-xl font-semibold leading-snug">
+          {product.title}
+        </h3>
+        <p className="text-ink/68 mt-3 min-h-16 text-sm leading-6">
+          {product.subtitle}
+        </p>
         <div className="mt-6 flex items-center justify-between gap-3">
           <div>
-            <div className="text-xs text-ink/50">Цена</div>
-            <div className="text-2xl font-semibold text-pine">{product.price}</div>
+            <div className="text-ink/50 text-xs">Цена</div>
+            <div className="text-pine text-2xl font-semibold">
+              {product.price}
+            </div>
           </div>
           <Link
             href={`/catalog/${product.slug}`}
-            className="rounded-full bg-pine px-5 py-3 text-sm font-medium text-white transition hover:bg-[#18483f]"
+            className="bg-pine rounded-full px-5 py-3 text-sm font-medium text-white transition hover:bg-[#18483f]"
           >
             Подробнее
           </Link>

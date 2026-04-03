@@ -13,7 +13,7 @@ export const categories = [
   "Кардиология",
   "Реабилитация",
   "Расходные материалы",
-  "Диагностика"
+  "Диагностика",
 ];
 
 export const featuredProducts: Product[] = [
@@ -25,7 +25,8 @@ export const featuredProducts: Product[] = [
     price: "48 500 ₽",
     priceValue: 48500,
     category: "Приборы",
-    imageUrl: "https://shop.kardi.ru/upload/iblock/db0/a7bge1maegd6f8ldzb0rttf9nnadw35y.jpg"
+    imageUrl:
+      "https://shop.kardi.ru/upload/iblock/db0/a7bge1maegd6f8ldzb0rttf9nnadw35y.jpg",
   },
   {
     id: 2,
@@ -35,7 +36,8 @@ export const featuredProducts: Product[] = [
     price: "120 000 ₽",
     priceValue: 120000,
     category: "Приборы",
-    imageUrl: "https://shop.kardi.ru/upload/iblock/749/e318ljrepq8afvjov8e2riaaavzsu6hi.jpg"
+    imageUrl:
+      "https://shop.kardi.ru/upload/iblock/749/e318ljrepq8afvjov8e2riaaavzsu6hi.jpg",
   },
   {
     id: 3,
@@ -45,6 +47,7 @@ export const featuredProducts: Product[] = [
     price: "180 000 ₽",
     priceValue: 180000,
     category: "Приборы",
-    imageUrl: "https://shop.kardi.ru/upload/iblock/4e1/p8am8nw6fqpxsjgt0jp4qxhn7g0ss0j8.jpg"
-  }
+    imageUrl:
+      "https://shop.kardi.ru/upload/iblock/4e1/p8am8nw6fqpxsjgt0jp4qxhn7g0ss0j8.jpg",
+  },
 ];

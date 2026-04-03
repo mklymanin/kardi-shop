@@ -33,7 +33,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
         phone: phone.trim(),
         email: email.trim() || undefined,
         message: message.trim() || undefined,
-        source
+        source,
       });
       setName("");
       setPhone("");
@@ -49,36 +49,46 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
 
   if (compact) {
     return (
-      <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
+      >
         <input
           type="text"
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="Имя"
-          className="h-12 flex-1 rounded-full border border-border-soft bg-surface px-5 outline-none placeholder:text-ink/35"
+          className="border-border-soft bg-surface placeholder:text-ink/35 h-12 flex-1 rounded-full border px-5 outline-none"
         />
         <input
           type="text"
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
           placeholder="+7 (___) ___-__-__"
-          className="h-12 flex-1 rounded-full border border-border-soft bg-surface px-5 outline-none placeholder:text-ink/35"
+          className="border-border-soft bg-surface placeholder:text-ink/35 h-12 flex-1 rounded-full border px-5 outline-none"
         />
         <button
           type="submit"
           disabled={!isValid || submitting}
-          className="h-12 rounded-full bg-pine px-6 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+          className="bg-pine h-12 rounded-full px-6 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {submitting ? "Отправка..." : "Отправить"}
         </button>
-        {status === "success" ? <p className="w-full text-sm text-pine">Заявка отправлена.</p> : null}
-        {status === "error" ? <p className="w-full text-sm text-red-600">Ошибка отправки заявки.</p> : null}
+        {status === "success" ? (
+          <p className="text-pine w-full text-sm">Заявка отправлена.</p>
+        ) : null}
+        {status === "error" ? (
+          <p className="w-full text-sm text-red-600">Ошибка отправки заявки.</p>
+        ) : null}
       </form>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 grid gap-4 rounded-3xl border border-border-subtle bg-surface p-6">
+    <form
+      onSubmit={handleSubmit}
+      className="border-border-subtle bg-surface mt-8 grid gap-4 rounded-3xl border p-6"
+    >
       <label className="grid gap-2 text-sm">
         <span>Имя *</span>
         <input
@@ -86,7 +96,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="Иван Иванов"
-          className="h-11 rounded-xl border border-border-strong px-4 outline-none"
+          className="border-border-strong h-11 rounded-xl border px-4 outline-none"
         />
       </label>
       <label className="grid gap-2 text-sm">
@@ -96,7 +106,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
           placeholder="+7 (999) 123-45-67"
-          className="h-11 rounded-xl border border-border-strong px-4 outline-none"
+          className="border-border-strong h-11 rounded-xl border px-4 outline-none"
         />
       </label>
       <label className="grid gap-2 text-sm">
@@ -106,7 +116,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="mail@example.com"
-          className="h-11 rounded-xl border border-border-strong px-4 outline-none"
+          className="border-border-strong h-11 rounded-xl border px-4 outline-none"
         />
       </label>
       <label className="grid gap-2 text-sm">
@@ -115,18 +125,26 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           placeholder="Интересует консультация по прибору"
-          className="min-h-24 rounded-xl border border-border-strong px-4 py-3 outline-none"
+          className="border-border-strong min-h-24 rounded-xl border px-4 py-3 outline-none"
         />
       </label>
       <button
         type="submit"
         disabled={!isValid || submitting}
-        className="w-fit rounded-full bg-pine px-6 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+        className="bg-pine w-fit rounded-full px-6 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
       >
         {submitting ? "Отправка..." : "Отправить заявку"}
       </button>
-      {status === "success" ? <p className="text-sm text-pine">Заявка отправлена. Мы свяжемся с вами.</p> : null}
-      {status === "error" ? <p className="text-sm text-red-600">Ошибка отправки заявки. Попробуйте еще раз.</p> : null}
+      {status === "success" ? (
+        <p className="text-pine text-sm">
+          Заявка отправлена. Мы свяжемся с вами.
+        </p>
+      ) : null}
+      {status === "error" ? (
+        <p className="text-sm text-red-600">
+          Ошибка отправки заявки. Попробуйте еще раз.
+        </p>
+      ) : null}
     </form>
   );
 }

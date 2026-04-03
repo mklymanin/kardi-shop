@@ -8,22 +8,23 @@ import "./theme.css";
 
 const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-manrope"
+  variable: "--font-manrope",
 });
 
 export const metadata: Metadata = {
   title: "shop.kardi",
-  description: "Современный магазин медицинского оборудования на Next.js и Strapi."
+  description:
+    "Современный магазин медицинского оборудования на Next.js и Strapi.",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="ru">
-      <body className={`${manrope.variable} font-sans text-ink antialiased`}>
+      <body className={`${manrope.variable} text-ink font-sans antialiased`}>
         <Header />
         <main>{children}</main>
         <Footer />

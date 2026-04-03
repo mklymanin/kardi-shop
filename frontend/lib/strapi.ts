@@ -1,6 +1,7 @@
 import { featuredProducts, type Product } from "@/lib/site-data";
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+const STRAPI_URL =
+  process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
 
 type StrapiListResponse<T> =
   | { data: T[] }
@@ -46,13 +47,17 @@ function toProductPrice(value: unknown) {
 
   if (typeof value === "string" && value.trim()) {
     const numeric = Number(value);
-    return Number.isNaN(numeric) ? value : `${numeric.toLocaleString("ru-RU")} ₽`;
+    return Number.isNaN(numeric)
+      ? value
+      : `${numeric.toLocaleString("ru-RU")} ₽`;
   }
 
   return "Цена по запросу";
 }
 
-function normalizeItems<T extends Record<string, unknown>>(payload: StrapiListResponse<T> | null): Array<T & { id: number }> {
+function normalizeItems<T extends Record<string, unknown>>(
+  payload: StrapiListResponse<T> | null
+): Array<T & { id: number }> {
   if (!payload || !Array.isArray(payload.data)) {
     return [];
   }
@@ -69,7 +74,7 @@ function normalizeItems<T extends Record<string, unknown>>(payload: StrapiListRe
 async function fetchFromStrapi<T>(path: string): Promise<T | null> {
   try {
     const response = await fetch(`${STRAPI_URL}${path}`, {
-      next: { revalidate: 30 }
+      next: { revalidate: 30 },
     });
 
     if (!response.ok) {
@@ -83,7 +88,9 @@ async function fetchFromStrapi<T>(path: string): Promise<T | null> {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const payload = await fetchFromStrapi<StrapiListResponse<any>>("/api/products?populate=category,image&sort=createdAt:desc");
+  const payload = await fetchFromStrapi<StrapiListResponse<any>>(
+    "/api/products?populate=category,image&sort=createdAt:desc"
+  );
   const items = normalizeItems(payload);
 
   if (!items.length) {
@@ -97,11 +104,15 @@ export async function getProducts(): Promise<Product[]> {
     subtitle: String(item.excerpt ?? item.description ?? ""),
     priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
-    imageUrl: extractMediaUrl(item.image) ?? featuredProducts[index % featuredProducts.length]?.imageUrl,
+    imageUrl:
+      extractMediaUrl(item.image) ??
+      featuredProducts[index % featuredProducts.length]?.imageUrl,
     category:
       typeof item.category === "object" && item.category
-        ? String((item.category as Record<string, unknown>).title ?? "Без категории")
-        : "Без категории"
+        ? String(
+            (item.category as Record<string, unknown>).title ?? "Без категории"
+          )
+        : "Без категории",
   }));
 }
 
@@ -125,8 +136,10 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     imageUrl: extractMediaUrl(item.image),
     category:
       typeof item.category === "object" && item.category
-        ? String((item.category as Record<string, unknown>).title ?? "Без категории")
-        : "Без категории"
+        ? String(
+            (item.category as Record<string, unknown>).title ?? "Без категории"
+          )
+        : "Без категории",
   };
 }
 
@@ -152,11 +165,13 @@ export type LeadPayload = {
   source?: string;
 };
 
-export async function submitLead(payload: LeadPayload): Promise<{ id: number | string }> {
+export async function submitLead(
+  payload: LeadPayload
+): Promise<{ id: number | string }> {
   const response = await fetch(`${STRAPI_URL}/api/leads`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       data: {
@@ -164,16 +179,18 @@ export async function submitLead(payload: LeadPayload): Promise<{ id: number | s
         phone: payload.phone,
         email: payload.email || undefined,
         message: payload.message || undefined,
-        source: payload.source || "site"
-      }
-    })
+        source: payload.source || "site",
+      },
+    }),
   });
 
   if (!response.ok) {
     throw new Error("Не удалось отправить заявку");
   }
 
-  const result = (await response.json()) as { data?: { id?: number; documentId?: string } };
+  const result = (await response.json()) as {
+    data?: { id?: number; documentId?: string };
+  };
   const leadId = result.data?.id ?? result.data?.documentId;
 
   if (!leadId) {
@@ -183,11 +200,13 @@ export async function submitLead(payload: LeadPayload): Promise<{ id: number | s
   return { id: leadId };
 }
 
-export async function submitOrder(payload: OrderPayload): Promise<{ id: number | string }> {
+export async function submitOrder(
+  payload: OrderPayload
+): Promise<{ id: number | string }> {
   const response = await fetch(`${STRAPI_URL}/api/orders`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       data: {
@@ -197,16 +216,18 @@ export async function submitOrder(payload: OrderPayload): Promise<{ id: number |
         comment: payload.comment || undefined,
         itemsRaw: payload.itemsRaw,
         total: payload.total,
-        status: "new"
-      }
-    })
+        status: "new",
+      },
+    }),
   });
 
   if (!response.ok) {
     throw new Error("Не удалось оформить заказ");
   }
 
-  const result = (await response.json()) as { data?: { id?: number; documentId?: string } };
+  const result = (await response.json()) as {
+    data?: { id?: number; documentId?: string };
+  };
   const orderId = result.data?.id ?? result.data?.documentId;
 
   if (!orderId) {

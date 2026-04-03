@@ -10,16 +10,14 @@ export function CartLink() {
   return (
     <Link
       href="/cart"
-      className="relative inline-flex items-center gap-2 rounded-full border border-pine/20 px-4 py-2 text-sm font-medium transition hover:border-pine/40 hover:text-pine"
+      className="border-pine/20 hover:border-pine/40 hover:text-pine relative inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition"
     >
       <span className="hidden sm:inline">Корзина</span>
       {totalItems > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-pine px-1 text-[11px] font-bold leading-none text-white shadow-sm">
+        <span className="bg-pine absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-bold leading-none text-white shadow-sm">
           {totalItems > 99 ? "99+" : totalItems}
         </span>
       )}
     </Link>
   );
 }
-
-

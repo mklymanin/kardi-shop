@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}"
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -19,15 +19,14 @@ const config: Config = {
         "border-subtle": "rgb(var(--color-border-subtle) / <alpha-value>)",
         "border-strong": "rgb(var(--color-border-strong) / <alpha-value>)",
         "surface-strong": "rgb(var(--color-surface-strong) / <alpha-value>)",
-        "pill-bg": "rgb(var(--color-pill-bg) / <alpha-value>)"
+        "pill-bg": "rgb(var(--color-pill-bg) / <alpha-value>)",
       },
       fontFamily: {
-        sans: ["var(--font-manrope)", "sans-serif"]
-      }
-    }
+        sans: ["var(--font-manrope)", "sans-serif"],
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
 
 export default config;
-

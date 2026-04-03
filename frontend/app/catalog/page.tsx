@@ -7,9 +7,13 @@ export default async function CatalogPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="mb-8">
-        <div className="text-sm uppercase tracking-[0.3em] text-rust">Каталог</div>
+        <div className="text-rust text-sm uppercase tracking-[0.3em]">
+          Каталог
+        </div>
         <h1 className="mt-2 text-4xl font-semibold">Товары</h1>
-        <p className="mt-3 max-w-2xl text-ink/70">Каталог товаров с основными категориями.</p>
+        <p className="text-ink/70 mt-3 max-w-2xl">
+          Каталог товаров с основными категориями.
+        </p>
       </div>
       <div className="grid gap-5 md:grid-cols-3">
         {products.map((product) => (

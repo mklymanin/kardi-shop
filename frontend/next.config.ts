@@ -5,19 +5,19 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com"
+        hostname: "images.unsplash.com",
       },
       {
         protocol: "https",
-        hostname: "shop.kardi.ru"
+        hostname: "shop.kardi.ru",
       },
       {
         protocol: "http",
         hostname: "localhost",
-        port: "1337"
-      }
-    ]
-  }
+        port: "1337",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

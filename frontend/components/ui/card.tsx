@@ -30,7 +30,8 @@ export function Card({
         radius === "xl" && "rounded-[30px]",
         variant === "default" && "border-border-subtle bg-surface",
         variant === "soft" && "border-border-subtle bg-surface-soft",
-        variant === "inverted" && "border-white/10 bg-surface-strong text-white",
+        variant === "inverted" &&
+          "bg-surface-strong border-white/10 text-white",
         padding === "sm" && "p-5",
         padding === "md" && "p-6",
         padding === "lg" && "p-8",
@@ -42,4 +43,3 @@ export function Card({
     </div>
   );
 }
-

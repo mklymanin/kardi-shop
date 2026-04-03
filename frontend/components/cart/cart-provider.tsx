@@ -83,10 +83,17 @@ function getServerSnapshot() {
 }
 
 export function useCart() {
-  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const snapshot = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
   const items = snapshot.items;
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = items.reduce((acc, item) => acc + item.priceValue * item.quantity, 0);
+  const totalPrice = items.reduce(
+    (acc, item) => acc + item.priceValue * item.quantity,
+    0
+  );
 
   return {
     items,
@@ -95,10 +102,13 @@ export function useCart() {
     addItem: (product: Product, quantity = 1) => {
       updateItems((prev) => {
         const existing = prev.find((item) => item.slug === product.slug);
-        const priceValue = product.priceValue ?? parsePriceLabelToNumber(product.price);
+        const priceValue =
+          product.priceValue ?? parsePriceLabelToNumber(product.price);
         if (existing) {
           return prev.map((item) =>
-            item.slug === product.slug ? { ...item, quantity: item.quantity + quantity } : item
+            item.slug === product.slug
+              ? { ...item, quantity: item.quantity + quantity }
+              : item
           );
         }
         return [
@@ -109,8 +119,8 @@ export function useCart() {
             priceLabel: product.price,
             priceValue,
             quantity,
-            imageUrl: product.imageUrl
-          }
+            imageUrl: product.imageUrl,
+          },
         ];
       });
     },
@@ -126,11 +136,10 @@ export function useCart() {
     },
     clearCart: () => {
       updateItems(() => []);
-    }
+    },
   };
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
-

@@ -10,7 +10,12 @@ type PageContainerProps = PropsWithChildren<
   } & HTMLAttributes<HTMLDivElement>
 >;
 
-export function PageContainer({ children, size = "md", className, ...rest }: PageContainerProps) {
+export function PageContainer({
+  children,
+  size = "md",
+  className,
+  ...rest
+}: PageContainerProps) {
   return (
     <div
       className={cn(
@@ -26,4 +31,3 @@ export function PageContainer({ children, size = "md", className, ...rest }: Pag
     </div>
   );
 }
-
