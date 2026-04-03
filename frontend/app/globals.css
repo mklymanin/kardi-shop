@@ -2,15 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-}
-
 body {
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(230, 244, 241, 0.92) 0, rgba(230, 244, 241, 0.92) 88px, #f7fbfa 88px, #f7fbfa 100%);
-  color: #10212b;
+    linear-gradient(
+      180deg,
+      rgba(var(--color-bg-page-top) / 0.92) 0,
+      rgba(var(--color-bg-page-top) / 0.92) 88px,
+      rgb(var(--color-bg-page-bottom)) 88px,
+      rgb(var(--color-bg-page-bottom)) 100%
+    );
+  color: rgb(var(--color-ink));
 }
 
 a {

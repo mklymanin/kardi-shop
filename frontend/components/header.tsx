@@ -12,7 +12,7 @@ const navItems = [
 export function Header() {
   return (
     <header>
-      <div className="border-b border-pine/10 bg-[#e6f4f1]">
+      <div className="border-b border-pine/10 bg-[rgb(var(--color-bg-header))]">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-3 text-sm text-ink/75 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
             <span className="font-semibold text-pine">+7 (499) 346-77-22</span>

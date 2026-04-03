@@ -55,14 +55,14 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="Имя"
-          className="h-12 flex-1 rounded-full border border-[#d8e6e2] bg-white px-5 outline-none placeholder:text-ink/35"
+          className="h-12 flex-1 rounded-full border border-border-soft bg-surface px-5 outline-none placeholder:text-ink/35"
         />
         <input
           type="text"
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
           placeholder="+7 (___) ___-__-__"
-          className="h-12 flex-1 rounded-full border border-[#d8e6e2] bg-white px-5 outline-none placeholder:text-ink/35"
+          className="h-12 flex-1 rounded-full border border-border-soft bg-surface px-5 outline-none placeholder:text-ink/35"
         />
         <button
           type="submit"
@@ -78,7 +78,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 grid gap-4 rounded-3xl border border-[#dceae5] bg-white p-6">
+    <form onSubmit={handleSubmit} className="mt-8 grid gap-4 rounded-3xl border border-border-subtle bg-surface p-6">
       <label className="grid gap-2 text-sm">
         <span>Имя *</span>
         <input
@@ -86,7 +86,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={name}
           onChange={(event) => setName(event.target.value)}
           placeholder="Иван Иванов"
-          className="h-11 rounded-xl border border-[#cfe3dd] px-4 outline-none"
+          className="h-11 rounded-xl border border-border-strong px-4 outline-none"
         />
       </label>
       <label className="grid gap-2 text-sm">
@@ -96,7 +96,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
           placeholder="+7 (999) 123-45-67"
-          className="h-11 rounded-xl border border-[#cfe3dd] px-4 outline-none"
+          className="h-11 rounded-xl border border-border-strong px-4 outline-none"
         />
       </label>
       <label className="grid gap-2 text-sm">
@@ -106,7 +106,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="mail@example.com"
-          className="h-11 rounded-xl border border-[#cfe3dd] px-4 outline-none"
+          className="h-11 rounded-xl border border-border-strong px-4 outline-none"
         />
       </label>
       <label className="grid gap-2 text-sm">
@@ -115,7 +115,7 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           placeholder="Интересует консультация по прибору"
-          className="min-h-24 rounded-xl border border-[#cfe3dd] px-4 py-3 outline-none"
+          className="min-h-24 rounded-xl border border-border-strong px-4 py-3 outline-none"
         />
       </label>
       <button

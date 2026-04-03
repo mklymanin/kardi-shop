@@ -125,7 +125,7 @@ export default function FaqPage() {
       </div>
       <div className="grid gap-4">
         {faqItems.map((item) => (
-          <article key={item.q} className="rounded-[24px] border border-[#dceae5] bg-white p-6">
+          <article key={item.q} className="rounded-[24px] border border-border-subtle bg-surface p-6">
             <h2 className="text-xl font-semibold">{item.q}</h2>
             <p className="mt-3 text-sm leading-7 text-ink/72">{item.a}</p>
           </article>
