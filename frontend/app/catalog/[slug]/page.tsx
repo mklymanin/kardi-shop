@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
-import { getProductBySlug } from "@/lib/strapi";
+import { getProductBySlug } from "@/lib/api/products";
 
 export default async function ProductPage({
   params,

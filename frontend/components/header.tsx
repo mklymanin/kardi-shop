@@ -1,15 +1,11 @@
 import Link from "next/link";
 
 import { CartLink } from "@/components/cart/cart-link";
+import { getCategories } from "@/lib/api/products";
 
-const navItems = [
-  { href: "/catalog?section=pribory", label: "Приборы" },
-  { href: "/catalog?section=accessories", label: "Аксессуары" },
-  { href: "/catalog?section=arenda", label: "Аренда" },
-  { href: "/faq", label: "Вопрос-ответ" },
-];
+export async function Header() {
+  const categories = await getCategories();
 
-export function Header() {
   return (
     <header>
       <div className="border-pine/10 border-b bg-[rgb(var(--color-bg-header))]">
@@ -41,15 +37,18 @@ export function Header() {
             </div>
           </div>
           <nav className="flex flex-wrap gap-5 text-sm font-medium">
-            {navItems.map((item, index) => (
+            {categories.map((cat) => (
               <Link
-                key={`${item.href}-${index}`}
-                href={item.href}
+                key={cat.slug}
+                href={`/catalog?section=${cat.slug}`}
                 className="hover:text-pine transition"
               >
-                {item.label}
+                {cat.seoTitle ?? cat.title}
               </Link>
             ))}
+            <Link href="/faq" className="hover:text-pine transition">
+              Вопрос-ответ
+            </Link>
             <a
               href="https://www.kardi.ru/"
               className="hover:text-pine transition"

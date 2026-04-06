@@ -9,7 +9,7 @@ import { ButtonLink, Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PageContainer } from "@/components/ui/page-container";
 import { formatRub } from "@/lib/format";
-import { submitOrder } from "@/lib/strapi";
+import { submitOrder } from "@/app/actions/submit-order";
 
 export default function CheckoutPage() {
   const router = useRouter();

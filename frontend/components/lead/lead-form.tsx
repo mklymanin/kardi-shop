@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { submitLead } from "@/lib/strapi";
+import { submitLead } from "@/app/actions/submit-lead";
 
 type LeadFormProps = {
   source: string;

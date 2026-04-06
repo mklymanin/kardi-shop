@@ -2,10 +2,13 @@ import Link from "next/link";
 
 import { LeadForm } from "@/components/lead/lead-form";
 import { ProductCard } from "@/components/product-card";
-import { getProducts } from "@/lib/strapi";
+import { getCategories, getProducts } from "@/lib/api/products";
 
 export default async function HomePage() {
-  const products = await getProducts();
+  const [products, categories] = await Promise.all([
+    getProducts(),
+    getCategories(),
+  ]);
   const reasons = [
     "Высокое качество регистрации ЭКГ",
     "Автоматическая оценка исследования",
@@ -74,11 +77,17 @@ export default async function HomePage() {
             Смотреть все
           </Link>
         </div>
-        <div className="grid gap-5 md:grid-cols-3">
-          {products.slice(0, 3).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-3">
+            {products.slice(0, 3).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-ink/50 py-8 text-center">
+            Не удалось загрузить товары. Попробуйте позже.
+          </p>
+        )}
       </section>
 
       <section className="mt-14 grid gap-6 md:grid-cols-[1fr_1fr]">
@@ -171,24 +180,15 @@ export default async function HomePage() {
           Разделы сайта
         </div>
         <div className="mt-4 flex flex-wrap gap-3 text-sm">
-          <Link
-            href="/catalog?section=pribory"
-            className="bg-pill-bg text-pine rounded-full px-4 py-2"
-          >
-            Приборы
-          </Link>
-          <Link
-            href="/catalog?section=accessories"
-            className="bg-pill-bg text-pine rounded-full px-4 py-2"
-          >
-            Аксессуары
-          </Link>
-          <Link
-            href="/catalog?section=arenda"
-            className="bg-pill-bg text-pine rounded-full px-4 py-2"
-          >
-            Аренда
-          </Link>
+          {categories.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/catalog?section=${cat.slug}`}
+              className="bg-pill-bg text-pine rounded-full px-4 py-2"
+            >
+              {cat.seoTitle ?? cat.title}
+            </Link>
+          ))}
           <Link
             href="/faq"
             className="bg-pill-bg text-pine rounded-full px-4 py-2"
