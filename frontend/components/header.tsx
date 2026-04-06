@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { CartLink } from "@/components/cart/cart-link";
+import { SearchBar } from "@/components/search-bar";
 import { getCategories } from "@/lib/api/products";
 
 export async function Header() {
@@ -25,16 +26,16 @@ export async function Header() {
       </div>
       <div className="border-b border-black/10 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-start gap-4">
             <Link
               href="/"
               className="text-pine text-2xl font-semibold tracking-tight"
             >
               КардиРу
             </Link>
-            <div className="text-ink/55 hidden text-sm md:block">
+            <p className="text-ink/55 hidden max-w-xs text-sm md:block">
               Интернет-магазин кардиографов и оборудования для ЭКГ
-            </div>
+            </p>
           </div>
           <nav className="flex flex-wrap gap-5 text-sm font-medium">
             {categories.map((cat) => (
@@ -49,22 +50,9 @@ export async function Header() {
             <Link href="/faq" className="hover:text-pine transition">
               Вопрос-ответ
             </Link>
-            <a
-              href="https://www.kardi.ru/"
-              className="hover:text-pine transition"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Выйти из магазина
-            </a>
           </nav>
-          <div className="flex items-center gap-3 text-sm">
-            <Link
-              href="/search"
-              className="border-pine/20 rounded-full border px-4 py-2"
-            >
-              Поиск
-            </Link>
+          <div className="flex min-w-0 flex-1 items-center justify-end gap-3 md:flex-none">
+            <SearchBar className="md:max-w-[280px]" />
           </div>
         </div>
       </div>
