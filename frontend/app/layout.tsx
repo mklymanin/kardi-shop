@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Inter } from "next/font/google";
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 import "./theme.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
@@ -23,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" className={cn("font-sans", inter.variable)}>
       <body
         className={cn(
           manrope.variable,
