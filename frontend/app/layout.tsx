@@ -13,8 +13,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "shop.kardi",
-  description:
-    "Современный магазин медицинского оборудования на Next.js и Strapi.",
+  description: "Магазин медицинского оборудования.",
 };
 
 export default function RootLayout({
