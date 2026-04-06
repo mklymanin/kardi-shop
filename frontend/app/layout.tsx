@@ -23,9 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${manrope.variable} text-ink font-sans antialiased`}>
+      <body
+        className={`${manrope.variable} text-ink flex min-h-screen flex-col font-sans antialiased`}
+      >
         <Header />
-        <main>{children}</main>
+        <main className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>
