@@ -13,7 +13,7 @@ import { submitOrder } from "@/app/actions/submit-order";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice } = useCart();
   const [customerName, setCustomerName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -48,13 +48,10 @@ export default function CheckoutPage() {
         })),
         total: totalPrice,
       });
-      clearCart();
-      router.push(
-        `/checkout/success?order=${encodeURIComponent(String(order.id))}`
-      );
+      router.push(order.confirmationUrl);
     } catch {
       setError(
-        "Не удалось отправить заказ. Проверьте, запущен ли backend, и попробуйте снова."
+        "Не удалось создать платёж. Проверьте настройки backend и YooKassa, затем попробуйте снова."
       );
     } finally {
       setSubmitting(false);
@@ -127,7 +124,7 @@ export default function CheckoutPage() {
               disabled={!isValid || submitting}
               className="mt-6"
             >
-              {submitting ? "Отправка..." : "Подтвердить заказ"}
+              {submitting ? "Переходим к оплате..." : "Перейти к оплате"}
             </Button>
           </form>
           <Card className="h-fit rounded-3xl">

@@ -1,6 +1,6 @@
 "use server";
 
-import { postToStrapi } from "@/lib/api/strapi-client";
+import { startOrderPayment } from "@/lib/orders";
 
 export type OrderPayload = {
   customerName: string;
@@ -16,30 +16,24 @@ export type OrderPayload = {
   total: number;
 };
 
-type StrapiOrderResponse = {
-  data?: { id?: number; documentId?: string };
-};
-
 export async function submitOrder(
   payload: OrderPayload
-): Promise<{ id: number | string }> {
-  const result = await postToStrapi<StrapiOrderResponse>("/api/orders", {
-    data: {
+): Promise<{ id: number | string; confirmationUrl: string }> {
+  const result = await startOrderPayment(
+    {
       customerName: payload.customerName,
       phone: payload.phone,
-      email: payload.email || undefined,
-      comment: payload.comment || undefined,
-      itemsRaw: payload.itemsRaw,
-      total: payload.total,
-      status: "new",
+      email: payload.email,
+      comment: payload.comment,
     },
-  });
+    payload.itemsRaw.map((item) => ({
+      slug: item.slug,
+      quantity: item.quantity,
+    }))
+  );
 
-  const orderId = result.data?.id ?? result.data?.documentId;
-
-  if (!orderId) {
-    throw new Error("Заказ создан, но идентификатор не получен");
-  }
-
-  return { id: orderId };
+  return {
+    id: result.orderId,
+    confirmationUrl: result.confirmationUrl,
+  };
 }
