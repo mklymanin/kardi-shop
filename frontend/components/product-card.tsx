@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import type { Product } from "@/lib/site-data";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -44,6 +45,7 @@ export function ProductCard({ product }: { product: Product }) {
             Подробнее
           </Link>
         </div>
+        <AddToCartButton product={product} />
       </div>
     </article>
   );
