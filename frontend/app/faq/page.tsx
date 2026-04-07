@@ -1,4 +1,5 @@
 import { getFaqItems } from "@/lib/api/faq";
+import { FaqAccordion } from "@/components/faq/faq-accordion";
 
 export default async function FaqPage() {
   const faqItems = await getFaqItems();
@@ -22,19 +23,7 @@ export default async function FaqPage() {
           Вопросы пока не добавлены.
         </p>
       ) : (
-        <div className="grid gap-4">
-          {faqItems.map((item) => (
-            <article
-              key={item.id}
-              className="border-border-subtle bg-surface rounded-[24px] border p-6"
-            >
-              <h2 className="text-xl font-semibold">{item.question}</h2>
-              <p className="text-ink/72 mt-3 text-sm leading-7">
-                {item.answer}
-              </p>
-            </article>
-          ))}
-        </div>
+        <FaqAccordion items={faqItems} />
       )}
     </div>
   );
