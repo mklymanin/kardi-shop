@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useCart } from "@/components/cart/cart-provider";
 import { ButtonLink, Button } from "@/components/ui/button";
@@ -10,6 +10,10 @@ import { Card } from "@/components/ui/card";
 import { PageContainer } from "@/components/ui/page-container";
 import { formatRub } from "@/lib/format";
 import { submitOrder } from "@/app/actions/submit-order";
+import {
+  getActiveDeliveryMethods,
+  type DeliveryMethod,
+} from "@/lib/api/delivery-methods";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -18,13 +22,48 @@ export default function CheckoutPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
+  const [deliveryMethods, setDeliveryMethods] = useState<DeliveryMethod[]>([]);
+  const [deliveryMethodCode, setDeliveryMethodCode] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [deliveryLoadError, setDeliveryLoadError] = useState<string | null>(
+    null
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getActiveDeliveryMethods()
+      .then((methods) => {
+        if (cancelled) return;
+        setDeliveryMethods(methods);
+        setDeliveryMethodCode((prev) => prev || methods[0]?.code || "");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setDeliveryLoadError("Не удалось загрузить способы получения");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const selectedDeliveryMethod = useMemo(
+    () => deliveryMethods.find((method) => method.code === deliveryMethodCode),
+    [deliveryMethods, deliveryMethodCode]
+  );
+  const needsDeliveryAddress =
+    deliveryMethodCode === "courier" || deliveryMethodCode === "russian_post";
+  const deliveryPrice = selectedDeliveryMethod?.price ?? 0;
+  const totalWithDelivery = totalPrice + deliveryPrice;
 
   const isValid =
     customerName.trim().length > 1 &&
     phone.trim().length > 4 &&
-    items.length > 0;
+    items.length > 0 &&
+    Boolean(deliveryMethodCode) &&
+    (!needsDeliveryAddress || deliveryAddress.trim().length > 5);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,13 +79,17 @@ export default function CheckoutPage() {
         phone: phone.trim(),
         email: email.trim() || undefined,
         comment: comment.trim() || undefined,
+        deliveryMethodCode,
+        deliveryAddress: needsDeliveryAddress
+          ? deliveryAddress.trim() || undefined
+          : undefined,
         itemsRaw: items.map((item) => ({
           slug: item.slug,
           title: item.title,
           quantity: item.quantity,
           price: item.priceValue,
         })),
-        total: totalPrice,
+        total: totalWithDelivery,
       });
       router.push(order.confirmationUrl);
     } catch {
@@ -116,6 +159,58 @@ export default function CheckoutPage() {
                 />
               </label>
             </div>
+            <h3 className="mt-6 text-lg font-semibold">Способ получения</h3>
+            {deliveryLoadError ? (
+              <p className="mt-3 text-sm text-red-600">{deliveryLoadError}</p>
+            ) : (
+              <div className="mt-4 grid gap-3">
+                {deliveryMethods.map((method) => (
+                  <label
+                    key={method.code}
+                    className="border-border-subtle flex cursor-pointer items-start gap-3 rounded-xl border p-3"
+                  >
+                    <input
+                      type="radio"
+                      name="deliveryMethod"
+                      className="mt-1"
+                      value={method.code}
+                      checked={deliveryMethodCode === method.code}
+                      onChange={(event) =>
+                        setDeliveryMethodCode(event.target.value)
+                      }
+                    />
+                    <span className="grid gap-1">
+                      <span className="text-sm font-medium">
+                        {method.title}
+                      </span>
+                      <span className="text-ink/65 text-sm">
+                        {method.price > 0
+                          ? formatRub(method.price)
+                          : "Бесплатно"}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            )}
+            {deliveryMethodCode === "pickup" &&
+            selectedDeliveryMethod?.pickupAddress ? (
+              <div className="border-border-subtle mt-4 rounded-xl border p-4 text-sm">
+                <div className="text-ink/60 mb-1">Адрес склада</div>
+                <div>{selectedDeliveryMethod.pickupAddress}</div>
+              </div>
+            ) : null}
+            {needsDeliveryAddress ? (
+              <label className="mt-4 grid gap-2 text-sm">
+                <span>Адрес доставки *</span>
+                <textarea
+                  className="border-border-strong min-h-24 rounded-xl border px-4 py-3 outline-none"
+                  value={deliveryAddress}
+                  onChange={(event) => setDeliveryAddress(event.target.value)}
+                  placeholder="Город, улица, дом, квартира"
+                />
+              </label>
+            ) : null}
             {error ? (
               <p className="mt-4 text-sm text-red-600">{error}</p>
             ) : null}
@@ -140,9 +235,19 @@ export default function CheckoutPage() {
               ))}
             </div>
             <div className="mt-5 border-t border-[#e3efeb] pt-4">
-              <div className="text-ink/65 text-sm">Итого</div>
-              <div className="text-pine text-3xl font-semibold">
+              <div className="text-ink/65 text-sm">Товары</div>
+              <div className="text-lg font-semibold">
                 {formatRub(totalPrice)}
+              </div>
+              <div className="text-ink/65 mt-3 text-sm">Способ получения</div>
+              <div className="text-lg font-semibold">
+                {selectedDeliveryMethod
+                  ? `${selectedDeliveryMethod.title}: ${formatRub(deliveryPrice)}`
+                  : "Не выбран"}
+              </div>
+              <div className="text-ink/65 mt-3 text-sm">Итого</div>
+              <div className="text-pine text-3xl font-semibold">
+                {formatRub(totalWithDelivery)}
               </div>
             </div>
           </Card>

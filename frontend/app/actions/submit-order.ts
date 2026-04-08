@@ -7,6 +7,8 @@ export type OrderPayload = {
   phone: string;
   email?: string;
   comment?: string;
+  deliveryMethodCode: string;
+  deliveryAddress?: string;
   itemsRaw: Array<{
     slug: string;
     title: string;
@@ -25,6 +27,8 @@ export async function submitOrder(
       phone: payload.phone,
       email: payload.email,
       comment: payload.comment,
+      deliveryMethodCode: payload.deliveryMethodCode,
+      deliveryAddress: payload.deliveryAddress,
     },
     payload.itemsRaw.map((item) => ({
       slug: item.slug,
