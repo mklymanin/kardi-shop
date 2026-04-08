@@ -25,6 +25,7 @@ export default function CheckoutPage() {
   const [deliveryMethods, setDeliveryMethods] = useState<DeliveryMethod[]>([]);
   const [deliveryMethodCode, setDeliveryMethodCode] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [couponCode, setCouponCode] = useState("");
   const [deliveryLoadError, setDeliveryLoadError] = useState<string | null>(
     null
   );
@@ -74,7 +75,7 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const order = await submitOrder({
+      const result = await submitOrder({
         customerName: customerName.trim(),
         phone: phone.trim(),
         email: email.trim() || undefined,
@@ -85,17 +86,24 @@ export default function CheckoutPage() {
           : undefined,
         itemsRaw: items.map((item) => ({
           slug: item.slug,
-          title: item.title,
           quantity: item.quantity,
-          price: item.priceValue,
         })),
-        total: totalWithDelivery,
+        couponCode: couponCode.trim() || undefined,
       });
-      router.push(order.confirmationUrl);
+
+      if (!result.success) {
+        setError(result.error.message);
+        return;
+      }
+
+      const confirmationUrl = result.order.confirmationUrl;
+      if (/^https?:\/\//i.test(confirmationUrl)) {
+        window.location.assign(confirmationUrl);
+        return;
+      }
+      router.push(confirmationUrl);
     } catch {
-      setError(
-        "Не удалось создать платёж. Проверьте настройки backend и YooKassa, затем попробуйте снова."
-      );
+      setError("Не удалось создать платёж. Попробуйте снова.");
     } finally {
       setSubmitting(false);
     }
@@ -211,6 +219,15 @@ export default function CheckoutPage() {
                 />
               </label>
             ) : null}
+            <label className="mt-4 grid gap-2 text-sm">
+              <span>Купон</span>
+              <input
+                className="border-border-strong h-11 rounded-xl border px-4 uppercase outline-none"
+                value={couponCode}
+                onChange={(event) => setCouponCode(event.target.value)}
+                placeholder="Например, SALE10"
+              />
+            </label>
             {error ? (
               <p className="mt-4 text-sm text-red-600">{error}</p>
             ) : null}
