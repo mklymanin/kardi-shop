@@ -35,6 +35,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "shop.kardi.ru",
       },
+      {
+        protocol: "https",
+        hostname: "*.media.strapiapp.com",
+      },
       strapiRemotePattern(),
     ],
   },
