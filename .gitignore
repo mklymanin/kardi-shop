@@ -19,3 +19,4 @@ docs/postgresql-migration-day2-report.txt
 docs/postgresql-migration-day2-report.docx
 docs/~$stgresql-migration-day2-report.docx
 .vercel
+*.tsbuildinfo
