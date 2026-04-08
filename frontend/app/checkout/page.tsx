@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useCart } from "@/components/cart/cart-provider";
 import { ButtonLink, Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PageContainer } from "@/components/ui/page-container";
 import { formatRub } from "@/lib/format";
-import { submitOrder } from "@/app/actions/submit-order";
+import { previewOrderPricing, submitOrder } from "@/app/actions/submit-order";
+import type { OrderPricingSnapshot } from "@/lib/orders";
 import {
   getActiveDeliveryMethods,
   type DeliveryMethod,
@@ -26,11 +27,18 @@ export default function CheckoutPage() {
   const [deliveryMethodCode, setDeliveryMethodCode] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [couponCode, setCouponCode] = useState("");
+  const [couponStatus, setCouponStatus] = useState<
+    "idle" | "typing" | "checking" | "valid" | "invalid"
+  >("idle");
+  const [couponMessage, setCouponMessage] = useState<string | null>(null);
+  const [pricingPreview, setPricingPreview] =
+    useState<OrderPricingSnapshot | null>(null);
   const [deliveryLoadError, setDeliveryLoadError] = useState<string | null>(
     null
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const couponRequestSeqRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +66,118 @@ export default function CheckoutPage() {
     deliveryMethodCode === "courier" || deliveryMethodCode === "russian_post";
   const deliveryPrice = selectedDeliveryMethod?.price ?? 0;
   const totalWithDelivery = totalPrice + deliveryPrice;
+  const normalizedCouponCode = couponCode.trim().toUpperCase();
+  const hasCoupon = normalizedCouponCode.length > 0;
+  const canQuoteOrder =
+    items.length > 0 &&
+    Boolean(deliveryMethodCode) &&
+    (!needsDeliveryAddress || deliveryAddress.trim().length > 5);
+  const itemsSignature = useMemo(
+    () =>
+      items
+        .map((item) => `${item.slug}:${item.quantity}`)
+        .sort()
+        .join("|"),
+    [items]
+  );
+
+  useEffect(() => {
+    if (!hasCoupon) {
+      setCouponStatus("idle");
+      setCouponMessage(null);
+      setPricingPreview(null);
+      return;
+    }
+
+    setPricingPreview(null);
+    setCouponMessage(null);
+
+    if (!canQuoteOrder) {
+      setCouponStatus("typing");
+      return;
+    }
+
+    setCouponStatus("typing");
+    const requestSeq = couponRequestSeqRef.current + 1;
+    couponRequestSeqRef.current = requestSeq;
+
+    const timeoutId = window.setTimeout(async () => {
+      setCouponStatus("checking");
+
+      const result = await previewOrderPricing({
+        customerName: customerName.trim() || "Покупатель",
+        phone: phone.trim() || "+70000000000",
+        email: email.trim() || undefined,
+        comment: comment.trim() || undefined,
+        deliveryMethodCode,
+        deliveryAddress: needsDeliveryAddress
+          ? deliveryAddress.trim() || undefined
+          : undefined,
+        itemsRaw: items.map((item) => ({
+          slug: item.slug,
+          quantity: item.quantity,
+        })),
+        couponCode: normalizedCouponCode,
+      });
+
+      if (couponRequestSeqRef.current !== requestSeq) {
+        return;
+      }
+
+      if (!result.success) {
+        setCouponStatus("invalid");
+        setCouponMessage(result.error.message);
+        setPricingPreview(null);
+        return;
+      }
+
+      if (!result.pricing.couponApplied) {
+        setCouponStatus("invalid");
+        setCouponMessage("Купон не применился к текущему заказу");
+        setPricingPreview(null);
+        return;
+      }
+
+      const discountLabel =
+        result.pricing.discountType === "percent" &&
+        typeof result.pricing.discountValue === "number"
+          ? `${result.pricing.discountValue}%`
+          : formatRub(result.pricing.discount);
+      setCouponStatus("valid");
+      setCouponMessage(`Купон применён. Скидка: ${discountLabel}`);
+      setPricingPreview(result.pricing);
+    }, 500);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    canQuoteOrder,
+    comment,
+    customerName,
+    deliveryAddress,
+    deliveryMethodCode,
+    email,
+    hasCoupon,
+    items,
+    itemsSignature,
+    needsDeliveryAddress,
+    normalizedCouponCode,
+    phone,
+  ]);
+
+  const couponBlocksSubmit =
+    hasCoupon &&
+    (couponStatus === "checking" ||
+      couponStatus === "typing" ||
+      couponStatus === "invalid" ||
+      couponStatus === "idle");
+  const subtotalBeforeDiscount =
+    pricingPreview?.subtotalBeforeDiscount ?? totalPrice;
+  const subtotalAfterDiscount =
+    pricingPreview?.subtotalAfterDiscount ?? totalPrice;
+  const discountAmount = pricingPreview?.discount ?? 0;
+  const totalWithCouponAndDelivery = pricingPreview?.total ?? totalWithDelivery;
 
   const isValid =
     customerName.trim().length > 1 &&
@@ -88,7 +208,7 @@ export default function CheckoutPage() {
           slug: item.slug,
           quantity: item.quantity,
         })),
-        couponCode: couponCode.trim() || undefined,
+        couponCode: normalizedCouponCode || undefined,
       });
 
       if (!result.success) {
@@ -224,16 +344,27 @@ export default function CheckoutPage() {
               <input
                 className="border-border-strong h-11 rounded-xl border px-4 uppercase outline-none"
                 value={couponCode}
-                onChange={(event) => setCouponCode(event.target.value)}
+                onChange={(event) =>
+                  setCouponCode(event.target.value.toUpperCase())
+                }
                 placeholder="Например, SALE10"
               />
             </label>
+            {couponStatus === "checking" ? (
+              <p className="text-ink/65 mt-2 text-sm">Проверяем купон...</p>
+            ) : null}
+            {couponStatus === "invalid" && couponMessage ? (
+              <p className="mt-2 text-sm text-red-600">{couponMessage}</p>
+            ) : null}
+            {couponStatus === "valid" && couponMessage ? (
+              <p className="mt-2 text-sm text-green-700">{couponMessage}</p>
+            ) : null}
             {error ? (
               <p className="mt-4 text-sm text-red-600">{error}</p>
             ) : null}
             <Button
               type="submit"
-              disabled={!isValid || submitting}
+              disabled={!isValid || submitting || couponBlocksSubmit}
               className="mt-6"
             >
               {submitting ? "Переходим к оплате..." : "Перейти к оплате"}
@@ -254,8 +385,24 @@ export default function CheckoutPage() {
             <div className="mt-5 border-t border-[#e3efeb] pt-4">
               <div className="text-ink/65 text-sm">Товары</div>
               <div className="text-lg font-semibold">
-                {formatRub(totalPrice)}
+                {formatRub(subtotalBeforeDiscount)}
               </div>
+              {discountAmount > 0 ? (
+                <>
+                  <div className="text-ink/65 mt-3 text-sm">
+                    Скидка по купону
+                  </div>
+                  <div className="text-lg font-semibold text-green-700">
+                    -{formatRub(discountAmount)}
+                  </div>
+                  <div className="text-ink/65 mt-3 text-sm">
+                    Товары со скидкой
+                  </div>
+                  <div className="text-lg font-semibold">
+                    {formatRub(subtotalAfterDiscount)}
+                  </div>
+                </>
+              ) : null}
               <div className="text-ink/65 mt-3 text-sm">Способ получения</div>
               <div className="text-lg font-semibold">
                 {selectedDeliveryMethod
@@ -264,7 +411,7 @@ export default function CheckoutPage() {
               </div>
               <div className="text-ink/65 mt-3 text-sm">Итого</div>
               <div className="text-pine text-3xl font-semibold">
-                {formatRub(totalWithDelivery)}
+                {formatRub(totalWithCouponAndDelivery)}
               </div>
             </div>
           </Card>

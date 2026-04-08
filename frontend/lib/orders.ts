@@ -66,11 +66,33 @@ type CheckoutStartResponse = {
   confirmationUrl: string;
   pricingSnapshot: {
     subtotal: number;
+    subtotalBeforeDiscount?: number;
+    subtotalAfterDiscount?: number;
     delivery: number;
     discount: number;
     total: number;
     couponApplied: boolean;
+    couponCode?: string | null;
+    discountType?: "percent" | "fixed" | null;
+    discountValue?: number | null;
   };
+};
+
+export type OrderPricingSnapshot = {
+  subtotal: number;
+  subtotalBeforeDiscount: number;
+  subtotalAfterDiscount: number;
+  delivery: number;
+  discount: number;
+  total: number;
+  couponApplied: boolean;
+  couponCode: string | null;
+  discountType: "percent" | "fixed" | null;
+  discountValue: number | null;
+};
+
+type CheckoutQuoteResponse = {
+  pricingSnapshot: CheckoutStartResponse["pricingSnapshot"];
 };
 
 type CheckoutErrorPayload = {
@@ -187,6 +209,68 @@ export async function startOrderPayment(
   return {
     orderId: data.orderId,
     confirmationUrl: data.confirmationUrl,
+  };
+}
+
+export async function quoteOrderPayment(
+  customer: OrderCustomerInput,
+  items: CheckoutItemInput[]
+): Promise<OrderPricingSnapshot> {
+  const response = await fetch(`${STRAPI_URL}/api/checkout/quote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      customerName: customer.customerName,
+      phone: customer.phone,
+      email: customer.email,
+      comment: customer.comment,
+      deliveryMethodCode: customer.deliveryMethodCode,
+      deliveryAddress: customer.deliveryAddress,
+      couponCode: customer.couponCode,
+      items,
+    }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = (await response
+      .json()
+      .catch(() => ({}))) as CheckoutErrorPayload;
+    throw new CheckoutStartError(
+      body?.error?.message || "Не удалось рассчитать заказ",
+      body?.error?.details?.code
+    );
+  }
+
+  const data = (await response.json()) as CheckoutQuoteResponse;
+  const snapshot = data?.pricingSnapshot;
+  if (!snapshot) {
+    throw new CheckoutStartError("Backend вернул некорректный ответ");
+  }
+
+  const subtotalBeforeDiscount = toNumericPrice(
+    snapshot.subtotalBeforeDiscount ?? snapshot.subtotal
+  );
+  const subtotalAfterDiscount = toNumericPrice(
+    snapshot.subtotalAfterDiscount ?? subtotalBeforeDiscount - snapshot.discount
+  );
+
+  return {
+    subtotal: toNumericPrice(snapshot.subtotal),
+    subtotalBeforeDiscount,
+    subtotalAfterDiscount,
+    delivery: toNumericPrice(snapshot.delivery),
+    discount: toNumericPrice(snapshot.discount),
+    total: toNumericPrice(snapshot.total),
+    couponApplied: Boolean(snapshot.couponApplied),
+    couponCode: snapshot.couponCode ?? null,
+    discountType: snapshot.discountType ?? null,
+    discountValue:
+      typeof snapshot.discountValue === "number"
+        ? toNumericPrice(snapshot.discountValue)
+        : null,
   };
 }
 
