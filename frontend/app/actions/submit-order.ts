@@ -7,7 +7,7 @@ import { quoteOrderPayment, type OrderPricingSnapshot } from "@/lib/orders";
 export type OrderPayload = {
   customerName: string;
   phone: string;
-  email?: string;
+  email: string;
   comment?: string;
   deliveryMethodCode: string;
   deliveryAddress?: string;
@@ -21,7 +21,11 @@ export type OrderPayload = {
 export type SubmitOrderResult =
   | {
       success: true;
-      order: { id: number | string; confirmationUrl: string };
+      order: {
+        id: number | string;
+        resumeToken: string;
+        confirmationUrl: string;
+      };
     }
   | {
       success: false;
@@ -62,6 +66,7 @@ export async function submitOrder(
       success: true,
       order: {
         id: result.orderId,
+        resumeToken: result.resumeToken,
         confirmationUrl: result.confirmationUrl,
       },
     };

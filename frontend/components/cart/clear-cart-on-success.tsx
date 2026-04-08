@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 import { useCart } from "@/components/cart/cart-provider";
+import { clearPendingOrder } from "@/lib/pending-order";
 
 export function ClearCartOnSuccess() {
   const { clearCart } = useCart();
@@ -18,6 +19,7 @@ export function ClearCartOnSuccess() {
     }
 
     clearCart();
+    clearPendingOrder();
 
     if (orderId) {
       sessionStorage.setItem(flagKey, orderId);

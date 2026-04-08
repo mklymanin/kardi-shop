@@ -17,7 +17,7 @@ export type CheckoutItemInput = {
 export type OrderCustomerInput = {
   customerName: string;
   phone: string;
-  email?: string;
+  email: string;
   comment?: string;
   deliveryMethodCode: string;
   deliveryAddress?: string;
@@ -63,6 +63,7 @@ type StrapiOrder = {
 
 type CheckoutStartResponse = {
   orderId: number | string;
+  resumeToken: string;
   confirmationUrl: string;
   pricingSnapshot: {
     subtotal: number;
@@ -93,6 +94,17 @@ export type OrderPricingSnapshot = {
 
 type CheckoutQuoteResponse = {
   pricingSnapshot: CheckoutStartResponse["pricingSnapshot"];
+};
+
+type CheckoutResumeResponse = {
+  orderId: number | string;
+  paymentStatus:
+    | "pending"
+    | "waiting_for_capture"
+    | "paid"
+    | "canceled"
+    | "failed";
+  confirmationUrl: string | null;
 };
 
 type CheckoutErrorPayload = {
@@ -202,12 +214,47 @@ export async function startOrderPayment(
   }
 
   const data = (await response.json()) as CheckoutStartResponse;
-  if (!data?.orderId || !data?.confirmationUrl) {
+  if (!data?.orderId || !data?.confirmationUrl || !data?.resumeToken) {
     throw new CheckoutStartError("Backend вернул некорректный ответ");
   }
 
   return {
     orderId: data.orderId,
+    resumeToken: data.resumeToken,
+    confirmationUrl: data.confirmationUrl,
+  };
+}
+
+export async function resumeOrderPayment(resumeToken: string) {
+  const response = await fetch(`${STRAPI_URL}/api/checkout/resume`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      resumeToken,
+    }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = (await response
+      .json()
+      .catch(() => ({}))) as CheckoutErrorPayload;
+    throw new CheckoutStartError(
+      body?.error?.message || "Не удалось возобновить оплату",
+      body?.error?.details?.code
+    );
+  }
+
+  const data = (await response.json()) as CheckoutResumeResponse;
+  if (!data?.orderId) {
+    throw new CheckoutStartError("Backend вернул некорректный ответ");
+  }
+
+  return {
+    orderId: data.orderId,
+    paymentStatus: data.paymentStatus,
     confirmationUrl: data.confirmationUrl,
   };
 }

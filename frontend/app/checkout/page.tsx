@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -10,7 +9,16 @@ import { Card } from "@/components/ui/card";
 import { PageContainer } from "@/components/ui/page-container";
 import { formatRub } from "@/lib/format";
 import { previewOrderPricing, submitOrder } from "@/app/actions/submit-order";
-import type { OrderPricingSnapshot } from "@/lib/orders";
+import {
+  resumeOrderPayment,
+  type OrderPricingSnapshot,
+  CheckoutStartError,
+} from "@/lib/orders";
+import {
+  clearPendingOrder,
+  getPendingOrder,
+  setPendingOrder,
+} from "@/lib/pending-order";
 import {
   getActiveDeliveryMethods,
   type DeliveryMethod,
@@ -37,8 +45,14 @@ export default function CheckoutPage() {
     null
   );
   const [submitting, setSubmitting] = useState(false);
+  const [resumingPayment, setResumingPayment] = useState(false);
+  const [resumeOrderId, setResumeOrderId] = useState<string | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+  const [resumeError, setResumeError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const couponRequestSeqRef = useRef(0);
+  const emailTrimmed = email.trim();
+  const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,7 +85,46 @@ export default function CheckoutPage() {
   const canQuoteOrder =
     items.length > 0 &&
     Boolean(deliveryMethodCode) &&
+    emailIsValid &&
     (!needsDeliveryAddress || deliveryAddress.trim().length > 5);
+  useEffect(() => {
+    const pending = getPendingOrder();
+    if (!pending) {
+      return;
+    }
+
+    let cancelled = false;
+    setResumingPayment(true);
+    resumeOrderPayment(pending.resumeToken)
+      .then((result) => {
+        if (cancelled) return;
+        if (result.paymentStatus === "paid" || !result.confirmationUrl) {
+          clearPendingOrder();
+          return;
+        }
+        setResumeOrderId(String(result.orderId));
+        setResumeUrl(result.confirmationUrl);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        clearPendingOrder();
+        if (err instanceof CheckoutStartError) {
+          setResumeError(err.message);
+          return;
+        }
+        setResumeError("Не удалось восстановить неоплаченный заказ");
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setResumingPayment(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const itemsSignature = useMemo(
     () =>
       items
@@ -107,7 +160,7 @@ export default function CheckoutPage() {
       const result = await previewOrderPricing({
         customerName: customerName.trim() || "Покупатель",
         phone: phone.trim() || "+70000000000",
-        email: email.trim() || undefined,
+        email: emailTrimmed || "customer@example.com",
         comment: comment.trim() || undefined,
         deliveryMethodCode,
         deliveryAddress: needsDeliveryAddress
@@ -182,6 +235,7 @@ export default function CheckoutPage() {
   const isValid =
     customerName.trim().length > 1 &&
     phone.trim().length > 4 &&
+    emailIsValid &&
     items.length > 0 &&
     Boolean(deliveryMethodCode) &&
     (!needsDeliveryAddress || deliveryAddress.trim().length > 5);
@@ -198,7 +252,7 @@ export default function CheckoutPage() {
       const result = await submitOrder({
         customerName: customerName.trim(),
         phone: phone.trim(),
-        email: email.trim() || undefined,
+        email: emailTrimmed,
         comment: comment.trim() || undefined,
         deliveryMethodCode,
         deliveryAddress: needsDeliveryAddress
@@ -217,6 +271,11 @@ export default function CheckoutPage() {
       }
 
       const confirmationUrl = result.order.confirmationUrl;
+      setPendingOrder({
+        orderId: String(result.order.id),
+        resumeToken: result.order.resumeToken,
+        createdAt: new Date().toISOString(),
+      });
       if (/^https?:\/\//i.test(confirmationUrl)) {
         window.location.assign(confirmationUrl);
         return;
@@ -232,6 +291,36 @@ export default function CheckoutPage() {
   return (
     <PageContainer size="md">
       <h1 className="text-4xl font-semibold">Оформление заказа</h1>
+      {resumeUrl ? (
+        <Card className="mt-6 rounded-3xl">
+          <p className="text-ink/70">
+            У вас есть неоплаченный заказ{" "}
+            {resumeOrderId ? (
+              <span className="font-semibold">#{resumeOrderId}</span>
+            ) : null}
+            .
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button
+              type="button"
+              onClick={() => window.location.assign(resumeUrl)}
+              disabled={resumingPayment}
+            >
+              Продолжить оплату
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={clearPendingOrder}
+            >
+              Оформить новый заказ
+            </Button>
+          </div>
+        </Card>
+      ) : null}
+      {!resumeUrl && resumeError ? (
+        <p className="mt-4 text-sm text-red-600">{resumeError}</p>
+      ) : null}
       {items.length === 0 ? (
         <Card className="mt-6 rounded-3xl">
           <p className="text-ink/70">
@@ -268,7 +357,7 @@ export default function CheckoutPage() {
                 />
               </label>
               <label className="grid gap-2 text-sm">
-                <span>Email</span>
+                <span>Email *</span>
                 <input
                   className="border-border-strong h-11 rounded-xl border px-4 outline-none"
                   value={email}
@@ -277,6 +366,11 @@ export default function CheckoutPage() {
                   type="email"
                 />
               </label>
+              {email && !emailIsValid ? (
+                <p className="text-sm text-red-600">
+                  Укажите корректный email для получения информации о заказе.
+                </p>
+              ) : null}
               <label className="grid gap-2 text-sm">
                 <span>Комментарий</span>
                 <textarea

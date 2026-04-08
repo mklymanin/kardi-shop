@@ -1,20 +1,94 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { useCart } from "@/components/cart/cart-provider";
-import { ButtonLink } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PageContainer } from "@/components/ui/page-container";
 import { formatRub } from "@/lib/format";
+import { CheckoutStartError, resumeOrderPayment } from "@/lib/orders";
+import { clearPendingOrder, getPendingOrder } from "@/lib/pending-order";
 
 export default function CartPage() {
   const { items, totalItems, totalPrice, setQuantity, removeItem, clearCart } =
     useCart();
+  const [resumingPayment, setResumingPayment] = useState(false);
+  const [resumeOrderId, setResumeOrderId] = useState<string | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+  const [resumeError, setResumeError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const pending = getPendingOrder();
+    if (!pending) {
+      return;
+    }
+
+    let cancelled = false;
+    setResumingPayment(true);
+    resumeOrderPayment(pending.resumeToken)
+      .then((result) => {
+        if (cancelled) return;
+        if (result.paymentStatus === "paid" || !result.confirmationUrl) {
+          clearPendingOrder();
+          return;
+        }
+        setResumeOrderId(String(result.orderId));
+        setResumeUrl(result.confirmationUrl);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        clearPendingOrder();
+        if (err instanceof CheckoutStartError) {
+          setResumeError(err.message);
+          return;
+        }
+        setResumeError("Не удалось восстановить неоплаченный заказ");
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setResumingPayment(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <PageContainer size="md">
       <h1 className="text-4xl font-semibold">Корзина</h1>
+      {resumeUrl ? (
+        <Card className="mt-6 rounded-3xl">
+          <p className="text-ink/70">
+            У вас есть неоплаченный заказ{" "}
+            {resumeOrderId ? (
+              <span className="font-semibold">#{resumeOrderId}</span>
+            ) : null}
+            .
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button
+              type="button"
+              disabled={resumingPayment}
+              onClick={() => window.location.assign(resumeUrl)}
+            >
+              Продолжить оплату
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={clearPendingOrder}
+            >
+              Оформить новый заказ
+            </Button>
+          </div>
+        </Card>
+      ) : null}
+      {!resumeUrl && resumeError ? (
+        <p className="mt-4 text-sm text-red-600">{resumeError}</p>
+      ) : null}
       {items.length === 0 ? (
         <Card className="mt-6 rounded-3xl">
           <p className="text-ink/70">
