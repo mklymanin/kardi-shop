@@ -8,23 +8,91 @@ import {
   toProductPrice,
 } from "./helpers";
 
+function extractTextFromRichValue(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (!Array.isArray(value)) {
+    return "";
+  }
+
+  const chunks: string[] = [];
+
+  for (const node of value) {
+    if (!node || typeof node !== "object") {
+      continue;
+    }
+
+    const nodeRecord = node as Record<string, unknown>;
+    const children = nodeRecord.children;
+
+    if (!Array.isArray(children)) {
+      continue;
+    }
+
+    const line = children
+      .map((child) => {
+        if (!child || typeof child !== "object") {
+          return "";
+        }
+        return String((child as Record<string, unknown>).text ?? "");
+      })
+      .join("")
+      .trim();
+
+    if (line) {
+      chunks.push(line);
+    }
+  }
+
+  return chunks.join("\n\n");
+}
+
+function normalizeText(value: string): string {
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractCategory(item: Record<string, unknown>): {
+  title: string;
+  slug: string;
+} {
+  if (typeof item.category !== "object" || !item.category) {
+    return { title: "Без категории", slug: "" };
+  }
+
+  const category = item.category as Record<string, unknown>;
+  return {
+    title: String(category.title ?? "Без категории"),
+    slug: String(category.slug ?? ""),
+  };
+}
+
 function strapiItemToProduct(
   item: Record<string, unknown> & { id: number }
 ): Product {
+  const category = extractCategory(item);
+  const rawDescription = extractTextFromRichValue(item.description);
+  const fallbackDescription = extractTextFromRichValue(item.excerpt);
+  const description = normalizeText(rawDescription || fallbackDescription);
+
   return {
     id: item.id,
     slug: String(item.slug ?? `product-${item.id}`),
     title: String(item.title ?? "Без названия"),
-    subtitle: String(item.excerpt ?? item.description ?? ""),
+    subtitle: description,
+    description: rawDescription || fallbackDescription || undefined,
     priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
     imageUrl: extractMediaUrl(item.image),
-    category:
-      typeof item.category === "object" && item.category
-        ? String(
-            (item.category as Record<string, unknown>).title ?? "Без категории"
-          )
-        : "Без категории",
+    category: category.title,
+    categorySlug: category.slug || undefined,
+    seoTitle: normalizeText(String(item.seoTitle ?? "")) || undefined,
+    seoDescription:
+      normalizeText(String(item.seoDescription ?? "")) || undefined,
   };
 }
 
@@ -82,4 +150,19 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   }
 
   return strapiItemToProduct(item);
+}
+
+export async function getRelatedProducts(
+  categorySlug: string,
+  excludeSlug: string,
+  limit = 3
+): Promise<Product[]> {
+  if (!categorySlug) {
+    return [];
+  }
+
+  const sectionProducts = await getProductsBySection(categorySlug);
+  return sectionProducts
+    .filter((product) => product.slug !== excludeSlug)
+    .slice(0, Math.max(0, limit));
 }
