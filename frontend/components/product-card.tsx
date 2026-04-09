@@ -29,7 +29,7 @@ export function ProductCard({ product }: { product: Product }) {
           {product.title}
         </h3>
         <p className="text-ink/68 mt-3 min-h-16 text-sm leading-6">
-          {product.subtitle}
+          {product.excerpt ?? product.subtitle}
         </p>
         <div className="mt-6 flex items-center justify-between gap-3">
           <div>

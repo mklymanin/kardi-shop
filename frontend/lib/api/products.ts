@@ -76,15 +76,16 @@ function strapiItemToProduct(
 ): Product {
   const category = extractCategory(item);
   const rawDescription = extractTextFromRichValue(item.description);
-  const fallbackDescription = extractTextFromRichValue(item.excerpt);
-  const description = normalizeText(rawDescription || fallbackDescription);
+  const rawExcerpt = extractTextFromRichValue(item.excerpt);
+  const subtitle = normalizeText(rawExcerpt || rawDescription);
 
   return {
     id: item.id,
     slug: String(item.slug ?? `product-${item.id}`),
     title: String(item.title ?? "Без названия"),
-    subtitle: description,
-    description: rawDescription || fallbackDescription || undefined,
+    subtitle,
+    excerpt: rawExcerpt || undefined,
+    description: rawDescription || undefined,
     priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
     imageUrl: extractMediaUrl(item.image),
