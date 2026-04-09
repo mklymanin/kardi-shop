@@ -3,6 +3,7 @@ import type { Product } from "@/lib/site-data";
 import { fetchFromStrapi, type StrapiListResponse } from "./strapi-client";
 import {
   extractMediaUrl,
+  extractMediaUrls,
   normalizeItems,
   toNumericPrice,
   toProductPrice,
@@ -79,6 +80,14 @@ function strapiItemToProduct(
   const rawExcerpt = extractTextFromRichValue(item.excerpt);
   const subtitle = normalizeText(rawExcerpt || rawDescription);
 
+  const imageUrls = Array.from(
+    new Set([
+      ...extractMediaUrls(item.gallery),
+      ...extractMediaUrls(item.images),
+      ...extractMediaUrls(item.image),
+    ])
+  );
+
   return {
     id: item.id,
     slug: String(item.slug ?? `product-${item.id}`),
@@ -88,7 +97,8 @@ function strapiItemToProduct(
     description: rawDescription || undefined,
     priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
-    imageUrl: extractMediaUrl(item.image),
+    imageUrl: imageUrls[0] ?? extractMediaUrl(item.image),
+    imageUrls: imageUrls.length ? imageUrls : undefined,
     category: category.title,
     categorySlug: category.slug || undefined,
     seoTitle: normalizeText(String(item.seoTitle ?? "")) || undefined,
@@ -99,7 +109,7 @@ function strapiItemToProduct(
 
 export async function getProducts(): Promise<Product[]> {
   const payload = await fetchFromStrapi<StrapiListResponse<any>>(
-    "/api/products?populate[0]=category&populate[1]=image&sort=createdAt:desc&status=published"
+    "/api/products?populate[0]=category&populate[1]=image&populate[2]=gallery&populate[3]=images&sort=createdAt:desc&status=published"
   );
   const items = normalizeItems(payload);
 
@@ -110,7 +120,7 @@ export async function getProductsBySection(
   sectionSlug: string
 ): Promise<Product[]> {
   const payload = await fetchFromStrapi<StrapiListResponse<any>>(
-    `/api/products?filters[category][slug][$eq]=${encodeURIComponent(sectionSlug)}&populate[0]=category&populate[1]=image&sort=createdAt:desc&status=published`
+    `/api/products?filters[category][slug][$eq]=${encodeURIComponent(sectionSlug)}&populate[0]=category&populate[1]=image&populate[2]=gallery&populate[3]=images&sort=createdAt:desc&status=published`
   );
   return normalizeItems(payload).map(strapiItemToProduct);
 }
@@ -142,7 +152,7 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   const payload = await fetchFromStrapi<StrapiListResponse<any>>(
-    `/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[0]=category&populate[1]=image&status=published`
+    `/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[0]=category&populate[1]=image&populate[2]=gallery&populate[3]=images&status=published`
   );
   const item = normalizeItems(payload)[0];
 

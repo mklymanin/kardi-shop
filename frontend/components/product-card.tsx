@@ -1,24 +1,26 @@
 import Link from "next/link";
-import Image from "next/image";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { ProductImageCarousel } from "@/components/product-image-carousel";
 import type { Product } from "@/lib/site-data";
 
 export function ProductCard({ product }: { product: Product }) {
+  const productImages =
+    product.imageUrls && product.imageUrls.length > 0
+      ? product.imageUrls
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
+
   return (
-    <article className="border-border-soft bg-surface overflow-hidden rounded-[24px] border shadow-[0_18px_40px_rgba(16,33,43,0.06)]">
-      {product.imageUrl ? (
-        <div className="bg-surface-accent relative h-48 w-full">
-          <Image
-            src={product.imageUrl}
-            alt={product.title}
-            fill
-            className="object-cover"
-          />
-        </div>
-      ) : (
-        <div className="bg-surface-accent h-48 w-full" />
-      )}
+    <article className="group border-border-soft bg-surface overflow-hidden rounded-[24px] border shadow-[0_18px_40px_rgba(16,33,43,0.06)]">
+      <div className="h-48 w-full">
+        <ProductImageCarousel
+          images={productImages}
+          title={product.title}
+          controlsOnHover
+        />
+      </div>
       <div className="bg-surface-accent px-6 py-4">
         <div className="text-pine text-xs uppercase tracking-[0.22em]">
           {product.category}

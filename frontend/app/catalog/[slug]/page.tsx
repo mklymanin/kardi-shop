@@ -1,10 +1,10 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ProductCard } from "@/components/product-card";
+import { ProductImageCarousel } from "@/components/product-image-carousel";
 import { getProductBySlug, getRelatedProducts } from "@/lib/api/products";
 
 type ProductPageParams = {
@@ -74,6 +74,12 @@ export async function generateMetadata({
 
   const description =
     product.seoDescription || product.subtitle || "Товар из каталога КардиРу";
+  const productImages =
+    product.imageUrls && product.imageUrls.length > 0
+      ? product.imageUrls
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
 
   return {
     title: product.seoTitle || product.title,
@@ -81,7 +87,9 @@ export async function generateMetadata({
     openGraph: {
       title: product.seoTitle || product.title,
       description,
-      images: product.imageUrl ? [{ url: product.imageUrl }] : undefined,
+      images: productImages.length
+        ? productImages.map((url) => ({ url }))
+        : undefined,
       type: "website",
     },
   };
@@ -94,6 +102,13 @@ export default async function ProductPage({ params }: ProductPageParams) {
   if (!product) {
     notFound();
   }
+
+  const productImages =
+    product.imageUrls && product.imageUrls.length > 0
+      ? product.imageUrls
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
 
   const relatedProducts = product.categorySlug
     ? await getRelatedProducts(product.categorySlug, product.slug, 3)
@@ -117,7 +132,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
     "@type": "Product",
     name: product.title,
     description: product.seoDescription || product.subtitle,
-    image: product.imageUrl ? [product.imageUrl] : undefined,
+    image: productImages.length ? productImages : undefined,
     category: product.category,
     sku: product.slug,
     offers: {
@@ -154,16 +169,12 @@ export default async function ProductPage({ params }: ProductPageParams) {
         ) : null}
         <div className="mt-8 grid gap-8 lg:grid-cols-2 lg:items-start">
           <div className="bg-surface-accent relative aspect-[4/5] w-full overflow-hidden rounded-[28px]">
-            {product.imageUrl ? (
-              <Image
-                src={product.imageUrl}
-                alt={product.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            ) : null}
+            <ProductImageCarousel
+              images={productImages}
+              title={product.title}
+              priorityFirst
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
           </div>
           <div className="grid gap-8 md:grid-cols-[1fr_320px] lg:grid-cols-1">
             <div className="text-ink/80 space-y-4 text-sm leading-7">

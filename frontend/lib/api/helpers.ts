@@ -59,6 +59,47 @@ export function extractMediaUrl(media: unknown): string | undefined {
   return undefined;
 }
 
+export function extractMediaUrls(media: unknown): string[] {
+  if (!media) {
+    return [];
+  }
+
+  if (Array.isArray(media)) {
+    return Array.from(
+      new Set(
+        media
+          .map((item) => extractMediaUrl(item))
+          .filter((url): url is string => Boolean(url))
+      )
+    );
+  }
+
+  if (typeof media !== "object") {
+    return [];
+  }
+
+  const record = media as Record<string, unknown>;
+  const data = record.data;
+
+  if (Array.isArray(data)) {
+    return Array.from(
+      new Set(
+        data
+          .map((item) => extractMediaUrl(item))
+          .filter((url): url is string => Boolean(url))
+      )
+    );
+  }
+
+  if (data && typeof data === "object") {
+    const single = extractMediaUrl(data);
+    return single ? [single] : [];
+  }
+
+  const single = extractMediaUrl(media);
+  return single ? [single] : [];
+}
+
 export function normalizeItems<T extends Record<string, unknown>>(
   payload: StrapiListResponse<T> | null
 ): Array<T & { id: number }> {

@@ -10,6 +10,7 @@ export type Product = {
   category: string;
   categorySlug?: string;
   imageUrl?: string;
+  imageUrls?: string[];
   seoTitle?: string;
   seoDescription?: string;
 };
