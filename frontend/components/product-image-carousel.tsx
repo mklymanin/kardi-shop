@@ -64,13 +64,13 @@ export function ProductImageCarousel({
       className={cn("bg-surface-accent h-full w-full", className)}
       opts={{ loop: true }}
     >
-      <CarouselContent className="-ml-0">
+      <CarouselContent className="-ml-0 h-full">
         {normalizedImages.map((imageUrl, index) => (
           <CarouselItem
             key={`${imageUrl}-${index}`}
-            className={cn("pl-0", slideClassName)}
+            className={cn("h-full pl-0", slideClassName)}
           >
-            <div className="relative h-full w-full">
+            <div className="relative h-full min-h-full w-full">
               <Image
                 src={imageUrl}
                 alt={`${title} — изображение ${index + 1}`}
