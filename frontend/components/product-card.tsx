@@ -13,7 +13,7 @@ export function ProductCard({ product }: { product: Product }) {
         : [];
 
   return (
-    <article className="group border-border-soft bg-surface overflow-hidden rounded-[24px] border shadow-[0_18px_40px_rgba(16,33,43,0.06)]">
+    <article className="border-border-soft bg-surface group overflow-hidden rounded-[24px] border shadow-[0_18px_40px_rgba(16,33,43,0.06)]">
       <div className="h-48 w-full">
         <ProductImageCarousel
           images={productImages}

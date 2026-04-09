@@ -33,7 +33,9 @@ export function ProductImageCarousel({
   controlsOnHover = false,
 }: ProductImageCarouselProps) {
   const normalizedImages = Array.from(
-    new Set((images ?? []).filter((src) => typeof src === "string" && src.trim()))
+    new Set(
+      (images ?? []).filter((src) => typeof src === "string" && src.trim())
+    )
   );
 
   if (normalizedImages.length === 0) {
@@ -42,7 +44,9 @@ export function ProductImageCarousel({
 
   if (normalizedImages.length === 1) {
     return (
-      <div className={cn("bg-surface-accent relative h-full w-full", className)}>
+      <div
+        className={cn("bg-surface-accent relative h-full w-full", className)}
+      >
         <Image
           src={normalizedImages[0]}
           alt={title}
@@ -62,7 +66,10 @@ export function ProductImageCarousel({
     >
       <CarouselContent className="-ml-0">
         {normalizedImages.map((imageUrl, index) => (
-          <CarouselItem key={`${imageUrl}-${index}`} className={cn("pl-0", slideClassName)}>
+          <CarouselItem
+            key={`${imageUrl}-${index}`}
+            className={cn("pl-0", slideClassName)}
+          >
             <div className="relative h-full w-full">
               <Image
                 src={imageUrl}
@@ -80,14 +87,14 @@ export function ProductImageCarousel({
         className={cn(
           "left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm",
           controlsOnHover &&
-            "pointer-events-none opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
+            "pointer-events-none opacity-0 transition-opacity group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
         )}
       />
       <CarouselNext
         className={cn(
           "right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm",
           controlsOnHover &&
-            "pointer-events-none opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
+            "pointer-events-none opacity-0 transition-opacity group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
         )}
       />
     </Carousel>
