@@ -64,7 +64,9 @@ const config: Config = {
         3: "3px",
       },
       fontFamily: {
-        sans: ["var(--font-manrope)", "sans-serif"],
+        sans: ["var(--font-sans)", "sans-serif"],
+        display: ["var(--font-display)", "sans-serif"],
+        nav: ["var(--font-nav)", "sans-serif"],
       },
     },
   },
