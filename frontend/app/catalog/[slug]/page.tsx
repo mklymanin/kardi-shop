@@ -158,7 +158,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
       />
       <div className="rounded-[36px] bg-white/80 p-8 shadow-sm">
         <Breadcrumbs items={breadcrumbs} />
-        <div className="text-pine text-sm uppercase tracking-[0.3em]">
+        <div className="text-pine pt-4 text-sm uppercase tracking-[0.3em]">
           {product.category}
         </div>
         <h1 className="mt-3 text-4xl font-semibold">{product.title}</h1>
@@ -193,7 +193,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
           <h2 className="text-ink text-3xl font-semibold">
             Еще из этого раздела
           </h2>
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
+          <div className="mt-6 grid auto-rows-fr gap-5 md:grid-cols-3">
             {relatedProducts.map((relatedProduct) => (
               <ProductCard key={relatedProduct.id} product={relatedProduct} />
             ))}

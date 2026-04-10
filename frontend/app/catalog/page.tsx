@@ -55,7 +55,7 @@ export default async function CatalogPage({
       </nav>
 
       {products.length > 0 ? (
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid auto-rows-fr gap-5 md:grid-cols-3">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
