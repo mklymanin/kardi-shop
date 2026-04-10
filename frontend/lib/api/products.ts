@@ -66,8 +66,10 @@ function extractCategory(item: Record<string, unknown>): {
   }
 
   const category = item.category as Record<string, unknown>;
+  const seoTitle =
+    typeof category.seoTitle === "string" ? category.seoTitle.trim() : "";
   return {
-    title: String(category.title ?? "Без категории"),
+    title: seoTitle || String(category.title ?? "Без категории"),
     slug: String(category.slug ?? ""),
   };
 }
