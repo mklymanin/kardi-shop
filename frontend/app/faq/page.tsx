@@ -1,13 +1,14 @@
 import { getFaqItems } from "@/lib/api/faq";
 import { FaqAccordion } from "@/components/faq/faq-accordion";
+import { Container } from "@/components/ui/container";
 
 export default async function FaqPage() {
   const faqItems = await getFaqItems();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
+    <Container className="max-w-5xl py-12">
       <div className="mb-8">
-        <div className="text-pine text-sm uppercase tracking-[0.24em]">
+        <div className="text-pine text-sm tracking-[0.24em] uppercase">
           Вопрос-ответ
         </div>
         <h1 className="mt-2 text-4xl font-semibold">
@@ -25,6 +26,6 @@ export default async function FaqPage() {
       ) : (
         <FaqAccordion items={faqItems} />
       )}
-    </div>
+    </Container>
   );
 }

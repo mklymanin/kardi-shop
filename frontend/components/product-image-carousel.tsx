@@ -135,7 +135,7 @@ function ProductImageCarouselWithDots({
         ))}
       </CarouselContent>
       <div
-        className="pointer-events-none absolute bottom-2.5 left-0 right-0 z-10 flex justify-center gap-1.5 px-3"
+        className="pointer-events-none absolute right-0 bottom-2.5 left-0 z-10 flex justify-center gap-1.5 px-3"
         aria-label="Навигация по изображениям"
       >
         {normalizedImages.map((_, index) => (
@@ -156,14 +156,14 @@ function ProductImageCarouselWithDots({
       </div>
       <CarouselPrevious
         className={cn(
-          "left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm",
+          "top-1/2 left-3 -translate-y-1/2 bg-white/90 backdrop-blur-sm",
           controlsOnHover &&
             "pointer-events-none opacity-0 transition-opacity group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
         )}
       />
       <CarouselNext
         className={cn(
-          "right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm",
+          "top-1/2 right-3 -translate-y-1/2 bg-white/90 backdrop-blur-sm",
           controlsOnHover &&
             "pointer-events-none opacity-0 transition-opacity group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
         )}

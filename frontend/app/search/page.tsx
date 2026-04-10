@@ -1,4 +1,5 @@
 import { ProductCard } from "@/components/product-card";
+import { Container } from "@/components/ui/container";
 import { getProducts } from "@/lib/api/products";
 import {
   filterProductsByQuery,
@@ -19,9 +20,9 @@ export default async function SearchPage({
     : [];
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12">
+    <Container className="py-12">
       <div className="mb-8">
-        <div className="text-rust text-sm uppercase tracking-[0.3em]">
+        <div className="text-rust text-sm tracking-[0.3em] uppercase">
           Поиск
         </div>
         <h1 className="mt-2 text-4xl font-semibold">
@@ -43,6 +44,6 @@ export default async function SearchPage({
           ))}
         </div>
       ) : null}
-    </div>
+    </Container>
   );
 }

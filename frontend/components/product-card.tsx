@@ -22,12 +22,12 @@ export function ProductCard({ product }: { product: Product }) {
         />
       </div>
       <div className="bg-surface-accent shrink-0 px-6 py-4">
-        <div className="text-pine text-xs uppercase tracking-[0.22em]">
+        <div className="text-pine text-xs tracking-[0.22em] uppercase">
           {product.category}
         </div>
       </div>
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="text-xl font-semibold leading-snug">{product.title}</h3>
+        <h3 className="text-xl leading-snug font-semibold">{product.title}</h3>
         <p className="text-ink/68 mt-3 line-clamp-3 text-sm leading-6">
           {product.excerpt ?? product.subtitle}
         </p>

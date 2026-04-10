@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ProductCard } from "@/components/product-card";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
+import { Container } from "@/components/ui/container";
 import { getProductBySlug, getRelatedProducts } from "@/lib/api/products";
 
 type ProductPageParams = {
@@ -145,7 +146,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
+    <Container className="max-w-5xl py-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -158,7 +159,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
       />
       <div className="rounded-[36px] bg-white/80 p-8 shadow-sm">
         <Breadcrumbs items={breadcrumbs} />
-        <div className="text-pine pt-4 text-sm uppercase tracking-[0.3em]">
+        <div className="text-pine pt-4 text-sm tracking-[0.3em] uppercase">
           {product.category}
         </div>
         <h1 className="mt-3 text-4xl font-semibold">{product.title}</h1>
@@ -200,6 +201,6 @@ export default async function ProductPage({ params }: ProductPageParams) {
           </div>
         </section>
       ) : null}
-    </div>
+    </Container>
   );
 }

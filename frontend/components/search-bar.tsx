@@ -235,7 +235,7 @@ export function SearchBar({ className }: SearchBarProps) {
                         ) : null}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="truncate font-medium leading-snug">
+                        <div className="truncate leading-snug font-medium">
                           {product.title}
                         </div>
                         <div className="text-muted-foreground truncate text-xs">

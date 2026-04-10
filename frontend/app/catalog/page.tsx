@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ProductCard } from "@/components/product-card";
+import { Container } from "@/components/ui/container";
 import {
   getCategories,
   getProducts,
@@ -24,9 +25,9 @@ export default async function CatalogPage({
     categories.find((c) => c.slug === section)?.title;
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12">
+    <Container className="py-12">
       <div className="mb-8">
-        <div className="text-rust text-sm uppercase tracking-[0.3em]">
+        <div className="text-rust text-sm tracking-[0.3em] uppercase">
           Каталог
         </div>
         <h1 className="mt-2 text-4xl font-semibold">
@@ -69,7 +70,7 @@ export default async function CatalogPage({
           </p>
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 

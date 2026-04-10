@@ -21,7 +21,7 @@ export function CartLink() {
       />
       <span className="hidden sm:inline">Корзина</span>
       {totalItems > 0 && (
-        <span className="bg-pine absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-bold leading-none text-white shadow-sm">
+        <span className="bg-pine absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] leading-none font-bold text-white shadow-sm">
           {totalItems > 99 ? "99+" : totalItems}
         </span>
       )}

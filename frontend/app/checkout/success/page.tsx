@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { ClearCartOnSuccess } from "@/components/cart/clear-cart-on-success";
+import { Container } from "@/components/ui/container";
 import { getOrderByPublicId, syncOrderPaymentStatus } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
@@ -34,10 +35,10 @@ export default async function CheckoutSuccessPage({
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12">
+    <Container className="max-w-4xl py-12">
       <ClearCartOnSuccess />
       <div className="border-border-subtle bg-surface rounded-3xl border p-8">
-        <div className="text-pine text-sm uppercase tracking-[0.24em]">
+        <div className="text-pine text-sm tracking-[0.24em] uppercase">
           Оплата подтверждена
         </div>
         <h1 className="mt-2 text-4xl font-semibold">
@@ -62,6 +63,6 @@ export default async function CheckoutSuccessPage({
           </Link>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

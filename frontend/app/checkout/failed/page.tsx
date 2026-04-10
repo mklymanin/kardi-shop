@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
 import { CheckoutStartError, resumeOrderPayment } from "@/lib/orders";
 import { clearPendingOrder, getPendingOrder } from "@/lib/pending-order";
 
@@ -51,9 +52,9 @@ export default function CheckoutFailedPage() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12">
+    <Container className="max-w-4xl py-12">
       <div className="border-border-subtle bg-surface rounded-3xl border p-8">
-        <div className="text-sm uppercase tracking-[0.24em] text-red-600">
+        <div className="text-sm tracking-[0.24em] text-red-600 uppercase">
           Оплата не завершена
         </div>
         <h1 className="mt-2 text-4xl font-semibold">
@@ -93,6 +94,6 @@ export default function CheckoutFailedPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

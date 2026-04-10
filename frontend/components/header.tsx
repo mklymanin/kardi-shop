@@ -1,60 +1,38 @@
 import Link from "next/link";
 
-import { CartLink } from "@/components/cart/cart-link";
-import { SearchBar } from "@/components/search-bar";
-import { getCategories } from "@/lib/api/products";
+import { Container } from "./ui/container";
+import Logo from "./logo";
 
 export async function Header() {
-  const categories = await getCategories();
-
   return (
-    <header>
-      <div className="border-pine/10 border-b bg-[rgb(var(--color-bg-header))]">
-        <div className="text-ink/75 mx-auto flex max-w-6xl flex-col gap-2 px-6 py-3 text-sm md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
-            <span className="text-pine font-semibold">+7 (499) 346-77-22</span>
-            <span>Пн-Пт с 10:00 до 18:00</span>
-            <span>support@kardi.ru</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/contact" className="text-pine font-medium">
-              WhatsApp
-            </Link>
-            <CartLink />
-          </div>
-        </div>
+    <header className="border-border border-b">
+      <div className="bg-mist py-8">
+        <Container className="font-nav text-foreground flex flex-col gap-2 text-sm md:flex-row md:items-center md:justify-start md:gap-10">
+          <a href="tel:+74993467722">+7 (499) 346-77-22</a>
+          <a href="mailto:support@kardi.ru">support@kardi.ru</a>
+          <span>Пн-Пт с 10:00 до 18:00</span>
+        </Container>
       </div>
-      <div className="border-b border-black/10 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-start gap-4">
+      <div className="py-6">
+        <Container className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col items-start gap-2">
             <Link
               href="/"
               className="text-pine text-2xl font-semibold tracking-tight"
             >
-              КардиРу
+              <Logo className="h-auto w-48" />
             </Link>
-            <p className="text-ink/55 hidden max-w-xs text-sm md:block">
+            <p className="text-muted-foreground font-nav hidden max-w-xs text-sm md:block">
               Интернет-магазин кардиографов и оборудования для ЭКГ
             </p>
           </div>
-          <nav className="flex flex-wrap gap-5 text-sm font-medium">
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/catalog?section=${cat.slug}`}
-                className="hover:text-pine transition"
-              >
-                {cat.seoTitle ?? cat.title}
-              </Link>
-            ))}
-            <Link href="/faq" className="hover:text-pine transition">
-              Вопрос-ответ
-            </Link>
+          <nav className="font-nav flex flex-wrap gap-6 text-sm md:gap-10">
+            <a href="#devices">Приборы</a>
+            <a href="#accessories">Аксессуары</a>
+            <a href="#delivery">Доставка</a>
+            <a href="#reviews">Отзывы</a>
           </nav>
-          <div className="flex min-w-0 flex-1 items-center justify-end gap-3 md:flex-none">
-            <SearchBar className="md:max-w-[280px]" />
-          </div>
-        </div>
+        </Container>
       </div>
     </header>
   );
