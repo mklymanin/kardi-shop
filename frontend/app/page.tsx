@@ -4,8 +4,11 @@ import { CustomerReviewsSection } from "@/components/home/customer-reviews-secti
 import { DeliveryPaymentSection } from "@/components/home/delivery-payment-section";
 import { DevicesSection } from "@/components/home/devices-section";
 import { OrderNowSection } from "@/components/home/order-now-section";
+import { getCustomerReviews } from "@/lib/api/customer-reviews";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const customerReviews = await getCustomerReviews();
+
   return (
     <div className="py-8 md:py-10">
       <DevicesSection />
@@ -13,7 +16,7 @@ export default function HomePage() {
       <AdvantagesCapabilitiesSection />
       <DeliveryPaymentSection />
       <OrderNowSection />
-      <CustomerReviewsSection />
+      <CustomerReviewsSection data={customerReviews} />
     </div>
   );
 }
