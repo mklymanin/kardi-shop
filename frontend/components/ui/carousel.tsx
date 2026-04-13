@@ -61,11 +61,21 @@ function Carousel({
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return;
-    setCanScrollPrev(api.canScrollPrev());
-    setCanScrollNext(api.canScrollNext());
-  }, []);
+  const onSelect = React.useCallback(
+    (api: CarouselApi) => {
+      if (!api) return;
+      // При loop Embla может вернуть false, если все слайды помещаются во вьюпорт
+      // (например две карточки в две колонки) — тогда стрелки остаются disabled.
+      if (opts?.loop) {
+        setCanScrollPrev(true);
+        setCanScrollNext(true);
+      } else {
+        setCanScrollPrev(api.canScrollPrev());
+        setCanScrollNext(api.canScrollNext());
+      }
+    },
+    [opts?.loop]
+  );
 
   const scrollPrev = React.useCallback(() => {
     api?.scrollPrev();
@@ -100,7 +110,8 @@ function Carousel({
     api.on("select", onSelect);
 
     return () => {
-      api?.off("select", onSelect);
+      api.off("reInit", onSelect);
+      api.off("select", onSelect);
     };
   }, [api, onSelect]);
 
