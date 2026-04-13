@@ -1,6 +1,7 @@
 export type Product = {
   id: number;
   slug: string;
+  sku?: string;
   title: string;
   subtitle: string;
   excerpt?: string;

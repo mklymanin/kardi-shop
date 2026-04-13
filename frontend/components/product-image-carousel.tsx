@@ -53,7 +53,7 @@ export function ProductImageCarousel({
           src={normalizedImages[0]}
           alt={title}
           fill
-          className={cn("object-cover", imageClassName)}
+          className={cn("object-contain", imageClassName)}
           sizes={sizes}
           priority={priorityFirst}
         />
@@ -126,7 +126,7 @@ function ProductImageCarouselWithDots({
                 src={imageUrl}
                 alt={`${title} — изображение ${index + 1}`}
                 fill
-                className={cn("object-cover", imageClassName)}
+                className={cn("object-contain", imageClassName)}
                 sizes={sizes}
                 priority={priorityFirst && index === 0}
               />

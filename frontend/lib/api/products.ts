@@ -90,9 +90,14 @@ function strapiItemToProduct(
     ])
   );
 
+  const slug = String(item.slug ?? `product-${item.id}`);
+  const skuFromCms =
+    typeof item.sku === "string" && item.sku.trim() ? item.sku.trim() : "";
+
   return {
     id: item.id,
-    slug: String(item.slug ?? `product-${item.id}`),
+    slug,
+    sku: skuFromCms || slug,
     title: String(item.title ?? "Без названия"),
     subtitle,
     excerpt: rawExcerpt || undefined,

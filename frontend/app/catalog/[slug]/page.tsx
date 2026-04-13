@@ -135,7 +135,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
     description: product.seoDescription || product.subtitle,
     image: productImages.length ? productImages : undefined,
     category: product.category,
-    sku: product.slug,
+    sku: product.sku ?? product.slug,
     offers: {
       "@type": "Offer",
       priceCurrency: "RUB",
