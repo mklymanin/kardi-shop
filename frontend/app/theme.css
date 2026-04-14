@@ -39,7 +39,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --max-width-site: 72rem;
+  --max-width-site: 80rem;
 
   --font-sans: var(--font-golos), sans-serif;
   --font-display: var(--font-sf-pro), sans-serif;
