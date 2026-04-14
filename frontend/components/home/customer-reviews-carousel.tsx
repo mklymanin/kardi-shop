@@ -31,10 +31,10 @@ function Stars({ rating }: { rating: number }) {
 
 function ReviewCard({ review }: { review: CustomerReviewEntry }) {
   return (
-    <article className="bg-muted flex h-full flex-col gap-2 rounded-xl border border-black px-4 py-5 font-sans text-sm">
+    <article className="bg-muted flex h-full flex-col gap-2 rounded-xl border border-black px-3 py-4 font-sans text-xs sm:px-4 sm:py-5 sm:text-sm">
       <div className="flex flex-col items-start justify-between gap-2">
         <span>{review.authorName}</span>
-        <span className="flex items-center gap-1 text-sm">
+        <span className="flex items-center gap-1 text-xs sm:text-sm">
           <Stars rating={review.rating} />
           <span>{review.rating}</span>
         </span>
@@ -87,19 +87,29 @@ function CustomerReviewsCarouselInner({
       opts={{ loop: true, align: "start" }}
       aria-label="Карусель отзывов"
     >
-      <div className="relative px-11 md:px-14">
-        <CarouselContent className="-ml-3 md:-ml-4">
-          {reviews.map((review) => (
-            <CarouselItem
-              key={String(review.id)}
-              className="basis-full pl-3 md:basis-1/2 md:pl-4"
-            >
-              <ReviewCard review={review} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="top-1/2 left-0 z-10 -translate-y-1/2 border-black/20 bg-white/95 shadow-sm backdrop-blur-sm" />
-        <CarouselNext className="top-1/2 right-0 z-10 -translate-y-1/2 border-black/20 bg-white/95 shadow-sm backdrop-blur-sm" />
+      <div className="relative flex w-full items-stretch gap-2 overflow-hidden md:gap-3">
+        <CarouselPrevious className="static inset-auto top-auto right-auto bottom-auto left-auto z-10 shrink-0 translate-none self-center border-black/20 bg-white/95 shadow-sm backdrop-blur-sm" />
+        <div className="min-w-0 flex-1 self-stretch">
+          <CarouselContent className="-ml-3 md:-ml-4" overflowVisible>
+            {reviews.map((review) => (
+              <CarouselItem
+                key={String(review.id)}
+                className="basis-full pl-3 md:basis-1/2 md:pl-4 lg:basis-1/3"
+              >
+                <ReviewCard review={review} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </div>
+        <CarouselNext className="static inset-auto top-auto right-auto bottom-auto left-auto z-10 shrink-0 translate-none self-center border-black/20 bg-white/95 shadow-sm backdrop-blur-sm" />
+        <div
+          aria-hidden
+          className="from-background via-background/80 pointer-events-none absolute inset-y-0 left-0 z-1 w-16 bg-linear-to-r to-transparent sm:w-20"
+        />
+        <div
+          aria-hidden
+          className="from-background via-background/80 pointer-events-none absolute inset-y-0 right-0 z-1 w-16 bg-linear-to-l to-transparent sm:w-20"
+        />
       </div>
       <div
         className="mt-6 flex justify-center gap-1.5"

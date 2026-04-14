@@ -49,21 +49,23 @@ function Stars({ rating }: { rating: number }) {
 export function CustomerReviewsSection({ data }: Props) {
   return (
     <section id="reviews" className="scroll-mt-32 py-12 md:py-16">
-      <div className="flex flex-col gap-2 pb-8">
-        <h2 className="font-display text-5xl uppercase">ОТЗЫВЫ ПОКУПАТЕЛЕЙ</h2>
-        <div className="my-4 border-b border-black/50" />
+      <div className="flex min-w-0 flex-col gap-2 pb-6 sm:gap-4 sm:pb-8">
+        <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
+          ОТЗЫВЫ ПОКУПАТЕЛЕЙ
+        </h2>
+        <div className="my-3 border-b border-black/50 sm:my-4" />
         {data && data.overallRating > 0 ? (
-          <div className="font-display flex items-center gap-2 text-lg">
-            <p className="font-sans text-5xl font-medium">
+          <div className="font-display flex flex-col gap-3 text-base sm:flex-row sm:items-center sm:gap-2 sm:text-lg">
+            <p className="font-sans text-4xl font-medium sm:text-5xl">
               {data.overallRating.toLocaleString("ru-RU", {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 1,
               })}
             </p>
-            <div>
+            <div className="min-w-0">
               <Stars rating={data.overallRating} />
               {data.reviews.length > 0 ? (
-                <p className="text-sm text-black/60">
+                <p className="text-xs text-black/60 sm:text-sm">
                   {reviewsCountLabel(data.reviews.length)}
                 </p>
               ) : null}
@@ -73,7 +75,9 @@ export function CustomerReviewsSection({ data }: Props) {
       </div>
 
       {!data || data.reviews.length === 0 ? (
-        <p className="font-display text-sm text-black/60">Отзывов пока нет</p>
+        <p className="font-display text-xs text-black/60 sm:text-sm">
+          Отзывов пока нет
+        </p>
       ) : (
         <CustomerReviewsCarousel reviews={data.reviews} />
       )}
