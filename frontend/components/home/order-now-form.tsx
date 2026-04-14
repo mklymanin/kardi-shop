@@ -75,24 +75,24 @@ export function OrderNowForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="font-display flex flex-col gap-6 md:min-h-0 md:flex-1 md:flex-row"
+      className="font-display flex min-h-0 flex-1 flex-col gap-4 md:min-h-0 md:flex-row md:gap-6"
     >
-      <div className="flex flex-col md:min-h-0 md:flex-1">
+      <div className="flex min-h-0 flex-1 flex-col">
         <Textarea
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           placeholder="Задайте вопрос"
-          className="min-h-36 resize-none md:field-sizing-fixed md:min-h-0 md:flex-1"
+          className="min-h-28 min-w-20 resize-none sm:min-h-32 md:field-sizing-fixed md:min-h-0 md:flex-1"
         />
       </div>
 
-      <div className="flex w-full flex-col gap-3 md:min-h-0 md:max-w-sm">
+      <div className="flex w-full flex-col gap-3 md:min-h-0 md:w-1/2">
         <Input
           id="order-name"
           type="text"
           value={name}
           onChange={(event) => setName(event.target.value)}
-          className="flex-1"
+          className="min-h-9 flex-1"
           placeholder="Как вас зовут?"
         />
 
@@ -106,7 +106,7 @@ export function OrderNowForm() {
           value={phone}
           onAccept={(value) => setPhone(String(value))}
           className={cn(
-            "placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 h-9 w-full min-w-0 flex-1 rounded-xl border border-black bg-transparent px-3.5 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 md:text-sm dark:bg-transparent",
+            "placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 h-9 min-h-9 w-full min-w-0 flex-1 rounded-xl border border-black bg-transparent px-3.5 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 md:text-sm dark:bg-transparent",
             normalizedPhoneDigits.length === 1
               ? "text-muted-foreground"
               : "text-foreground"
@@ -117,10 +117,10 @@ export function OrderNowForm() {
         <Button
           type="submit"
           disabled={!isValid || submitting}
-          className="w-full flex-1 justify-between rounded-xl px-3.5"
+          className="h-11 w-full flex-1 justify-between rounded-xl px-3.5 md:h-9"
         >
           {submitting ? "Отправка..." : "Отправить"}
-          <ArrowRightIcon className="size-5" />
+          <ArrowRightIcon className="size-5 min-h-9" />
         </Button>
 
         {status === "success" ? (

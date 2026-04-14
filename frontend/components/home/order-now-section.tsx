@@ -4,10 +4,12 @@ export function OrderNowSection() {
   return (
     <section
       id="order"
-      className="flex scroll-mt-32 flex-col gap-4 py-12 md:flex-row md:items-stretch"
+      className="grid grid-cols-1 gap-6 py-8 sm:gap-6 sm:py-10 md:grid-cols-2 md:items-stretch lg:gap-8 lg:py-12"
     >
-      <div className="md:max-w-sm">
-        <h2 className="font-display text-5xl uppercase">ЗАКАЖИТЕ СЕЙЧАС</h2>
+      <div className="w-full min-w-0">
+        <h2 className="font-display text-3xl wrap-break-word uppercase sm:text-4xl lg:text-5xl">
+          ЗАКАЖИТЕ СЕЙЧАС
+        </h2>
         <div className="my-4 border-b border-black/50" />
         <div className="font-display flex flex-col gap-3 text-sm">
           <p>Проведём бесплатную консультацию</p>
@@ -15,7 +17,7 @@ export function OrderNowSection() {
           <p>Поможем с подбором прибора</p>
         </div>
       </div>
-      <div className="border-muted-foreground flex min-h-0 min-w-0 flex-1 flex-col rounded-3xl border p-7">
+      <div className="border-muted-foreground flex min-h-0 min-w-0 flex-col rounded-3xl border p-4 sm:p-6 lg:p-7">
         <OrderNowForm />
       </div>
     </section>
