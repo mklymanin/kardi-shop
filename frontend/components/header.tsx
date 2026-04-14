@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HeaderSiteNav } from "./header-site-nav";
 import { Container } from "./ui/container";
 import Logo from "./logo";
 
@@ -14,8 +15,8 @@ export async function Header() {
         </Container>
       </div>
       <div className="py-6">
-        <Container className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-col items-start gap-2">
+        <Container className="flex flex-row items-start justify-between gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex min-w-0 flex-col items-start gap-2">
             <Link
               href="/"
               className="text-pine text-2xl font-semibold tracking-tight"
@@ -26,12 +27,7 @@ export async function Header() {
               Интернет-магазин кардиографов и оборудования для ЭКГ
             </p>
           </div>
-          <nav className="font-nav flex flex-wrap gap-6 text-sm md:gap-10">
-            <a href="#devices">Приборы</a>
-            <a href="#accessories">Аксессуары</a>
-            <a href="#delivery">Доставка</a>
-            <a href="#reviews">Отзывы</a>
-          </nav>
+          <HeaderSiteNav />
         </Container>
       </div>
     </header>
