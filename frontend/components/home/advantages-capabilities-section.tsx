@@ -15,29 +15,51 @@ const mockCapabilities = [
   "Экспорт и передача данных в формате PDF и через облачные сервисы",
 ];
 
+function Panel({
+  titleId,
+  title,
+  children,
+}: {
+  titleId: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
+      <h2
+        id={titleId}
+        className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl"
+      >
+        {title}
+      </h2>
+      <div className="border-b border-black/50" aria-hidden />
+      {children}
+    </div>
+  );
+}
+
 export function AdvantagesCapabilitiesSection() {
   return (
     <section id="advantages" className="scroll-mt-32 py-12 md:py-16">
-      <div className="flex justify-between gap-6 pb-4">
-        <h2 className="font-display text-5xl uppercase">ПРЕИМУЩЕСТВА</h2>
-        <h2 className="font-display text-5xl uppercase">ВОЗМОЖНОСТИ</h2>
-      </div>
-      <div className="my-4 border-b border-black/50" />
-      <div className="flex gap-4">
-        <ul className="font-display flex w-1/2 flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm">
-          {mockAdvantages.map((advantage) => (
-            <li key={advantage}>
-              <span>•</span> {advantage}
-            </li>
-          ))}
-        </ul>
-        <ul className="font-display flex w-1/2 flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm">
-          {mockCapabilities.map((capability) => (
-            <li key={capability}>
-              <span>•</span> {capability}
-            </li>
-          ))}
-        </ul>
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-6 xl:gap-10">
+        <Panel titleId="advantages-heading" title="Преимущества">
+          <ul className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
+            {mockAdvantages.map((advantage) => (
+              <li key={advantage}>
+                <span>•</span> {advantage}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+        <Panel titleId="capabilities-heading" title="Возможности">
+          <ul className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
+            {mockCapabilities.map((capability) => (
+              <li key={capability}>
+                <span>•</span> {capability}
+              </li>
+            ))}
+          </ul>
+        </Panel>
       </div>
     </section>
   );
