@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { CartLink } from "@/components/cart/cart-link";
 import { HeaderSiteNav } from "./header-site-nav";
 import { Container } from "./ui/container";
 import Logo from "./logo";
@@ -19,7 +20,7 @@ export async function Header() {
           <div className="flex min-w-0 flex-col items-start gap-2">
             <Link
               href="/"
-              className="text-pine text-2xl font-semibold tracking-tight"
+              className="text-foreground text-2xl font-semibold tracking-tight"
             >
               <Logo className="h-auto w-48" />
             </Link>
@@ -27,7 +28,10 @@ export async function Header() {
               Интернет-магазин кардиографов и оборудования для ЭКГ
             </p>
           </div>
-          <HeaderSiteNav />
+          <div className="flex items-center gap-6">
+            <HeaderSiteNav />
+            <CartLink className="hidden md:block" />
+          </div>
         </Container>
       </div>
     </header>

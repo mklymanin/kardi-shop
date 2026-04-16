@@ -1,27 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
 
 import { useCart } from "@/components/cart/cart-provider";
+import { cn } from "@/lib/utils";
 
-export function CartLink() {
+export function CartLink({ className }: { className?: string }) {
   const { totalItems } = useCart();
 
   return (
     <Link
       href="/cart"
       aria-label="Корзина"
-      className="border-pine/20 hover:border-pine/40 hover:text-pine relative inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition sm:px-4"
+      className={cn(
+        "text-foreground hover:text-pine relative inline-flex items-center justify-center rounded-full p-2 transition",
+        className
+      )}
     >
-      <ShoppingCart
-        className="size-5 shrink-0 sm:hidden"
-        strokeWidth={2}
-        aria-hidden
-      />
-      <span className="hidden sm:inline">Корзина</span>
+      <p className="font-nav text-sm">Корзина</p>
       {totalItems > 0 && (
-        <span className="bg-pine absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] leading-none font-bold text-white shadow-sm">
+        <span className="bg-pine absolute -top-1 -right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[10px] leading-none font-bold text-white shadow-sm">
           {totalItems > 99 ? "99+" : totalItems}
         </span>
       )}

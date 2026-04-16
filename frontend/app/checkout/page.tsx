@@ -1,12 +1,15 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Loader2, ShoppingBag } from "lucide-react";
 
 import { useCart } from "@/components/cart/cart-provider";
-import { ButtonLink, Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { PageContainer } from "@/components/ui/page-container";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { formatRub } from "@/lib/format";
 import { previewOrderPricing, submitOrder } from "@/app/actions/submit-order";
 import {
@@ -87,6 +90,7 @@ export default function CheckoutPage() {
     Boolean(deliveryMethodCode) &&
     emailIsValid &&
     (!needsDeliveryAddress || deliveryAddress.trim().length > 5);
+
   useEffect(() => {
     const pending = getPendingOrder();
     if (!pending) {
@@ -211,6 +215,7 @@ export default function CheckoutPage() {
     deliveryAddress,
     deliveryMethodCode,
     email,
+    emailTrimmed,
     hasCoupon,
     items,
     itemsSignature,
@@ -289,11 +294,23 @@ export default function CheckoutPage() {
   };
 
   return (
-    <PageContainer size="md">
-      <h1 className="text-4xl font-semibold">Оформление заказа</h1>
+    <div className="py-8 md:py-10">
+      <Link
+        href="/cart"
+        className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1.5 text-sm transition"
+      >
+        <ArrowLeft className="size-4" />
+        Вернуться в корзину
+      </Link>
+
+      <h1 className="font-display text-3xl uppercase sm:text-4xl lg:text-5xl">
+        Оформление заказа
+      </h1>
+      <div className="my-3 border-b border-black/50 sm:my-4" aria-hidden />
+
       {resumeUrl ? (
-        <Card className="mt-6 rounded-3xl">
-          <p className="text-ink/70">
+        <div className="bg-mist mt-6 rounded-2xl border border-black p-5">
+          <p className="font-display text-sm">
             У вас есть неоплаченный заказ{" "}
             {resumeOrderId ? (
               <span className="font-semibold">#{resumeOrderId}</span>
@@ -305,212 +322,312 @@ export default function CheckoutPage() {
               type="button"
               onClick={() => window.location.assign(resumeUrl)}
               disabled={resumingPayment}
+              className="h-11 rounded-xl px-5"
             >
               Продолжить оплату
             </Button>
             <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               onClick={clearPendingOrder}
+              className="h-11 rounded-xl border-black px-5"
             >
               Оформить новый заказ
             </Button>
           </div>
-        </Card>
+        </div>
       ) : null}
+
       {!resumeUrl && resumeError ? (
         <p className="mt-4 text-sm text-red-600">{resumeError}</p>
       ) : null}
+
       {items.length === 0 ? (
-        <Card className="mt-6 rounded-3xl">
-          <p className="text-ink/70">
-            В корзине нет товаров. Добавьте позиции перед оформлением заказа.
+        <div className="mt-8 flex flex-col items-center gap-4 py-16 text-center">
+          <ShoppingBag
+            className="text-muted-foreground size-16"
+            strokeWidth={1}
+          />
+          <p className="font-display text-muted-foreground text-lg">
+            В корзине нет товаров
           </p>
-          <ButtonLink href="/catalog" className="mt-4">
-            Перейти в каталог
-          </ButtonLink>
-        </Card>
-      ) : (
-        <div className="mt-8 grid gap-6 md:grid-cols-[1fr_320px]">
-          <form
-            onSubmit={handleSubmit}
-            className="border-border-subtle bg-surface rounded-3xl border p-6"
+          <ButtonLink
+            href="/#devices"
+            className="mt-2 h-11 rounded-xl px-6 text-base"
           >
-            <h2 className="text-xl font-semibold">Контактные данные</h2>
-            <div className="mt-5 grid gap-4">
-              <label className="grid gap-2 text-sm">
-                <span>Имя *</span>
-                <input
-                  className="border-border-strong h-11 rounded-xl border px-4 outline-none"
-                  value={customerName}
-                  onChange={(event) => setCustomerName(event.target.value)}
-                  placeholder="Иван Иванов"
-                />
-              </label>
-              <label className="grid gap-2 text-sm">
-                <span>Телефон *</span>
-                <input
-                  className="border-border-strong h-11 rounded-xl border px-4 outline-none"
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  placeholder="+7 (999) 123-45-67"
-                />
-              </label>
-              <label className="grid gap-2 text-sm">
-                <span>Email *</span>
-                <input
-                  className="border-border-strong h-11 rounded-xl border px-4 outline-none"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="mail@example.com"
-                  type="email"
-                />
-              </label>
-              {email && !emailIsValid ? (
-                <p className="text-sm text-red-600">
-                  Укажите корректный email для получения информации о заказе.
+            Перейти к товарам
+          </ButtonLink>
+        </div>
+      ) : (
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Contact info */}
+            <div className="rounded-2xl border border-black p-5 sm:p-6">
+              <h2 className="font-display text-xl uppercase">
+                Контактные данные
+              </h2>
+              <div className="my-3 border-b border-black/50" aria-hidden />
+              <div className="mt-5 grid gap-4">
+                <label className="grid gap-1.5 text-sm">
+                  <span className="font-display text-muted-foreground">
+                    Имя *
+                  </span>
+                  <Input
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Иван Иванов"
+                    className="h-11"
+                  />
+                </label>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="grid gap-1.5 text-sm">
+                    <span className="font-display text-muted-foreground">
+                      Телефон *
+                    </span>
+                    <Input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+7 (999) 123-45-67"
+                      className="h-11"
+                    />
+                  </label>
+                  <label className="grid gap-1.5 text-sm">
+                    <span className="font-display text-muted-foreground">
+                      Email *
+                    </span>
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="mail@example.com"
+                      className="h-11"
+                    />
+                  </label>
+                </div>
+                {email && !emailIsValid ? (
+                  <p className="text-sm text-red-600">
+                    Укажите корректный email для получения информации о заказе.
+                  </p>
+                ) : null}
+                <label className="grid gap-1.5 text-sm">
+                  <span className="font-display text-muted-foreground">
+                    Комментарий
+                  </span>
+                  <Textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Комментарий к заказу (необязательно)"
+                    className="min-h-24"
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* Delivery */}
+            <div className="rounded-2xl border border-black p-5 sm:p-6">
+              <h2 className="font-display text-xl uppercase">
+                Способ получения
+              </h2>
+              <div className="my-3 border-b border-black/50" aria-hidden />
+              {deliveryLoadError ? (
+                <p className="mt-3 text-sm text-red-600">{deliveryLoadError}</p>
+              ) : (
+                <div className="mt-4 grid gap-2">
+                  {deliveryMethods.map((method) => {
+                    const selected = deliveryMethodCode === method.code;
+                    return (
+                      <label
+                        key={method.code}
+                        className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition ${
+                          selected
+                            ? "bg-mist border-black"
+                            : "border-black/20 hover:border-black"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="deliveryMethod"
+                          className="size-4 shrink-0 accent-black"
+                          value={method.code}
+                          checked={selected}
+                          onChange={(e) =>
+                            setDeliveryMethodCode(e.target.value)
+                          }
+                        />
+                        <span className="flex flex-1 items-center justify-between">
+                          <span className="font-display text-sm">
+                            {method.title}
+                          </span>
+                          <span className="text-muted-foreground text-sm">
+                            {method.price > 0
+                              ? formatRub(method.price)
+                              : "Бесплатно"}
+                          </span>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+
+              {deliveryMethodCode === "pickup" &&
+              selectedDeliveryMethod?.pickupAddress ? (
+                <div className="bg-mist mt-4 rounded-xl border border-black p-4 text-sm">
+                  <div className="text-muted-foreground font-display mb-1 text-xs tracking-wider uppercase">
+                    Адрес склада
+                  </div>
+                  <div>{selectedDeliveryMethod.pickupAddress}</div>
+                </div>
+              ) : null}
+
+              {needsDeliveryAddress ? (
+                <label className="mt-4 grid gap-1.5 text-sm">
+                  <span className="font-display text-muted-foreground">
+                    Адрес доставки *
+                  </span>
+                  <Textarea
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    placeholder="Город, улица, дом, квартира"
+                    className="min-h-24"
+                  />
+                </label>
+              ) : null}
+            </div>
+
+            {/* Coupon */}
+            <div className="rounded-2xl border border-black p-5 sm:p-6">
+              <h2 className="font-display text-xl uppercase">Промокод</h2>
+              <div className="my-3 border-b border-black/50" aria-hidden />
+              <Input
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                placeholder="Например, SALE10"
+                className="h-11 uppercase"
+              />
+              {couponStatus === "checking" ? (
+                <p className="text-muted-foreground mt-2 flex items-center gap-1.5 text-sm">
+                  <Loader2 className="size-3.5 animate-spin" />
+                  Проверяем купон...
                 </p>
               ) : null}
-              <label className="grid gap-2 text-sm">
-                <span>Комментарий</span>
-                <textarea
-                  className="border-border-strong min-h-24 rounded-xl border px-4 py-3 outline-none"
-                  value={comment}
-                  onChange={(event) => setComment(event.target.value)}
-                  placeholder="Комментарий к заказу"
-                />
-              </label>
+              {couponStatus === "invalid" && couponMessage ? (
+                <p className="mt-2 text-sm text-red-600">{couponMessage}</p>
+              ) : null}
+              {couponStatus === "valid" && couponMessage ? (
+                <p className="mt-2 text-sm font-medium text-green-700">
+                  {couponMessage}
+                </p>
+              ) : null}
             </div>
-            <h3 className="mt-6 text-lg font-semibold">Способ получения</h3>
-            {deliveryLoadError ? (
-              <p className="mt-3 text-sm text-red-600">{deliveryLoadError}</p>
-            ) : (
-              <div className="mt-4 grid gap-3">
-                {deliveryMethods.map((method) => (
-                  <label
-                    key={method.code}
-                    className="border-border-subtle flex cursor-pointer items-start gap-3 rounded-xl border p-3"
-                  >
-                    <input
-                      type="radio"
-                      name="deliveryMethod"
-                      className="mt-1"
-                      value={method.code}
-                      checked={deliveryMethodCode === method.code}
-                      onChange={(event) =>
-                        setDeliveryMethodCode(event.target.value)
-                      }
-                    />
-                    <span className="grid gap-1">
-                      <span className="text-sm font-medium">
-                        {method.title}
-                      </span>
-                      <span className="text-ink/65 text-sm">
-                        {method.price > 0
-                          ? formatRub(method.price)
-                          : "Бесплатно"}
-                      </span>
-                    </span>
-                  </label>
-                ))}
-              </div>
-            )}
-            {deliveryMethodCode === "pickup" &&
-            selectedDeliveryMethod?.pickupAddress ? (
-              <div className="border-border-subtle mt-4 rounded-xl border p-4 text-sm">
-                <div className="text-ink/60 mb-1">Адрес склада</div>
-                <div>{selectedDeliveryMethod.pickupAddress}</div>
-              </div>
-            ) : null}
-            {needsDeliveryAddress ? (
-              <label className="mt-4 grid gap-2 text-sm">
-                <span>Адрес доставки *</span>
-                <textarea
-                  className="border-border-strong min-h-24 rounded-xl border px-4 py-3 outline-none"
-                  value={deliveryAddress}
-                  onChange={(event) => setDeliveryAddress(event.target.value)}
-                  placeholder="Город, улица, дом, квартира"
-                />
-              </label>
-            ) : null}
-            <label className="mt-4 grid gap-2 text-sm">
-              <span>Купон</span>
-              <input
-                className="border-border-strong h-11 rounded-xl border px-4 uppercase outline-none"
-                value={couponCode}
-                onChange={(event) =>
-                  setCouponCode(event.target.value.toUpperCase())
-                }
-                placeholder="Например, SALE10"
-              />
-            </label>
-            {couponStatus === "checking" ? (
-              <p className="text-ink/65 mt-2 text-sm">Проверяем купон...</p>
-            ) : null}
-            {couponStatus === "invalid" && couponMessage ? (
-              <p className="mt-2 text-sm text-red-600">{couponMessage}</p>
-            ) : null}
-            {couponStatus === "valid" && couponMessage ? (
-              <p className="mt-2 text-sm text-green-700">{couponMessage}</p>
-            ) : null}
+
             {error ? (
-              <p className="mt-4 text-sm text-red-600">{error}</p>
+              <div className="rounded-xl border border-red-300 bg-red-50 p-4 text-sm text-red-700">
+                {error}
+              </div>
             ) : null}
+
             <Button
               type="submit"
               disabled={!isValid || submitting || couponBlocksSubmit}
-              className="mt-6"
+              className="h-12 w-full rounded-xl text-base"
             >
-              {submitting ? "Переходим к оплате..." : "Перейти к оплате"}
+              {submitting ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  Переходим к оплате...
+                </>
+              ) : (
+                "Перейти к оплате"
+              )}
             </Button>
           </form>
-          <Card className="h-fit rounded-3xl">
-            <h2 className="text-lg font-semibold">Ваш заказ</h2>
-            <div className="mt-4 space-y-3">
+
+          {/* Order summary sidebar */}
+          <div className="h-fit rounded-2xl border border-black p-6 lg:sticky lg:top-6">
+            <h2 className="font-display text-xl uppercase">Ваш заказ</h2>
+            <div className="my-3 border-b border-black/50" aria-hidden />
+
+            <div className="space-y-3">
               {items.map((item) => (
-                <div key={item.slug} className="text-sm">
-                  <div>{item.title}</div>
-                  <div className="text-ink/65">
-                    {item.quantity} x {item.priceLabel}
+                <div key={item.slug} className="flex gap-3">
+                  {item.imageUrl ? (
+                    <div className="relative size-12 shrink-0 overflow-hidden rounded-lg border border-black">
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        fill
+                        className="object-contain p-0.5"
+                        sizes="48px"
+                      />
+                    </div>
+                  ) : (
+                    <div className="bg-mist flex size-12 shrink-0 items-center justify-center rounded-lg border border-black">
+                      <ShoppingBag className="text-muted-foreground size-5" />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="font-display truncate text-sm">
+                      {item.title}
+                    </div>
+                    <div className="text-muted-foreground text-xs">
+                      {item.quantity} x {item.priceLabel}
+                    </div>
+                  </div>
+                  <div className="font-display shrink-0 text-sm font-medium">
+                    {formatRub(item.priceValue * item.quantity)}
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-5 border-t border-[#e3efeb] pt-4">
-              <div className="text-ink/65 text-sm">Товары</div>
-              <div className="text-lg font-semibold">
-                {formatRub(subtotalBeforeDiscount)}
+
+            <div className="mt-5 space-y-2.5 border-t border-black/50 pt-4">
+              <div className="flex items-baseline justify-between text-sm">
+                <span className="text-muted-foreground">Товары</span>
+                <span className="font-display font-medium">
+                  {formatRub(subtotalBeforeDiscount)}
+                </span>
               </div>
+
               {discountAmount > 0 ? (
                 <>
-                  <div className="text-ink/65 mt-3 text-sm">
-                    Скидка по купону
+                  <div className="flex items-baseline justify-between text-sm">
+                    <span className="text-muted-foreground">Скидка</span>
+                    <span className="font-display font-medium text-green-700">
+                      -{formatRub(discountAmount)}
+                    </span>
                   </div>
-                  <div className="text-lg font-semibold text-green-700">
-                    -{formatRub(discountAmount)}
-                  </div>
-                  <div className="text-ink/65 mt-3 text-sm">
-                    Товары со скидкой
-                  </div>
-                  <div className="text-lg font-semibold">
-                    {formatRub(subtotalAfterDiscount)}
+                  <div className="flex items-baseline justify-between text-sm">
+                    <span className="text-muted-foreground">Со скидкой</span>
+                    <span className="font-display font-medium">
+                      {formatRub(subtotalAfterDiscount)}
+                    </span>
                   </div>
                 </>
               ) : null}
-              <div className="text-ink/65 mt-3 text-sm">Способ получения</div>
-              <div className="text-lg font-semibold">
-                {selectedDeliveryMethod
-                  ? `${selectedDeliveryMethod.title}: ${formatRub(deliveryPrice)}`
-                  : "Не выбран"}
-              </div>
-              <div className="text-ink/65 mt-3 text-sm">Итого</div>
-              <div className="text-pine text-3xl font-semibold">
-                {formatRub(totalWithCouponAndDelivery)}
+
+              <div className="flex items-baseline justify-between text-sm">
+                <span className="text-muted-foreground">Доставка</span>
+                <span className="font-display font-medium">
+                  {selectedDeliveryMethod
+                    ? deliveryPrice > 0
+                      ? formatRub(deliveryPrice)
+                      : "Бесплатно"
+                    : "—"}
+                </span>
               </div>
             </div>
-          </Card>
+
+            <div className="mt-4 flex items-baseline justify-between border-t border-black/50 pt-4">
+              <span className="font-display font-semibold">Итого</span>
+              <span className="font-display text-2xl font-semibold">
+                {formatRub(totalWithCouponAndDelivery)}
+              </span>
+            </div>
+          </div>
         </div>
       )}
-    </PageContainer>
+    </div>
   );
 }

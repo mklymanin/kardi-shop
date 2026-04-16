@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { ClearCartOnSuccess } from "@/components/cart/clear-cart-on-success";
-import { Container } from "@/components/ui/container";
+import { ButtonLink } from "@/components/ui/button";
 import { getOrderByPublicId, syncOrderPaymentStatus } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
@@ -35,34 +35,32 @@ export default async function CheckoutSuccessPage({
   }
 
   return (
-    <Container className="max-w-4xl py-12">
+    <div className="py-8 md:py-10">
       <ClearCartOnSuccess />
-      <div className="border-border-subtle bg-surface rounded-3xl border p-8">
-        <div className="text-pine text-sm tracking-[0.24em] uppercase">
+      <div className="rounded-2xl border border-black p-6 sm:p-8">
+        <div className="font-display text-muted-foreground text-xs tracking-[0.24em] uppercase">
           Оплата подтверждена
         </div>
-        <h1 className="mt-2 text-4xl font-semibold">
+        <h1 className="font-display mt-2 text-3xl uppercase sm:text-4xl">
           Спасибо! Заказ успешно оплачен.
         </h1>
-        <p className="text-ink/70 mt-4">
+        <div className="my-3 border-b border-black/50 sm:my-4" aria-hidden />
+        <p className="mt-4">
           Мы получили оплату и передали заказ в обработку. Номер заказа:{" "}
           <span className="font-semibold">{syncedOrder.id}</span>
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="/catalog"
-            className="bg-pine rounded-full px-5 py-3 font-medium text-white"
-          >
+          <ButtonLink href="/#devices" className="h-11 rounded-xl px-5">
             Продолжить покупки
-          </Link>
+          </ButtonLink>
           <Link
             href="/"
-            className="border-border-strong rounded-full border px-5 py-3 font-medium"
+            className="font-display hover:bg-muted inline-flex h-11 items-center rounded-xl border border-black px-5 font-medium transition"
           >
             На главную
           </Link>
         </div>
       </div>
-    </Container>
+    </div>
   );
 }

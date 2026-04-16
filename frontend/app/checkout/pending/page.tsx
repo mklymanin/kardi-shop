@@ -1,36 +1,34 @@
 import Link from "next/link";
 
-import { Container } from "@/components/ui/container";
+import { ButtonLink } from "@/components/ui/button";
 
 export default function CheckoutPendingPage() {
   return (
-    <Container className="max-w-4xl py-12">
-      <div className="border-border-subtle bg-surface rounded-3xl border p-8">
-        <div className="text-pine text-sm tracking-[0.24em] uppercase">
+    <div className="py-8 md:py-10">
+      <div className="rounded-2xl border border-black p-6 sm:p-8">
+        <div className="font-display text-muted-foreground text-xs tracking-[0.24em] uppercase">
           Платёж обрабатывается
         </div>
-        <h1 className="mt-2 text-4xl font-semibold">
+        <h1 className="font-display mt-2 text-3xl uppercase sm:text-4xl">
           Ждём подтверждение оплаты
         </h1>
-        <p className="text-ink/70 mt-4">
+        <div className="my-3 border-b border-black/50 sm:my-4" aria-hidden />
+        <p className="mt-4">
           Банк или YooKassa ещё не прислали окончательный статус. Обычно это
           занимает недолго. Обновите страницу чуть позже.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="/"
-            className="bg-pine rounded-full px-5 py-3 font-medium text-white"
-          >
+          <ButtonLink href="/" className="h-11 rounded-xl px-5">
             На главную
-          </Link>
+          </ButtonLink>
           <Link
             href="/checkout"
-            className="border-border-strong rounded-full border px-5 py-3 font-medium"
+            className="font-display hover:bg-muted inline-flex h-11 items-center rounded-xl border border-black px-5 font-medium transition"
           >
             К оформлению
           </Link>
         </div>
       </div>
-    </Container>
+    </div>
   );
 }

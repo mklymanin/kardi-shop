@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { MenuIcon, XIcon } from "lucide-react";
 
+import { useCart } from "@/components/cart/cart-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +24,7 @@ export const SITE_NAV_LINKS = [
 
 export function HeaderSiteNav() {
   const [open, setOpen] = React.useState(false);
+  const { totalItems } = useCart();
 
   return (
     <>
@@ -71,6 +74,19 @@ export function HeaderSiteNav() {
                   </a>
                 </DialogClose>
               ))}
+              <DialogClose asChild>
+                <Link
+                  href="/cart"
+                  className="text-foreground hover:bg-muted -mx-2 flex items-center gap-2 rounded-md px-2 py-3 transition-colors"
+                >
+                  Корзина
+                  {totalItems > 0 && (
+                    <span className="bg-foreground text-background ml-auto flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] leading-none font-bold">
+                      {totalItems > 99 ? "99+" : totalItems}
+                    </span>
+                  )}
+                </Link>
+              </DialogClose>
             </nav>
           </DialogContent>
         </Dialog>

@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
 import type { Product } from "@/lib/site-data";
@@ -14,7 +12,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="flex h-full flex-col">
-      <div className="aspect-square w-full shrink-0 overflow-hidden rounded-xl border border-black">
+      <div className="aspect-square w-full shrink-0 overflow-hidden rounded-4xl border border-black [corner-shape:squircle]">
         <ProductImageCarousel
           images={productImages}
           title={product.title}
@@ -30,7 +28,10 @@ export function ProductCard({ product }: { product: Product }) {
         <h3 className="text-md font-display line-clamp-2 text-sm leading-tight">
           {product.title}
         </h3>
-        <div className="font-display font-semibold">{product.price}</div>
+        <div className="mt-auto flex flex-col gap-3">
+          <div className="font-display font-semibold">{product.price}</div>
+          <AddToCartButton product={product} compact />
+        </div>
       </div>
     </article>
   );

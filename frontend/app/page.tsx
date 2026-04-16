@@ -3,6 +3,7 @@ import { AdvantagesCapabilitiesSection } from "@/components/home/advantages-capa
 import { CustomerReviewsSection } from "@/components/home/customer-reviews-section";
 import { DeliveryPaymentSection } from "@/components/home/delivery-payment-section";
 import { DevicesSection } from "@/components/home/devices-section";
+import { HeroBannerCarousel } from "@/components/home/hero-banner-carousel";
 import { OrderNowSection } from "@/components/home/order-now-section";
 import { getCustomerReviews } from "@/lib/api/customer-reviews";
 
@@ -11,6 +12,7 @@ export default async function HomePage() {
 
   return (
     <div className="py-8 md:py-10">
+      <HeroBannerCarousel />
       <DevicesSection />
       <AccessoriesSection />
       <AdvantagesCapabilitiesSection />
