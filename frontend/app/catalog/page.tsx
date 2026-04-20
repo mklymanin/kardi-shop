@@ -87,7 +87,9 @@ function SectionTab({
     <Link
       href={href}
       className={`rounded-full px-5 py-2.5 text-sm font-medium transition ${
-        active ? "bg-pine text-white" : "bg-pill-bg text-pine hover:bg-pine/10"
+        active
+          ? "bg-primary text-white"
+          : "bg-pill-bg text-primary hover:bg-primary/10"
       }`}
     >
       {children}

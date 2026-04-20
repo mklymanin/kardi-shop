@@ -8,7 +8,7 @@ export default async function FaqPage() {
   return (
     <Container className="max-w-5xl py-12">
       <div className="mb-8">
-        <div className="text-pine text-sm tracking-[0.24em] uppercase">
+        <div className="text-primary text-sm tracking-[0.24em] uppercase">
           Вопрос-ответ
         </div>
         <h1 className="mt-2 text-4xl font-semibold">

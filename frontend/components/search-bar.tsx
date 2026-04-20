@@ -155,7 +155,7 @@ export function SearchBar({ className }: SearchBarProps) {
           <PopoverAnchor asChild>
             <div
               className={cn(
-                "border-pine/20 bg-background focus-within:border-pine/50 focus-within:ring-pine/15 group relative flex h-10 w-full items-center gap-2 rounded-full border px-3 text-sm transition focus-within:ring-2"
+                "border-primary/20 bg-background focus-within:border-primary/50 focus-within:ring-primary/15 group relative flex h-10 w-full items-center gap-2 rounded-full border px-3 text-sm transition focus-within:ring-2"
               )}
               onMouseDown={handleContainerMouseDown}
             >
@@ -163,7 +163,7 @@ export function SearchBar({ className }: SearchBarProps) {
                 type="button"
                 data-search-submit
                 aria-label="Показать все результаты"
-                className="text-muted-foreground hover:text-pine shrink-0 transition-colors"
+                className="text-muted-foreground hover:text-primary shrink-0 transition-colors"
                 onClick={() => goToFullResults()}
               >
                 <Search className="size-4" />

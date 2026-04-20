@@ -16,10 +16,10 @@ import {
 import { cn } from "@/lib/utils";
 
 export const SITE_NAV_LINKS = [
-  { href: "#devices", label: "Приборы" },
-  { href: "#accessories", label: "Аксессуары" },
-  { href: "#delivery", label: "Доставка" },
-  { href: "#reviews", label: "Отзывы" },
+  { href: "/#devices", label: "Приборы" },
+  { href: "/#accessories", label: "Аксессуары" },
+  { href: "/#delivery", label: "Доставка" },
+  { href: "/#reviews", label: "Отзывы" },
 ] as const;
 
 export function HeaderSiteNav() {
@@ -35,7 +35,7 @@ export function HeaderSiteNav() {
               type="button"
               variant="ghost"
               size="icon-sm"
-              className="text-foreground"
+              className="text-white hover:bg-white/10 hover:text-white"
               aria-expanded={open}
               aria-controls="site-nav-mobile-panel"
               aria-label={open ? "Закрыть меню" : "Открыть меню"}
@@ -97,7 +97,11 @@ export function HeaderSiteNav() {
         aria-label="Основная навигация"
       >
         {SITE_NAV_LINKS.map(({ href, label }) => (
-          <a key={href} href={href}>
+          <a
+            key={href}
+            href={href}
+            className="text-white/90 duration-200 hover:text-white"
+          >
             {label}
           </a>
         ))}

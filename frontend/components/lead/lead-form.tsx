@@ -70,12 +70,12 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
         <button
           type="submit"
           disabled={!isValid || submitting}
-          className="bg-pine h-12 rounded-full px-6 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+          className="bg-primary h-12 rounded-full px-6 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {submitting ? "Отправка..." : "Отправить"}
         </button>
         {status === "success" ? (
-          <p className="text-pine w-full text-sm">Заявка отправлена.</p>
+          <p className="text-primary w-full text-sm">Заявка отправлена.</p>
         ) : null}
         {status === "error" ? (
           <p className="w-full text-sm text-red-600">Ошибка отправки заявки.</p>
@@ -131,12 +131,12 @@ export function LeadForm({ source, compact = false }: LeadFormProps) {
       <button
         type="submit"
         disabled={!isValid || submitting}
-        className="bg-pine w-fit rounded-full px-6 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+        className="bg-primary w-fit rounded-full px-6 py-3 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
       >
         {submitting ? "Отправка..." : "Отправить заявку"}
       </button>
       {status === "success" ? (
-        <p className="text-pine text-sm">
+        <p className="text-primary text-sm">
           Заявка отправлена. Мы свяжемся с вами.
         </p>
       ) : null}

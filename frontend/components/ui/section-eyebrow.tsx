@@ -11,7 +11,10 @@ export function SectionEyebrow({
 }: SectionEyebrowProps) {
   return (
     <div
-      className={cn("text-pine text-sm tracking-[0.24em] uppercase", className)}
+      className={cn(
+        "text-primary text-sm tracking-[0.24em] uppercase",
+        className
+      )}
       {...rest}
     >
       {children}
