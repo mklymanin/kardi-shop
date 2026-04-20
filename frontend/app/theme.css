@@ -33,6 +33,7 @@
 
   --color-mist: var(--mist);
   --color-star: var(--star);
+  --color-kardi-green: var(--kardi-green);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -44,18 +45,44 @@
   --font-sans: var(--font-golos), sans-serif;
   --font-display: var(--font-sf-pro), sans-serif;
   --font-nav: var(--font-rg-spacious), sans-serif;
+
+  --text-xs: 0.9rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1.1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
+  --text-9xl: 8rem;
+  --text-9xl--line-height: 1;
 }
 
 @layer base {
   :root {
     --background: #ffffff;
     --foreground: #000000;
-    --primary: oklch(0.205 0 0);
+    --primary: #63567a;
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
@@ -84,5 +111,6 @@
 
     --mist: #d9ede2;
     --star: #ffcc00;
+    --kardi-green: #22bca7;
   }
 }
