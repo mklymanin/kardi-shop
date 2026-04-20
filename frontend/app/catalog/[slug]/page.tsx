@@ -145,8 +145,10 @@ export default async function ProductPage({ params }: ProductPageParams) {
     },
   };
 
+  const shortLead = product.excerpt || product.subtitle;
+
   return (
-    <Container className="max-w-5xl py-12">
+    <Container className="py-8 md:py-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -157,44 +159,81 @@ export default async function ProductPage({ params }: ProductPageParams) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
-      <div className="rounded-[36px] bg-white/80 p-8 shadow-sm">
-        <Breadcrumbs items={breadcrumbs} />
-        <div className="text-pine pt-4 text-sm tracking-[0.3em] uppercase">
+
+      <Breadcrumbs items={breadcrumbs} />
+
+      <section className="mt-6 flex flex-col gap-3 sm:gap-4">
+        <div className="text-primary text-sm tracking-[0.3em] uppercase">
           {product.category}
         </div>
-        <h1 className="mt-3 text-4xl font-semibold">{product.title}</h1>
-        {product.excerpt ? (
-          <p className="text-ink/70 mt-4 max-w-2xl">{product.excerpt}</p>
-        ) : product.subtitle ? (
-          <p className="text-ink/70 mt-4 max-w-2xl">{product.subtitle}</p>
-        ) : null}
-        <div className="mt-8 grid gap-8 lg:grid-cols-2 lg:items-start">
-          <div className="bg-surface-accent relative aspect-[4/5] w-full overflow-hidden rounded-[28px]">
-            <ProductImageCarousel
-              images={productImages}
-              title={product.title}
-              priorityFirst
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-          </div>
-          <div className="grid gap-8 md:grid-cols-[1fr_320px] lg:grid-cols-1">
-            <div className="text-ink/80 space-y-4 text-sm leading-7">
-              {buildProductDescription(product.description, product.excerpt)}
-            </div>
-            <aside className="bg-sand rounded-[28px] border border-black/10 p-6">
-              <div className="text-ink/60 text-sm">Цена</div>
-              <div className="mt-2 text-3xl font-semibold">{product.price}</div>
-              <AddToCartButton product={product} />
-            </aside>
-          </div>
+        <h1 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
+          {product.title}
+        </h1>
+        <div className="border-b border-black/50" aria-hidden />
+      </section>
+
+      <section className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr] lg:items-start lg:gap-8">
+        <div className="relative aspect-4/5 w-full overflow-hidden rounded-xl border border-black">
+          <ProductImageCarousel
+            images={productImages}
+            title={product.title}
+            priorityFirst
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
         </div>
-      </div>
+
+        <aside className="font-display flex flex-col gap-5 rounded-xl border border-black p-5 sm:p-6">
+          {product.sku ? (
+            <div className="text-muted-foreground text-sm uppercase">
+              Артикул: {product.sku}
+            </div>
+          ) : null}
+
+          {shortLead ? (
+            <p className="text-sm leading-relaxed">{shortLead}</p>
+          ) : null}
+
+          <div className="mt-auto flex flex-col gap-4 border-t border-black/30 pt-5">
+            <div className="flex flex-col gap-1">
+              <div className="text-muted-foreground text-sm uppercase">
+                Цена
+              </div>
+              <div className="text-3xl font-semibold">{product.price}</div>
+            </div>
+            <AddToCartButton product={product} />
+          </div>
+
+          <ul className="font-display flex flex-col gap-2 border-t border-black/30 pt-5 text-sm leading-relaxed">
+            <li>
+              <span aria-hidden>•</span> Доставка курьером по Москве и по России
+            </li>
+            <li>
+              <span aria-hidden>•</span> Оплата картой или по счёту для юрлиц
+            </li>
+            <li>
+              <span aria-hidden>•</span> Бесплатная консультация менеджера
+            </li>
+          </ul>
+        </aside>
+      </section>
+
+      <section className="mt-12 flex flex-col gap-3 sm:gap-4">
+        <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
+          ОПИСАНИЕ
+        </h2>
+        <div className="border-b border-black/50" aria-hidden />
+        <div className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed sm:px-6 sm:py-6">
+          {buildProductDescription(product.description, product.excerpt)}
+        </div>
+      </section>
+
       {relatedProducts.length > 0 ? (
-        <section className="mt-12">
-          <h2 className="text-ink text-3xl font-semibold">
-            Еще из этого раздела
+        <section className="mt-12 flex flex-col gap-3 sm:gap-4">
+          <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
+            ЕЩЕ ИЗ ЭТОГО РАЗДЕЛА
           </h2>
-          <div className="mt-6 grid auto-rows-fr gap-5 md:grid-cols-3">
+          <div className="border-b border-black/50" aria-hidden />
+          <div className="mt-4 grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
             {relatedProducts.map((relatedProduct) => (
               <ProductCard key={relatedProduct.id} product={relatedProduct} />
             ))}

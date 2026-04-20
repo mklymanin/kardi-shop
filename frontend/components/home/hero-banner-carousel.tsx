@@ -4,12 +4,6 @@ import Image from "next/image";
 import * as React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
-import {
-  type CarouselApi,
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -38,44 +32,82 @@ const BANNERS: BannerSlide[] = [
 ];
 
 export function HeroBannerCarousel() {
-  const [api, setApi] = React.useState<CarouselApi | null>(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [slideCount, setSlideCount] = React.useState(0);
+  const slideCount = BANNERS.length;
 
-  React.useEffect(() => {
-    if (!api) return;
-    const sync = () => {
-      setSelectedIndex(api.selectedScrollSnap());
-      setSlideCount(api.scrollSnapList().length);
-    };
-    sync();
-    api.on("reInit", sync);
-    api.on("select", sync);
-    return () => {
-      api.off("reInit", sync);
-      api.off("select", sync);
-    };
-  }, [api]);
+  const goTo = React.useCallback(
+    (index: number) => {
+      if (slideCount === 0) return;
+      const normalized = ((index % slideCount) + slideCount) % slideCount;
+      setSelectedIndex(normalized);
+    },
+    [slideCount]
+  );
+
+  const goPrev = React.useCallback(() => {
+    goTo(selectedIndex - 1);
+  }, [goTo, selectedIndex]);
+
+  const goNext = React.useCallback(() => {
+    goTo(selectedIndex + 1);
+  }, [goTo, selectedIndex]);
 
   return (
     <section aria-label="Акции и предложения">
-      <Carousel setApi={setApi} opts={{ loop: true }} className="w-full">
-        <CarouselContent className="-ml-0">
+      <div className="relative w-full">
+        <div className="relative min-h-[200px] md:min-h-[260px] lg:min-h-[300px]">
           {BANNERS.map((banner, index) => (
-            <CarouselItem key={index} className="pl-0">
-              <div
-                className="relative flex min-h-[200px] overflow-hidden rounded-3xl md:min-h-[260px] lg:min-h-[300px]"
-                style={{ backgroundColor: "#5a9e6f" }}
-              >
-                <div
-                  className="pointer-events-none absolute inset-0 opacity-30"
-                  style={{
-                    backgroundImage: "url(/kardi-bg-pattern.png)",
-                    backgroundRepeat: "repeat",
-                    backgroundSize: "180px",
-                  }}
+            <div
+              key={index}
+              aria-hidden={index !== selectedIndex}
+              className={cn(
+                "absolute inset-0 transition-opacity duration-500",
+                index === selectedIndex
+                  ? "pointer-events-auto z-10 opacity-100"
+                  : "pointer-events-none z-0 opacity-0"
+              )}
+            >
+              <div className="bg-kardi-green relative flex min-h-[200px] overflow-hidden rounded-3xl md:min-h-[260px] lg:min-h-[300px]">
+                <svg
                   aria-hidden
-                />
+                  className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
+                >
+                  <defs>
+                    <pattern
+                      id="kardi-bg-pattern"
+                      width="180"
+                      height="360"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <image
+                        href="/kardi-bg-pattern.png"
+                        x="0"
+                        y="0"
+                        width="180"
+                        height="180"
+                      />
+                      <image
+                        href="/kardi-bg-pattern.png"
+                        x="-90"
+                        y="180"
+                        width="180"
+                        height="180"
+                      />
+                      <image
+                        href="/kardi-bg-pattern.png"
+                        x="90"
+                        y="180"
+                        width="180"
+                        height="180"
+                      />
+                    </pattern>
+                  </defs>
+                  <rect
+                    width="100%"
+                    height="100%"
+                    fill="url(#kardi-bg-pattern)"
+                  />
+                </svg>
 
                 <div className="relative z-10 flex w-full flex-col md:flex-row md:items-stretch">
                   <div className="flex flex-1 flex-col justify-start px-6 pt-6 pb-16 md:px-10 md:py-10 md:pb-16 lg:px-10 lg:py-8 lg:pb-4">
@@ -96,38 +128,44 @@ export function HeroBannerCarousel() {
                   </div>
                 </div>
               </div>
-            </CarouselItem>
+            </div>
           ))}
-        </CarouselContent>
+        </div>
 
         {slideCount > 1 && (
           <BannerNav
-            api={api}
             selectedIndex={selectedIndex}
             slideCount={slideCount}
+            onPrev={goPrev}
+            onNext={goNext}
+            onSelect={goTo}
           />
         )}
-      </Carousel>
+      </div>
     </section>
   );
 }
 
 function BannerNav({
-  api,
   selectedIndex,
   slideCount,
+  onPrev,
+  onNext,
+  onSelect,
 }: {
-  api: CarouselApi | null;
   selectedIndex: number;
   slideCount: number;
+  onPrev: () => void;
+  onNext: () => void;
+  onSelect: (index: number) => void;
 }) {
   return (
     <div className="absolute bottom-4 left-6 z-20 flex items-center gap-2 md:bottom-5 md:left-10 lg:bottom-6 lg:left-14">
       <Button
         variant="ghost"
         size="icon-sm"
-        className="size-7 rounded-full bg-white/20 text-white hover:bg-white/40 hover:text-white"
-        onClick={() => api?.scrollPrev()}
+        className="hover:text-muted-foreground size-7 rounded-full bg-white/20 text-white hover:bg-white/40"
+        onClick={onPrev}
         aria-label="Предыдущий баннер"
       >
         <ChevronLeftIcon className="size-4" />
@@ -146,7 +184,7 @@ function BannerNav({
                 ? "h-2.5 w-2.5 bg-white"
                 : "h-2 w-2 bg-white/50 hover:bg-white/70"
             )}
-            onClick={() => api?.scrollTo(index)}
+            onClick={() => onSelect(index)}
           />
         ))}
       </div>
@@ -154,8 +192,8 @@ function BannerNav({
       <Button
         variant="ghost"
         size="icon-sm"
-        className="size-7 rounded-full bg-white/20 text-white hover:bg-white/40 hover:text-white"
-        onClick={() => api?.scrollNext()}
+        className="hover:text-muted-foreground size-7 rounded-full bg-white/20 text-white hover:bg-white/40"
+        onClick={onNext}
         aria-label="Следующий баннер"
       >
         <ChevronRightIcon className="size-4" />

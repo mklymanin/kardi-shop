@@ -31,7 +31,7 @@ function Stars({ rating }: { rating: number }) {
 
 function ReviewCard({ review }: { review: CustomerReviewEntry }) {
   return (
-    <article className="bg-muted flex h-full flex-col gap-2 rounded-xl border border-black px-3 py-4 font-sans text-xs sm:px-4 sm:py-5 sm:text-sm">
+    <article className="bg-muted flex h-full flex-col gap-2 rounded-xl border px-3 py-4 font-sans text-xs sm:px-4 sm:py-5 sm:text-sm">
       <div className="flex flex-col items-start justify-between gap-2">
         <span>{review.authorName}</span>
         <span className="flex items-center gap-1 text-xs sm:text-sm">

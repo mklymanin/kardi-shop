@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 const mockAdvantages = [
   "Высокое качество регистрации ЭКГ",
   "Автоматическая оценка исследования",
@@ -19,20 +21,31 @@ function Panel({
   titleId,
   title,
   children,
+  titleRight = false,
 }: {
   titleId: string;
   title: string;
   children: React.ReactNode;
+  titleRight?: boolean;
 }) {
   return (
     <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
       <h2
         id={titleId}
-        className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl"
+        className={cn(
+          "font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl",
+          titleRight && "text-right"
+        )}
       >
         {title}
       </h2>
-      <div className="border-b border-black/50" aria-hidden />
+      <div
+        className={cn(
+          "border-b border-black/50",
+          !titleRight && "lg:-mr-6 xl:-mr-10"
+        )}
+        aria-hidden
+      />
       {children}
     </div>
   );
@@ -43,7 +56,7 @@ export function AdvantagesCapabilitiesSection() {
     <section id="advantages" className="scroll-mt-32 py-12 md:py-16">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-6 xl:gap-10">
         <Panel titleId="advantages-heading" title="Преимущества">
-          <ul className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
+          <ul className="font-display flex w-full flex-1 flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
             {mockAdvantages.map((advantage) => (
               <li key={advantage}>
                 <span>•</span> {advantage}
@@ -51,8 +64,8 @@ export function AdvantagesCapabilitiesSection() {
             ))}
           </ul>
         </Panel>
-        <Panel titleId="capabilities-heading" title="Возможности">
-          <ul className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
+        <Panel titleId="capabilities-heading" title="Возможности" titleRight>
+          <ul className="font-display flex w-full flex-1 flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
             {mockCapabilities.map((capability) => (
               <li key={capability}>
                 <span>•</span> {capability}
