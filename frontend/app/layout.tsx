@@ -40,8 +40,11 @@ const rgSpacious = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "shop.kardi",
+  title: "Kardi.Ru - Контроль Вашего Сердца",
   description: "Магазин медицинского оборудования.",
+  icons: {
+    icon: "/kardiru.png",
+  },
 };
 
 export default function RootLayout({
