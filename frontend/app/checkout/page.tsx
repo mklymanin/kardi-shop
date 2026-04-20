@@ -88,7 +88,6 @@ export default function CheckoutPage() {
   const canQuoteOrder =
     items.length > 0 &&
     Boolean(deliveryMethodCode) &&
-    emailIsValid &&
     (!needsDeliveryAddress || deliveryAddress.trim().length > 5);
 
   useEffect(() => {
