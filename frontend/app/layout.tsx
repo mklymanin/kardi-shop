@@ -19,12 +19,12 @@ const golosText = localFont({
 const sfProExpanded = localFont({
   src: [
     {
-      path: "./fonts/SF-Pro-Display-Regular-Expanded.woff2",
+      path: "./fonts/SF-Pro-Display-Regular.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./fonts/SF-Pro-Display-Semibold-Expanded.woff2",
+      path: "./fonts/SF-Pro-Display-Semibold.woff2",
       weight: "600",
       style: "normal",
     },
