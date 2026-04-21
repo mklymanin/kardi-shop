@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { FadeInSection } from "@/components/motion/fade-in-section";
+import { StaggerItem, StaggerList } from "@/components/motion/stagger-list";
 import { ProductCard } from "@/components/product-card";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
 import { Container } from "@/components/ui/container";
@@ -162,7 +164,11 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
       <Breadcrumbs items={breadcrumbs} />
 
-      <section className="mt-6 flex flex-col gap-3 sm:gap-4">
+      <FadeInSection
+        as="section"
+        className="mt-6 flex flex-col gap-3 sm:gap-4"
+        amount={0.1}
+      >
         <div className="text-primary text-sm tracking-[0.3em] uppercase">
           {product.category}
         </div>
@@ -170,19 +176,27 @@ export default async function ProductPage({ params }: ProductPageParams) {
           {product.title}
         </h1>
         <div className="border-b border-black/50" aria-hidden />
-      </section>
+      </FadeInSection>
 
       <section className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr] lg:items-start lg:gap-8">
-        <div className="relative aspect-4/5 w-full overflow-hidden rounded-xl border border-black">
+        <FadeInSection
+          className="relative aspect-4/5 w-full overflow-hidden rounded-xl border border-black"
+          amount={0.1}
+        >
           <ProductImageCarousel
             images={productImages}
             title={product.title}
             priorityFirst
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
-        </div>
+        </FadeInSection>
 
-        <aside className="font-display flex flex-col gap-5 rounded-xl border border-black p-5 sm:p-6">
+        <FadeInSection
+          as="aside"
+          className="font-display flex flex-col gap-5 rounded-xl border border-black p-5 sm:p-6"
+          amount={0.1}
+          delay={0.1}
+        >
           {product.sku ? (
             <div className="text-muted-foreground text-sm uppercase">
               Артикул: {product.sku}
@@ -214,10 +228,14 @@ export default async function ProductPage({ params }: ProductPageParams) {
               <span aria-hidden>•</span> Бесплатная консультация менеджера
             </li>
           </ul>
-        </aside>
+        </FadeInSection>
       </section>
 
-      <section className="mt-12 flex flex-col gap-3 sm:gap-4">
+      <FadeInSection
+        as="section"
+        className="mt-12 flex flex-col gap-3 sm:gap-4"
+        amount={0.15}
+      >
         <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
           ОПИСАНИЕ
         </h2>
@@ -225,19 +243,23 @@ export default async function ProductPage({ params }: ProductPageParams) {
         <div className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed sm:px-6 sm:py-6">
           {buildProductDescription(product.description, product.excerpt)}
         </div>
-      </section>
+      </FadeInSection>
 
       {relatedProducts.length > 0 ? (
         <section className="mt-12 flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
-            ЕЩЕ ИЗ ЭТОГО РАЗДЕЛА
-          </h2>
-          <div className="border-b border-black/50" aria-hidden />
-          <div className="mt-4 grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+          <FadeInSection className="flex flex-col gap-3 sm:gap-4" amount={0.15}>
+            <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
+              ЕЩЕ ИЗ ЭТОГО РАЗДЕЛА
+            </h2>
+            <div className="border-b border-black/50" aria-hidden />
+          </FadeInSection>
+          <StaggerList className="mt-4 grid auto-rows-fr grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {relatedProducts.map((relatedProduct) => (
-              <ProductCard key={relatedProduct.id} product={relatedProduct} />
+              <StaggerItem key={relatedProduct.id} className="h-full">
+                <ProductCard product={relatedProduct} />
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerList>
         </section>
       ) : null}
     </Container>

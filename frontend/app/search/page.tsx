@@ -1,3 +1,5 @@
+import { FadeInSection } from "@/components/motion/fade-in-section";
+import { StaggerItem, StaggerList } from "@/components/motion/stagger-list";
 import { ProductCard } from "@/components/product-card";
 import { Container } from "@/components/ui/container";
 import { getProducts } from "@/lib/api/products";
@@ -21,7 +23,7 @@ export default async function SearchPage({
 
   return (
     <Container className="py-12">
-      <div className="mb-8">
+      <FadeInSection className="mb-8" amount={0.1}>
         <div className="text-rust text-sm tracking-[0.3em] uppercase">
           Поиск
         </div>
@@ -35,14 +37,16 @@ export default async function SearchPage({
               : "По этому запросу товаров не найдено — попробуйте другие слова."
             : `Введите запрос в строке поиска в шапке сайта (не менее ${MIN_SEARCH_QUERY_LENGTH} символов) и нажмите Enter или иконку лупы, чтобы увидеть все совпадения.`}
         </p>
-      </div>
+      </FadeInSection>
 
       {valid && products.length > 0 ? (
-        <div className="grid gap-5 md:grid-cols-3">
+        <StaggerList className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <StaggerItem key={product.id} className="h-full">
+              <ProductCard product={product} />
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerList>
       ) : null}
     </Container>
   );

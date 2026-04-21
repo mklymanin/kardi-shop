@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { useCart } from "@/components/cart/cart-provider";
 import { Button, ButtonLink } from "@/components/ui/button";
@@ -11,9 +12,15 @@ import { formatRub } from "@/lib/format";
 import { CheckoutStartError, resumeOrderPayment } from "@/lib/orders";
 import { clearPendingOrder, getPendingOrder } from "@/lib/pending-order";
 
+const ITEM_TRANSITION = {
+  duration: 0.3,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
+
 export default function CartPage() {
   const { items, totalItems, totalPrice, setQuantity, removeItem, clearCart } =
     useCart();
+  const reduce = useReducedMotion();
   const [resumingPayment, setResumingPayment] = useState(false);
   const [resumeOrderId, setResumeOrderId] = useState<string | null>(null);
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
@@ -99,7 +106,12 @@ export default function CartPage() {
       ) : null}
 
       {items.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center gap-4 py-16 text-center">
+        <motion.div
+          className="mt-8 flex flex-col items-center gap-4 py-16 text-center"
+          initial={reduce ? false : { opacity: 0, y: 8 }}
+          animate={reduce ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        >
           <ShoppingBag
             className="text-muted-foreground size-16"
             strokeWidth={1}
@@ -116,85 +128,94 @@ export default function CartPage() {
           >
             Перейти к товарам
           </ButtonLink>
-        </div>
+        </motion.div>
       ) : (
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
-          <div className="space-y-3">
-            {items.map((item) => (
-              <div
-                key={item.slug}
-                className="flex gap-4 rounded-2xl border border-black p-4"
-              >
-                {item.imageUrl ? (
-                  <div className="relative size-20 shrink-0 overflow-hidden rounded-xl border border-black sm:size-24">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.title}
-                      fill
-                      className="object-contain p-1"
-                      sizes="96px"
-                    />
-                  </div>
-                ) : (
-                  <div className="bg-mist flex size-20 shrink-0 items-center justify-center rounded-xl border border-black sm:size-24">
-                    <ShoppingBag className="text-muted-foreground size-8" />
-                  </div>
-                )}
-
-                <div className="flex min-w-0 flex-1 flex-col justify-between gap-3">
-                  <div>
-                    <h2 className="font-display text-sm leading-tight sm:text-base">
-                      {item.title}
-                    </h2>
-                    <div className="text-muted-foreground mt-1 text-xs sm:text-sm">
-                      {item.priceLabel} за шт.
+          <motion.div className="space-y-3" layout={!reduce}>
+            <AnimatePresence initial={false}>
+              {items.map((item) => (
+                <motion.div
+                  key={item.slug}
+                  layout={!reduce}
+                  initial={reduce ? false : { opacity: 0, y: 8, scale: 0.98 }}
+                  animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
+                  exit={
+                    reduce ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }
+                  }
+                  transition={ITEM_TRANSITION}
+                  className="flex gap-4 rounded-2xl border border-black p-4"
+                >
+                  {item.imageUrl ? (
+                    <div className="relative size-20 shrink-0 overflow-hidden rounded-xl border border-black sm:size-24">
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        fill
+                        className="object-contain p-1"
+                        sizes="96px"
+                      />
                     </div>
-                  </div>
+                  ) : (
+                    <div className="bg-mist flex size-20 shrink-0 items-center justify-center rounded-xl border border-black sm:size-24">
+                      <ShoppingBag className="text-muted-foreground size-8" />
+                    </div>
+                  )}
 
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center rounded-xl border border-black">
-                      <button
-                        className="hover:bg-muted flex size-9 items-center justify-center rounded-l-xl transition"
-                        onClick={() =>
-                          setQuantity(item.slug, item.quantity - 1)
-                        }
-                        type="button"
-                        aria-label="Уменьшить количество"
-                      >
-                        <Minus className="size-4" />
-                      </button>
-                      <span className="font-display min-w-8 text-center text-sm font-medium">
-                        {item.quantity}
-                      </span>
-                      <button
-                        className="hover:bg-muted flex size-9 items-center justify-center rounded-r-xl transition"
-                        onClick={() =>
-                          setQuantity(item.slug, item.quantity + 1)
-                        }
-                        type="button"
-                        aria-label="Увеличить количество"
-                      >
-                        <Plus className="size-4" />
-                      </button>
+                  <div className="flex min-w-0 flex-1 flex-col justify-between gap-3">
+                    <div>
+                      <h2 className="font-display text-sm leading-tight sm:text-base">
+                        {item.title}
+                      </h2>
+                      <div className="text-muted-foreground mt-1 text-xs sm:text-sm">
+                        {item.priceLabel} за шт.
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="font-display text-sm font-semibold sm:text-base">
-                        {formatRub(item.priceValue * item.quantity)}
-                      </span>
-                      <button
-                        className="text-muted-foreground hover:bg-muted hover:text-foreground flex size-9 items-center justify-center rounded-xl transition"
-                        onClick={() => removeItem(item.slug)}
-                        type="button"
-                        aria-label="Удалить товар"
-                      >
-                        <Trash2 className="size-4" />
-                      </button>
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center rounded-xl border border-black">
+                        <button
+                          className="hover:bg-muted flex size-9 items-center justify-center rounded-l-xl transition"
+                          onClick={() =>
+                            setQuantity(item.slug, item.quantity - 1)
+                          }
+                          type="button"
+                          aria-label="Уменьшить количество"
+                        >
+                          <Minus className="size-4" />
+                        </button>
+                        <span className="font-display min-w-8 text-center text-sm font-medium">
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="hover:bg-muted flex size-9 items-center justify-center rounded-r-xl transition"
+                          onClick={() =>
+                            setQuantity(item.slug, item.quantity + 1)
+                          }
+                          type="button"
+                          aria-label="Увеличить количество"
+                        >
+                          <Plus className="size-4" />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <span className="font-display text-sm font-semibold sm:text-base">
+                          {formatRub(item.priceValue * item.quantity)}
+                        </span>
+                        <button
+                          className="text-muted-foreground hover:bg-muted hover:text-foreground flex size-9 items-center justify-center rounded-xl transition"
+                          onClick={() => removeItem(item.slug)}
+                          type="button"
+                          aria-label="Удалить товар"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </motion.div>
+              ))}
+            </AnimatePresence>
 
             <button
               className="text-muted-foreground hover:text-foreground mt-1 text-sm underline underline-offset-2 transition"
@@ -203,9 +224,12 @@ export default function CartPage() {
             >
               Очистить корзину
             </button>
-          </div>
+          </motion.div>
 
-          <div className="h-fit rounded-2xl border border-black p-6 lg:sticky lg:top-6">
+          <motion.div
+            layout={!reduce}
+            className="h-fit rounded-2xl border border-black p-6 lg:sticky lg:top-6"
+          >
             <h2 className="font-display text-xl uppercase">Итого</h2>
             <div className="my-3 border-b border-black/50" aria-hidden />
 
@@ -243,7 +267,7 @@ export default function CartPage() {
             >
               Продолжить покупки
             </Link>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

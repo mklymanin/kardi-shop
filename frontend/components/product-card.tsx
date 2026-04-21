@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion, useReducedMotion } from "motion/react";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
@@ -6,6 +9,7 @@ import type { Product } from "@/lib/site-data";
 import { ArrowRightIcon } from "lucide-react";
 
 export function ProductCard({ product }: { product: Product }) {
+  const reduce = useReducedMotion();
   const productImages =
     product.imageUrls && product.imageUrls.length > 0
       ? product.imageUrls
@@ -16,7 +20,11 @@ export function ProductCard({ product }: { product: Product }) {
   const productHref = `/catalog/${product.slug}`;
 
   return (
-    <article className="group relative flex h-full flex-col">
+    <motion.article
+      className="group relative flex h-full flex-col"
+      whileTap={reduce ? undefined : { scale: 0.99 }}
+      transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-4xl border border-black transition [corner-shape:squircle] group-hover:shadow-md">
         <ProductImageCarousel
           images={productImages}
@@ -61,6 +69,6 @@ export function ProductCard({ product }: { product: Product }) {
           <AddToCartButton product={product} compact />
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
