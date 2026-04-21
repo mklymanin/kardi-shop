@@ -1,6 +1,7 @@
 import type { CustomerReviewsData } from "@/lib/api/customer-reviews";
 
 import { CustomerReviewsCarousel } from "@/components/home/customer-reviews-carousel";
+import { FadeInSection } from "@/components/motion/fade-in-section";
 
 type Props = {
   data: CustomerReviewsData | null;
@@ -16,18 +17,6 @@ function reviewsCountLabel(n: number): string {
     return `${n} отзыва`;
   }
   return `${n} отзывов`;
-}
-
-function formatReviewDate(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) {
-    return "";
-  }
-  return d.toLocaleDateString("ru-RU", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 }
 
 function Stars({ rating }: { rating: number }) {
@@ -49,7 +38,7 @@ function Stars({ rating }: { rating: number }) {
 export function CustomerReviewsSection({ data }: Props) {
   return (
     <section id="reviews" className="scroll-mt-32 py-12 md:py-16">
-      <div className="flex min-w-0 flex-col gap-2 pb-6 sm:gap-4 sm:pb-8">
+      <FadeInSection className="flex min-w-0 flex-col gap-2 pb-6 sm:gap-4 sm:pb-8">
         <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
           ОТЗЫВЫ ПОКУПАТЕЛЕЙ
         </h2>
@@ -72,14 +61,16 @@ export function CustomerReviewsSection({ data }: Props) {
             </div>
           </div>
         ) : null}
-      </div>
+      </FadeInSection>
 
       {!data || data.reviews.length === 0 ? (
         <p className="font-display text-xs text-black/60 sm:text-sm">
           Отзывов пока нет
         </p>
       ) : (
-        <CustomerReviewsCarousel reviews={data.reviews} />
+        <FadeInSection amount={0.15}>
+          <CustomerReviewsCarousel reviews={data.reviews} />
+        </FadeInSection>
       )}
     </section>
   );

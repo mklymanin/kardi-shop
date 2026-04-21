@@ -1,3 +1,5 @@
+import { FadeInSection } from "@/components/motion/fade-in-section";
+import { StaggerItem, StaggerList } from "@/components/motion/stagger-list";
 import { cn } from "@/lib/utils";
 
 const mockAdvantages = [
@@ -20,16 +22,23 @@ const mockCapabilities = [
 function Panel({
   titleId,
   title,
-  children,
+  items,
   titleRight = false,
+  xOffset = 0,
 }: {
   titleId: string;
   title: string;
-  children: React.ReactNode;
+  items: string[];
   titleRight?: boolean;
+  xOffset?: number;
 }) {
   return (
-    <div className="flex min-w-0 flex-col gap-3 sm:gap-4">
+    <FadeInSection
+      className="flex min-w-0 flex-col gap-3 sm:gap-4"
+      x={xOffset}
+      y={0}
+      amount={0.25}
+    >
       <h2
         id={titleId}
         className={cn(
@@ -46,8 +55,17 @@ function Panel({
         )}
         aria-hidden
       />
-      {children}
-    </div>
+      <StaggerList
+        as="ul"
+        className="font-display flex w-full flex-1 flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed"
+      >
+        {items.map((item) => (
+          <StaggerItem as="li" key={item}>
+            <span>•</span> {item}
+          </StaggerItem>
+        ))}
+      </StaggerList>
+    </FadeInSection>
   );
 }
 
@@ -55,24 +73,19 @@ export function AdvantagesCapabilitiesSection() {
   return (
     <section id="advantages" className="scroll-mt-32 py-12 md:py-16">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-6 xl:gap-10">
-        <Panel titleId="advantages-heading" title="Преимущества">
-          <ul className="font-display flex w-full flex-1 flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
-            {mockAdvantages.map((advantage) => (
-              <li key={advantage}>
-                <span>•</span> {advantage}
-              </li>
-            ))}
-          </ul>
-        </Panel>
-        <Panel titleId="capabilities-heading" title="Возможности" titleRight>
-          <ul className="font-display flex w-full flex-1 flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed">
-            {mockCapabilities.map((capability) => (
-              <li key={capability}>
-                <span>•</span> {capability}
-              </li>
-            ))}
-          </ul>
-        </Panel>
+        <Panel
+          titleId="advantages-heading"
+          title="Преимущества"
+          items={mockAdvantages}
+          xOffset={-12}
+        />
+        <Panel
+          titleId="capabilities-heading"
+          title="Возможности"
+          titleRight
+          items={mockCapabilities}
+          xOffset={12}
+        />
       </div>
     </section>
   );

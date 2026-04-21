@@ -1,3 +1,5 @@
+import { FadeInSection } from "@/components/motion/fade-in-section";
+import { StaggerItem, StaggerList } from "@/components/motion/stagger-list";
 import { ProductCard } from "@/components/product-card";
 import { getProductsBySection } from "@/lib/api/products";
 
@@ -8,24 +10,26 @@ export async function DevicesSection() {
 
   return (
     <section id="devices" className="scroll-mt-32 py-12 md:py-16">
-      <div className="flex min-w-0 flex-col gap-2 pb-4 sm:gap-3 sm:pb-6">
+      <FadeInSection className="flex min-w-0 flex-col gap-2 pb-4 sm:gap-3 sm:pb-6">
         <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
           ПРИБОРЫ
         </h2>
         <div className="my-3 border-b border-black/50 sm:my-4" aria-hidden />
-      </div>
+      </FadeInSection>
       {products.length > 0 ? (
-        <div className="mt-4 grid auto-rows-fr grid-cols-1 gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4">
+        <StaggerList className="mt-4 grid auto-rows-fr grid-cols-1 gap-4 sm:mt-6 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <StaggerItem key={product.id} className="h-full">
+              <ProductCard product={product} />
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerList>
       ) : (
-        <div className="border-border-subtle bg-surface mt-4 rounded-3xl border p-6 text-center sm:mt-6 sm:p-8">
+        <FadeInSection className="border-border-subtle bg-surface mt-4 rounded-3xl border p-6 text-center sm:mt-6 sm:p-8">
           <p className="text-ink/60 text-base sm:text-lg">
             В этом разделе пока нет товаров.
           </p>
-        </div>
+        </FadeInSection>
       )}
     </section>
   );

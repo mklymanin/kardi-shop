@@ -3,6 +3,7 @@
 import Image from "next/image";
 import * as React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -31,41 +32,54 @@ const BANNERS: BannerSlide[] = [
   },
 ];
 
+const SLIDE_TRANSITION = {
+  duration: 0.5,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
+
 export function HeroBannerCarousel() {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [[selectedIndex, direction], setState] = React.useState<
+    [number, number]
+  >([0, 0]);
   const slideCount = BANNERS.length;
+  const reduce = useReducedMotion();
 
   const goTo = React.useCallback(
-    (index: number) => {
+    (index: number, dir: number = 0) => {
       if (slideCount === 0) return;
       const normalized = ((index % slideCount) + slideCount) % slideCount;
-      setSelectedIndex(normalized);
+      setState([normalized, dir]);
     },
     [slideCount]
   );
 
   const goPrev = React.useCallback(() => {
-    goTo(selectedIndex - 1);
+    goTo(selectedIndex - 1, -1);
   }, [goTo, selectedIndex]);
 
   const goNext = React.useCallback(() => {
-    goTo(selectedIndex + 1);
+    goTo(selectedIndex + 1, 1);
   }, [goTo, selectedIndex]);
+
+  const banner = BANNERS[selectedIndex];
 
   return (
     <section aria-label="Акции и предложения">
       <div className="relative w-full">
         <div className="relative min-h-[200px] md:min-h-[260px] lg:min-h-[300px]">
-          {BANNERS.map((banner, index) => (
-            <div
-              key={index}
-              aria-hidden={index !== selectedIndex}
-              className={cn(
-                "absolute inset-0 transition-opacity duration-500",
-                index === selectedIndex
-                  ? "pointer-events-auto z-10 opacity-100"
-                  : "pointer-events-none z-0 opacity-0"
-              )}
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
+            <motion.div
+              key={selectedIndex}
+              custom={direction}
+              initial={
+                reduce ? { opacity: 0 } : { opacity: 0, x: direction * 16 }
+              }
+              animate={reduce ? { opacity: 1 } : { opacity: 1, x: 0 }}
+              exit={
+                reduce ? { opacity: 0 } : { opacity: 0, x: direction * -16 }
+              }
+              transition={SLIDE_TRANSITION}
+              className="absolute inset-0"
             >
               <div className="bg-kardi-green relative flex min-h-[200px] overflow-hidden rounded-3xl md:min-h-[260px] lg:min-h-[300px]">
                 <svg
@@ -123,13 +137,13 @@ export function HeroBannerCarousel() {
                       fill
                       className="rounded-lg object-contain md:rounded-xl"
                       sizes="(max-width: 768px) 90vw, 45vw"
-                      priority={index === 0}
+                      priority={selectedIndex === 0}
                     />
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         {slideCount > 1 && (
@@ -138,7 +152,12 @@ export function HeroBannerCarousel() {
             slideCount={slideCount}
             onPrev={goPrev}
             onNext={goNext}
-            onSelect={goTo}
+            onSelect={(index) =>
+              goTo(
+                index,
+                index > selectedIndex ? 1 : index < selectedIndex ? -1 : 0
+              )
+            }
           />
         )}
       </div>
@@ -172,21 +191,27 @@ function BannerNav({
       </Button>
 
       <div className="flex items-center gap-1.5">
-        {Array.from({ length: slideCount }).map((_, index) => (
-          <button
-            key={index}
-            type="button"
-            aria-current={index === selectedIndex ? "true" : undefined}
-            aria-label={`Баннер ${index + 1} из ${slideCount}`}
-            className={cn(
-              "touch-manipulation rounded-full transition-all duration-200",
-              index === selectedIndex
-                ? "h-2.5 w-2.5 bg-white"
-                : "h-2 w-2 bg-white/50 hover:bg-white/70"
-            )}
-            onClick={() => onSelect(index)}
-          />
-        ))}
+        {Array.from({ length: slideCount }).map((_, index) => {
+          const isActive = index === selectedIndex;
+          return (
+            <motion.button
+              key={index}
+              type="button"
+              aria-current={isActive ? "true" : undefined}
+              aria-label={`Баннер ${index + 1} из ${slideCount}`}
+              className={cn(
+                "touch-manipulation rounded-full",
+                isActive ? "bg-white" : "bg-white/50 hover:bg-white/70"
+              )}
+              animate={{
+                width: isActive ? 10 : 8,
+                height: isActive ? 10 : 8,
+              }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => onSelect(index)}
+            />
+          );
+        })}
       </div>
 
       <Button
