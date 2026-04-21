@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { FadeInSection } from "@/components/motion/fade-in-section";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { CheckoutStartError, resumeOrderPayment } from "@/lib/orders";
 import { clearPendingOrder, getPendingOrder } from "@/lib/pending-order";
@@ -52,7 +53,10 @@ export default function CheckoutFailedPage() {
 
   return (
     <div className="py-8 md:py-10">
-      <div className="rounded-2xl border border-black p-6 sm:p-8">
+      <FadeInSection
+        className="rounded-2xl border border-black p-6 sm:p-8"
+        amount={0.1}
+      >
         <div className="font-display text-xs tracking-[0.24em] text-red-600 uppercase">
           Оплата не завершена
         </div>
@@ -91,7 +95,7 @@ export default function CheckoutFailedPage() {
             В корзину
           </Link>
         </div>
-      </div>
+      </FadeInSection>
     </div>
   );
 }

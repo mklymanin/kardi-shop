@@ -1,11 +1,15 @@
 import Link from "next/link";
 
+import { FadeInSection } from "@/components/motion/fade-in-section";
 import { ButtonLink } from "@/components/ui/button";
 
 export default function CheckoutPendingPage() {
   return (
     <div className="py-8 md:py-10">
-      <div className="rounded-2xl border border-black p-6 sm:p-8">
+      <FadeInSection
+        className="rounded-2xl border border-black p-6 sm:p-8"
+        amount={0.1}
+      >
         <div className="font-display text-muted-foreground text-xs tracking-[0.24em] uppercase">
           Платёж обрабатывается
         </div>
@@ -28,7 +32,7 @@ export default function CheckoutPendingPage() {
             К оформлению
           </Link>
         </div>
-      </div>
+      </FadeInSection>
     </div>
   );
 }

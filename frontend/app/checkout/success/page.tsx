@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { ClearCartOnSuccess } from "@/components/cart/clear-cart-on-success";
+import { FadeInSection } from "@/components/motion/fade-in-section";
 import { ButtonLink } from "@/components/ui/button";
 import { getOrderByPublicId, syncOrderPaymentStatus } from "@/lib/orders";
 
@@ -37,7 +38,10 @@ export default async function CheckoutSuccessPage({
   return (
     <div className="py-8 md:py-10">
       <ClearCartOnSuccess />
-      <div className="rounded-2xl border border-black p-6 sm:p-8">
+      <FadeInSection
+        className="rounded-2xl border border-black p-6 sm:p-8"
+        amount={0.1}
+      >
         <div className="font-display text-muted-foreground text-xs tracking-[0.24em] uppercase">
           Оплата подтверждена
         </div>
@@ -60,7 +64,7 @@ export default async function CheckoutSuccessPage({
             На главную
           </Link>
         </div>
-      </div>
+      </FadeInSection>
     </div>
   );
 }
