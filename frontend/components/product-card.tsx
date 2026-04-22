@@ -18,6 +18,12 @@ export function ProductCard({ product }: { product: Product }) {
         : [];
 
   const productHref = `/catalog/${product.slug}`;
+  const showRentalHint =
+    product.rentalAvailable === true &&
+    (product.rentalPriceValue ?? 0) > 0 &&
+    Boolean(product.rentalPrice);
+  const canRent =
+    product.rentalAvailable === true && (product.rentalPriceValue ?? 0) > 0;
 
   return (
     <motion.article
@@ -70,8 +76,35 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
         </h3>
         <div className="mt-auto flex flex-col gap-3">
-          <div className="font-display font-semibold">{product.price}</div>
-          <AddToCartButton product={product} compact />
+          <div className="flex gap-1 justify-between items-center">
+            <div className="font-display font-semibold">{product.price}</div>
+            {showRentalHint ? (
+              <p className="text-muted-foreground font-display text-xs leading-snug">
+                Аренда: {product.rentalPrice}
+                {product.rentalPeriodLabel
+                  ? ` (${product.rentalPeriodLabel})`
+                  : null}
+              </p>
+            ) : null}
+          </div>
+          {canRent ? (
+            <div className="flex min-w-0 gap-2">
+              <AddToCartButton
+                product={product}
+                compact
+                className="min-w-0 flex-1"
+              />
+              <AddToCartButton
+                product={product}
+                compact
+                lineType="rent"
+                variant="outline"
+                className="min-w-0 flex-1 border-black"
+              />
+            </div>
+          ) : (
+            <AddToCartButton product={product} compact />
+          )}
         </div>
       </div>
     </motion.article>

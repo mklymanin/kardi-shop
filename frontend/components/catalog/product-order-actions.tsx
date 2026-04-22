@@ -1,73 +1,132 @@
 "use client";
 
 import { useState } from "react";
+import { FileCheck2, ShieldCheck, Truck } from "lucide-react";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
-import { cn } from "@/lib/utils";
 import type { LineType, Product } from "@/lib/site-data";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 export function ProductOrderActions({ product }: { product: Product }) {
   const canRent =
     product.rentalAvailable === true && (product.rentalPriceValue ?? 0) > 0;
 
   const [mode, setMode] = useState<LineType>("purchase");
+  const activeMode: LineType = canRent ? mode : "purchase";
+  const isRent = activeMode === "rent";
+
+  const activePrice = isRent ? (product.rentalPrice ?? "—") : product.price;
+  const priceLabel = isRent ? "Стоимость аренды" : "Цена";
 
   return (
-    <div className="mt-auto flex flex-col gap-4 border-t border-black/30 pt-5">
+    <div className="mt-auto flex flex-col gap-5 border-t border-black/30 pt-5">
+      <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-green-700 uppercase">
+        <span
+          aria-hidden
+          className="inline-block size-1.5 rounded-full bg-green-600"
+        />
+        В наличии, готово к отгрузке
+      </div>
+
       {canRent ? (
         <div
-          className="flex gap-1 rounded-xl border border-black/30 p-1"
-          role="group"
+          role="radiogroup"
           aria-label="Способ оформления"
+          className="grid grid-cols-2 rounded-xl border border-black p-1 text-sm"
         >
-          <button
-            type="button"
-            onClick={() => setMode("purchase")}
-            className={cn(
-              "font-display flex-1 rounded-lg px-3 py-2 text-sm transition",
-              mode === "purchase"
-                ? "bg-black text-white"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Купить
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("rent")}
-            className={cn(
-              "font-display flex-1 rounded-lg px-3 py-2 text-sm transition",
-              mode === "rent"
-                ? "bg-black text-white"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Аренда
-          </button>
+          <ModeOption
+            label="Купить"
+            active={!isRent}
+            onSelect={() => setMode("purchase")}
+          />
+          <ModeOption
+            label="Аренда"
+            active={isRent}
+            onSelect={() => setMode("rent")}
+          />
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-1">
-        <div className="text-muted-foreground text-sm uppercase">
-          {mode === "rent" ? (
-            <>
-              Аренда
-              {product.rentalPeriodLabel ? (
-                <span className="text-muted-foreground font-normal normal-case">
-                  {" "}
-                  ({product.rentalPeriodLabel})
-                </span>
-              ) : null}
-            </>
-          ) : (
-            "Цена"
-          )}
+      <div className="flex flex-col gap-1.5">
+        <div className="text-muted-foreground text-xs tracking-wide uppercase">
+          {priceLabel}
         </div>
-        <div className="text-3xl font-semibold">
-          {mode === "rent" ? (product.rentalPrice ?? "—") : product.price}
+        <div className="flex items-baseline gap-2">
+          <div className="text-4xl leading-none font-semibold tracking-tight">
+            {activePrice}
+          </div>
+          {isRent && product.rentalPeriodLabel ? (
+            <span className="text-muted-foreground text-sm">
+              / {product.rentalPeriodLabel}
+            </span>
+          ) : null}
         </div>
+        {!isRent && canRent ? (
+          <p className="text-muted-foreground text-xs">
+            Также доступна аренда — {product.rentalPrice}
+            {product.rentalPeriodLabel
+              ? ` / ${product.rentalPeriodLabel}`
+              : ""}
+          </p>
+        ) : null}
       </div>
-      <AddToCartButton product={product} lineType={mode} />
+
+      <AddToCartButton
+        key={activeMode}
+        product={product}
+        lineType={activeMode}
+        className="mt-0"
+      />
+
+      <ul className="grid grid-cols-1 gap-2 border-t border-black/10 pt-4 text-xs sm:grid-cols-2">
+        <TrustItem icon={<Truck className="size-4 shrink-0" strokeWidth={1.75} aria-hidden />}>
+          Доставка по России
+        </TrustItem>
+        <TrustItem icon={<ShieldCheck className="size-4 shrink-0" strokeWidth={1.75} aria-hidden />}>
+          Гарантия производителя
+        </TrustItem>
+        <TrustItem icon={<FileCheck2 className="size-4 shrink-0" strokeWidth={1.75} aria-hidden />}>
+          Регистрационное удостоверение
+        </TrustItem>
+      </ul>
     </div>
+  );
+}
+
+function ModeOption({
+  label,
+  active,
+  onSelect,
+}: {
+  label: string;
+  active: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <Button
+      type="button"
+      role="radio"
+      aria-checked={active}
+      onClick={onSelect}
+      variant={active ? "default" : "outline"}
+    >
+      {label}
+    </Button>
+  );
+}
+
+function TrustItem({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="text-muted-foreground flex items-center gap-2 leading-snug">
+      {icon}
+      <span>{children}</span>
+    </li>
   );
 }

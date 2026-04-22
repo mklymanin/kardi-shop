@@ -5,8 +5,9 @@ import { Check, ShoppingCart } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { useCart } from "@/components/cart/cart-provider";
-import { Button } from "@/components/ui/button";
+import { Button, type buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { VariantProps } from "class-variance-authority";
 import type { LineType, Product } from "@/lib/site-data";
 
 const LABEL_TRANSITION = {
@@ -57,10 +58,14 @@ export function AddToCartButton({
   product,
   compact = false,
   lineType = "purchase",
+  variant = "default",
+  className,
 }: {
   product: Product;
   compact?: boolean;
   lineType?: LineType;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
+  className?: string;
 }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
@@ -77,11 +82,13 @@ export function AddToCartButton({
   return (
     <Button
       type="button"
+      variant={variant}
       onClick={handleClick}
       className={cn(
         compact
           ? "h-9 rounded-xl px-3 text-xs"
-          : "mt-6 h-11 w-full rounded-xl text-base"
+          : "mt-6 h-11 w-full rounded-xl text-base",
+        className
       )}
     >
       <AnimatePresence mode="wait" initial={false}>
