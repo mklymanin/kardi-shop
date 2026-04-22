@@ -101,6 +101,8 @@ function strapiItemToProduct(
       ? item.rentalPeriodLabel.trim()
       : "";
 
+  const stock = Math.max(0, Math.trunc(Number(item.stock) || 0));
+
   return {
     id: item.id,
     slug,
@@ -111,6 +113,7 @@ function strapiItemToProduct(
     description: rawDescription || undefined,
     priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
+    stock,
     ...(rentalAvailable
       ? {
           rentalAvailable: true,

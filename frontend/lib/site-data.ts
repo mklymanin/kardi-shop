@@ -10,6 +10,8 @@ export type Product = {
   description?: string;
   price: string;
   priceValue?: number;
+  /** Складской остаток; 0 — только предзаказ */
+  stock: number;
   rentalAvailable?: boolean;
   rentalPrice?: string;
   rentalPriceValue?: number;

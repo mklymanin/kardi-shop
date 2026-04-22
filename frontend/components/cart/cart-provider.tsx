@@ -171,6 +171,9 @@ export function useCart() {
       quantity = 1,
       lineType: LineType = "purchase"
     ) => {
+      if ((product.stock ?? 0) <= 0) {
+        return;
+      }
       if (lineType === "rent") {
         if (
           !product.rentalAvailable ||

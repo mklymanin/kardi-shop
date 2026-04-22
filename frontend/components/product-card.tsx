@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
+import { ButtonLink } from "@/components/ui/button";
 import type { Product } from "@/lib/site-data";
 import { ArrowRightIcon } from "lucide-react";
 
@@ -24,6 +25,7 @@ export function ProductCard({ product }: { product: Product }) {
     Boolean(product.rentalPrice);
   const canRent =
     product.rentalAvailable === true && (product.rentalPriceValue ?? 0) > 0;
+  const inStock = product.stock > 0;
 
   return (
     <motion.article
@@ -76,7 +78,7 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
         </h3>
         <div className="mt-auto flex flex-col gap-3">
-          <div className="flex gap-1 justify-between items-center">
+          <div className="flex items-center justify-between gap-1">
             <div className="font-display font-semibold">{product.price}</div>
             {showRentalHint ? (
               <p className="text-muted-foreground font-display text-xs leading-snug">
@@ -87,7 +89,14 @@ export function ProductCard({ product }: { product: Product }) {
               </p>
             ) : null}
           </div>
-          {canRent ? (
+          {!inStock ? (
+            <ButtonLink
+              href={`/catalog/${product.slug}/preorder`}
+              className="h-8 w-full text-xs"
+            >
+              Предзаказ
+            </ButtonLink>
+          ) : canRent ? (
             <div className="flex min-w-0 gap-2">
               <AddToCartButton
                 product={product}
