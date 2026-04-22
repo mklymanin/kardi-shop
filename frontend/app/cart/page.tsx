@@ -27,7 +27,11 @@ function CartLineBody({
   removeItem,
 }: {
   item: CartItem;
-  setQuantity: (slug: string, lineType: CartItem["lineType"], quantity: number) => void;
+  setQuantity: (
+    slug: string,
+    lineType: CartItem["lineType"],
+    quantity: number
+  ) => void;
   removeItem: (slug: string, lineType: CartItem["lineType"]) => void;
 }) {
   return (
@@ -67,9 +71,7 @@ function CartLineBody({
               {item.lineType === "rent" ? (
                 <>
                   Аренда
-                  {item.rentalPeriodLabel
-                    ? ` · ${item.rentalPeriodLabel}`
-                    : ""}
+                  {item.rentalPeriodLabel ? ` · ${item.rentalPeriodLabel}` : ""}
                 </>
               ) : (
                 "Покупка"
