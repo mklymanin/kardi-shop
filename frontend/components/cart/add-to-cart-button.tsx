@@ -7,30 +7,48 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCart } from "@/components/cart/cart-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { Product } from "@/lib/site-data";
+import type { LineType, Product } from "@/lib/site-data";
 
 const LABEL_TRANSITION = {
   duration: 0.2,
   ease: [0.22, 1, 0.36, 1] as const,
 };
 
-function IdleLabel({ compact }: { compact: boolean }) {
+function IdleLabel({
+  compact,
+  lineType,
+}: {
+  compact: boolean;
+  lineType: LineType;
+}) {
+  const verb = lineType === "rent" ? "Аренда" : "В корзину";
+  const verbFull =
+    lineType === "rent" ? "Аренда в корзину" : "Добавить в корзину";
   return (
     <>
       <ShoppingCart
         strokeWidth={2}
         className={compact ? undefined : "size-5"}
       />
-      {compact ? "В корзину" : "Добавить в корзину"}
+      {compact ? verb : verbFull}
     </>
   );
 }
 
-function DoneLabel({ compact }: { compact: boolean }) {
+function DoneLabel({
+  compact,
+  lineType,
+}: {
+  compact: boolean;
+  lineType: LineType;
+}) {
+  const done = lineType === "rent" ? "Добавлено" : "Готово";
+  const doneFull =
+    lineType === "rent" ? "Аренда в корзине" : "Добавлено в корзину";
   return (
     <>
       <Check strokeWidth={2.5} className={compact ? undefined : "size-5"} />
-      {compact ? "Готово" : "Добавлено в корзину"}
+      {compact ? done : doneFull}
     </>
   );
 }
@@ -38,9 +56,11 @@ function DoneLabel({ compact }: { compact: boolean }) {
 export function AddToCartButton({
   product,
   compact = false,
+  lineType = "purchase",
 }: {
   product: Product;
   compact?: boolean;
+  lineType?: LineType;
 }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
@@ -49,7 +69,7 @@ export function AddToCartButton({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem(product, 1);
+    addItem(product, 1, lineType);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1200);
   };
@@ -74,9 +94,9 @@ export function AddToCartButton({
           className="inline-flex items-center gap-1.5"
         >
           {added ? (
-            <DoneLabel compact={compact} />
+            <DoneLabel compact={compact} lineType={lineType} />
           ) : (
-            <IdleLabel compact={compact} />
+            <IdleLabel compact={compact} lineType={lineType} />
           )}
         </motion.span>
       </AnimatePresence>

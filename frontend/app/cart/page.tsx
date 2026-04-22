@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-import { useCart } from "@/components/cart/cart-provider";
+import { useCart, type CartItem } from "@/components/cart/cart-provider";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { formatRub } from "@/lib/format";
 import { CheckoutStartError, resumeOrderPayment } from "@/lib/orders";
@@ -16,6 +16,10 @@ const ITEM_TRANSITION = {
   duration: 0.3,
   ease: [0.22, 1, 0.36, 1] as const,
 };
+
+function cartItemReactKey(item: CartItem) {
+  return `${item.slug}:${item.lineType}`;
+}
 
 export default function CartPage() {
   const { items, totalItems, totalPrice, setQuantity, removeItem, clearCart } =
@@ -135,7 +139,7 @@ export default function CartPage() {
             <AnimatePresence initial={false}>
               {items.map((item) => (
                 <motion.div
-                  key={item.slug}
+                  key={cartItemReactKey(item)}
                   layout={!reduce}
                   initial={reduce ? false : { opacity: 0, y: 8, scale: 0.98 }}
                   animate={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
@@ -167,6 +171,17 @@ export default function CartPage() {
                         {item.title}
                       </h2>
                       <div className="text-muted-foreground mt-1 text-xs sm:text-sm">
+                        {item.lineType === "rent" ? (
+                          <>
+                            <span className="text-foreground font-medium">
+                              Аренда
+                            </span>
+                            {item.rentalPeriodLabel
+                              ? ` (${item.rentalPeriodLabel})`
+                              : ""}
+                            {" · "}
+                          </>
+                        ) : null}
                         {item.priceLabel} за шт.
                       </div>
                     </div>
@@ -176,7 +191,11 @@ export default function CartPage() {
                         <button
                           className="hover:bg-muted flex size-9 items-center justify-center rounded-l-xl transition"
                           onClick={() =>
-                            setQuantity(item.slug, item.quantity - 1)
+                            setQuantity(
+                              item.slug,
+                              item.lineType,
+                              item.quantity - 1
+                            )
                           }
                           type="button"
                           aria-label="Уменьшить количество"
@@ -189,7 +208,11 @@ export default function CartPage() {
                         <button
                           className="hover:bg-muted flex size-9 items-center justify-center rounded-r-xl transition"
                           onClick={() =>
-                            setQuantity(item.slug, item.quantity + 1)
+                            setQuantity(
+                              item.slug,
+                              item.lineType,
+                              item.quantity + 1
+                            )
                           }
                           type="button"
                           aria-label="Увеличить количество"
@@ -204,7 +227,7 @@ export default function CartPage() {
                         </span>
                         <button
                           className="text-muted-foreground hover:bg-muted hover:text-foreground flex size-9 items-center justify-center rounded-xl transition"
-                          onClick={() => removeItem(item.slug)}
+                          onClick={() => removeItem(item.slug, item.lineType)}
                           type="button"
                           aria-label="Удалить товар"
                         >

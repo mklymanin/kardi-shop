@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { ProductOrderActions } from "@/components/catalog/product-order-actions";
 import { FadeInSection } from "@/components/motion/fade-in-section";
 import { StaggerItem, StaggerList } from "@/components/motion/stagger-list";
 import { ProductCard } from "@/components/product-card";
@@ -207,15 +207,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
             <p className="text-sm leading-relaxed">{shortLead}</p>
           ) : null}
 
-          <div className="mt-auto flex flex-col gap-4 border-t border-black/30 pt-5">
-            <div className="flex flex-col gap-1">
-              <div className="text-muted-foreground text-sm uppercase">
-                Цена
-              </div>
-              <div className="text-3xl font-semibold">{product.price}</div>
-            </div>
-            <AddToCartButton product={product} />
-          </div>
+          <ProductOrderActions product={product} />
 
           <ul className="font-display flex flex-col gap-2 border-t border-black/30 pt-5 text-sm leading-relaxed">
             <li>

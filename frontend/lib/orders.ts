@@ -12,6 +12,7 @@ import {
 export type CheckoutItemInput = {
   slug: string;
   quantity: number;
+  lineType?: "purchase" | "rent";
 };
 
 export type OrderCustomerInput = {
@@ -29,6 +30,8 @@ export type OrderLine = {
   title: string;
   quantity: number;
   price: number;
+  lineType?: "purchase" | "rent";
+  rentalPeriodLabel?: string;
 };
 
 type StrapiSingleResponse<T> = {
@@ -198,7 +201,11 @@ export async function startOrderPayment(
       deliveryMethodCode: customer.deliveryMethodCode,
       deliveryAddress: customer.deliveryAddress,
       couponCode: customer.couponCode,
-      items,
+      items: items.map((item) => ({
+        slug: item.slug,
+        quantity: item.quantity,
+        lineType: item.lineType ?? "purchase",
+      })),
     }),
     cache: "no-store",
   });
@@ -276,7 +283,11 @@ export async function quoteOrderPayment(
       deliveryMethodCode: customer.deliveryMethodCode,
       deliveryAddress: customer.deliveryAddress,
       couponCode: customer.couponCode,
-      items,
+      items: items.map((item) => ({
+        slug: item.slug,
+        quantity: item.quantity,
+        lineType: item.lineType ?? "purchase",
+      })),
     }),
     cache: "no-store",
   });

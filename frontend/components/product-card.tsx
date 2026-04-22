@@ -26,6 +26,11 @@ export function ProductCard({ product }: { product: Product }) {
       transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-4xl border border-black transition [corner-shape:squircle] group-hover:shadow-md">
+        {product.rentalAvailable ? (
+          <span className="pointer-events-none absolute top-3 left-3 z-30 rounded-full border border-white/50 bg-black/55 px-2.5 py-1 text-[10px] font-medium tracking-wide text-white uppercase shadow-sm backdrop-blur-sm sm:text-xs">
+            Доступно в аренду
+          </span>
+        ) : null}
         <ProductImageCarousel
           images={productImages}
           title={product.title}

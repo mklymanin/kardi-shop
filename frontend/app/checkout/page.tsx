@@ -131,7 +131,7 @@ export default function CheckoutPage() {
   const itemsSignature = useMemo(
     () =>
       items
-        .map((item) => `${item.slug}:${item.quantity}`)
+        .map((item) => `${item.slug}:${item.lineType}:${item.quantity}`)
         .sort()
         .join("|"),
     [items]
@@ -172,6 +172,7 @@ export default function CheckoutPage() {
         itemsRaw: items.map((item) => ({
           slug: item.slug,
           quantity: item.quantity,
+          lineType: item.lineType,
         })),
         couponCode: normalizedCouponCode,
       });
@@ -265,6 +266,7 @@ export default function CheckoutPage() {
         itemsRaw: items.map((item) => ({
           slug: item.slug,
           quantity: item.quantity,
+          lineType: item.lineType,
         })),
         couponCode: normalizedCouponCode || undefined,
       });
@@ -550,7 +552,10 @@ export default function CheckoutPage() {
 
             <div className="space-y-3">
               {items.map((item) => (
-                <div key={item.slug} className="flex gap-3">
+                <div
+                  key={`${item.slug}:${item.lineType}`}
+                  className="flex gap-3"
+                >
                   {item.imageUrl ? (
                     <div className="relative size-12 shrink-0 overflow-hidden rounded-lg border border-black">
                       <Image
@@ -571,6 +576,15 @@ export default function CheckoutPage() {
                       {item.title}
                     </div>
                     <div className="text-muted-foreground text-xs">
+                      {item.lineType === "rent" ? (
+                        <>
+                          Аренда
+                          {item.rentalPeriodLabel
+                            ? ` · ${item.rentalPeriodLabel}`
+                            : ""}
+                          {" · "}
+                        </>
+                      ) : null}
                       {item.quantity} x {item.priceLabel}
                     </div>
                   </div>

@@ -94,6 +94,13 @@ function strapiItemToProduct(
   const skuFromCms =
     typeof item.sku === "string" && item.sku.trim() ? item.sku.trim() : "";
 
+  const rentalAvailable = Boolean(item.rentalAvailable);
+  const rentalPriceValue = toNumericPrice(item.rentalPrice);
+  const rentalPeriodLabelRaw =
+    typeof item.rentalPeriodLabel === "string"
+      ? item.rentalPeriodLabel.trim()
+      : "";
+
   return {
     id: item.id,
     slug,
@@ -104,6 +111,20 @@ function strapiItemToProduct(
     description: rawDescription || undefined,
     priceValue: toNumericPrice(item.price),
     price: toProductPrice(item.price),
+    ...(rentalAvailable
+      ? {
+          rentalAvailable: true,
+          ...(rentalPriceValue > 0
+            ? {
+                rentalPriceValue,
+                rentalPrice: toProductPrice(item.rentalPrice),
+              }
+            : {}),
+          ...(rentalPeriodLabelRaw
+            ? { rentalPeriodLabel: rentalPeriodLabelRaw }
+            : {}),
+        }
+      : {}),
     imageUrl: imageUrls[0] ?? extractMediaUrl(item.image),
     imageUrls: imageUrls.length ? imageUrls : undefined,
     category: category.title,

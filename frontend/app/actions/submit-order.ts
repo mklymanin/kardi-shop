@@ -15,6 +15,7 @@ export type OrderPayload = {
   itemsRaw: Array<{
     slug: string;
     quantity: number;
+    lineType?: "purchase" | "rent";
   }>;
 };
 
@@ -59,6 +60,7 @@ export async function submitOrder(
       payload.itemsRaw.map((item) => ({
         slug: item.slug,
         quantity: item.quantity,
+        lineType: item.lineType ?? "purchase",
       }))
     );
 
@@ -107,6 +109,7 @@ export async function previewOrderPricing(
       payload.itemsRaw.map((item) => ({
         slug: item.slug,
         quantity: item.quantity,
+        lineType: item.lineType ?? "purchase",
       }))
     );
 
