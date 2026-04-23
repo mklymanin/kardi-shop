@@ -188,7 +188,7 @@ function BannerWithText({
 
   return (
     <BannerClickable href={banner.href} className="min-h-[inherit]">
-      <div className="bg-kardi-green relative flex min-h-[200px] overflow-hidden rounded-3xl md:min-h-[260px] lg:min-h-[300px]">
+      <div className="bg-kardi-green border border-border/50 relative flex min-h-[200px] overflow-hidden rounded-3xl md:min-h-[260px] lg:min-h-[300px]">
         <svg
           aria-hidden
           className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
@@ -233,12 +233,12 @@ function BannerWithText({
             </p>
           </div>
 
-          <div className="relative mx-4 mb-4 h-[180px] shrink-0 md:mx-0 md:mb-0 md:h-auto md:w-[45%] lg:w-[38.5%]">
+          <div className="mx-4 mb-4 h-[180px] shrink-0 md:mx-0 md:mb-0 md:h-auto md:w-[45%] lg:w-[38.5%]">
             <Image
               src={banner.imageUrl}
               alt={banner.imageAlt}
               fill
-              className="rounded-lg object-contain md:rounded-xl"
+              className="object-contain relative!"
               sizes="(max-width: 768px) 90vw, 45vw"
               priority={priorityImage}
             />
