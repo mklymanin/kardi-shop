@@ -1,7 +1,7 @@
 import { extractMediaUrl } from "./helpers";
 import { fetchFromStrapi } from "./strapi-client";
 
-const HERO_BANNERS_REVALIDATE_SECONDS = 3600;
+const HERO_BANNERS_REVALIDATE_SECONDS = 30;
 
 type StrapiSingleResponse = {
   data:
