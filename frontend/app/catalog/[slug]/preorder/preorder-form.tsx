@@ -339,8 +339,8 @@ export function PreorderForm({ product }: PreorderFormProps) {
         <aside className="text-muted-foreground h-fit space-y-3 rounded-2xl border border-black/15 p-5 text-sm">
           <p className="text-foreground font-display font-medium">
             {lineType === "rent" && canRent && product.rentalPrice
-              ? `Ориентир по аренде: ${product.rentalPrice}`
-              : `Ориентир по цене: ${product.price}`}
+              ? `Предварительная стоимость: ${product.rentalPrice}`
+              : `Предварительная стоимость: ${product.price}`}
           </p>
           <p>
             Стоимость и согласование сроков — после появления товара, по

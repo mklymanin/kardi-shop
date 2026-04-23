@@ -19,7 +19,7 @@ export function CartLink({ className }: { className?: string }) {
         className
       )}
     >
-      <p className="font-nav text-sm">Корзина</p>
+      <p className="font-display text-sm">Корзина</p>
       <AnimatePresence initial={false}>
         {totalItems > 0 && (
           <motion.span

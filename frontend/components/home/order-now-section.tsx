@@ -19,7 +19,7 @@ export function OrderNowSection() {
         </div>
       </FadeInSection>
       <FadeInSection
-        className="border-muted-foreground flex min-h-0 min-w-0 flex-col rounded-3xl border p-4 sm:p-6 lg:p-7"
+        className="border-muted-foreground flex min-h-0 min-w-0 flex-col rounded-3xl border p-3 sm:p-3 lg:p-4"
         amount={0.2}
         delay={0.1}
       >

@@ -8,12 +8,20 @@ export type StrapiListResponse<T> =
   | { data: T[] }
   | { data: Array<{ id: number; attributes?: T } & T> };
 
-export async function fetchFromStrapi<T>(path: string): Promise<T | null> {
+type FetchFromStrapiOptions = {
+  revalidate?: number;
+};
+
+export async function fetchFromStrapi<T>(
+  path: string,
+  options?: FetchFromStrapiOptions
+): Promise<T | null> {
   const url = `${STRAPI_URL}${path}`;
+  const revalidate = options?.revalidate ?? 30;
 
   try {
     const response = await fetch(url, {
-      next: { revalidate: 30 },
+      next: { revalidate },
     });
 
     if (!response.ok) {

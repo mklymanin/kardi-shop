@@ -7,7 +7,7 @@ import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ProductImageCarousel } from "@/components/product-image-carousel";
 import { ButtonLink } from "@/components/ui/button";
 import type { Product } from "@/lib/site-data";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, Package } from "lucide-react";
 
 export function ProductCard({ product }: { product: Product }) {
   const reduce = useReducedMotion();
@@ -92,8 +92,9 @@ export function ProductCard({ product }: { product: Product }) {
           {!inStock ? (
             <ButtonLink
               href={`/catalog/${product.slug}/preorder`}
-              className="h-8 w-full text-xs"
+              className="h-9 w-full rounded-xl px-3 text-xs"
             >
+              <Package strokeWidth={2} aria-hidden />
               Предзаказ
             </ButtonLink>
           ) : canRent ? (

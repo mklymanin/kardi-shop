@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileCheck2, ShieldCheck, Truck } from "lucide-react";
+import { FileCheck2, Package, ShieldCheck, Truck } from "lucide-react";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import type { LineType, Product } from "@/lib/site-data";
@@ -48,8 +48,9 @@ export function ProductOrderActions({ product }: { product: Product }) {
 
         <ButtonLink
           href={`/catalog/${product.slug}/preorder`}
-          className="h-10 w-full text-sm"
+          className="h-11 w-full rounded-xl text-base"
         >
+          <Package className="size-5" strokeWidth={2} aria-hidden />
           Предзаказ
         </ButtonLink>
 

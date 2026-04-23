@@ -57,11 +57,11 @@ export function HeaderSiteNav() {
               "data-closed:animate-out data-closed:slide-out-to-right data-closed:fade-out-0 data-closed:zoom-out-100 data-closed:duration-200"
             )}
           >
-            <DialogTitle className="font-nav text-foreground mb-6 text-base font-medium">
+            <DialogTitle className="font-display text-foreground mb-6 text-base font-medium">
               Навигация по сайту
             </DialogTitle>
             <nav
-              className="font-nav flex flex-col gap-1 text-base"
+              className="font-display flex flex-col gap-1 text-base"
               aria-label="Основная навигация"
             >
               {SITE_NAV_LINKS.map(({ href, label }) => (
@@ -93,7 +93,7 @@ export function HeaderSiteNav() {
       </div>
 
       <nav
-        className="font-nav hidden flex-wrap gap-6 text-sm md:flex md:gap-10"
+        className="font-display hidden flex-wrap gap-6 text-sm md:flex md:gap-10"
         aria-label="Основная навигация"
       >
         {SITE_NAV_LINKS.map(({ href, label }) => (
