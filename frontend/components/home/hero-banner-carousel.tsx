@@ -18,7 +18,7 @@ const SLIDE_TRANSITION = {
 const AUTOPLAY_MS = 5500;
 
 const linkSurfaceClass =
-  "relative z-10 block h-full min-h-[inherit] rounded-3xl focus-visible:ring-2 focus-visible:ring-white/90 focus-visible:ring-offset-2 focus-visible:ring-offset-kardi-green focus-visible:outline-none";
+  "focus-visible:ring-offset-kardi-green block h-full rounded-3xl focus-visible:ring-2 focus-visible:ring-white/90 focus-visible:ring-offset-2 focus-visible:outline-none";
 
 type Props = {
   slides: HeroBannerSlide[];
@@ -83,36 +83,32 @@ export function HeroBannerCarousel({ slides }: Props) {
 
   return (
     <section aria-label="Акции и предложения">
-      <div className="relative w-full">
-        <div className="relative min-h-[200px] md:min-h-[260px] lg:min-h-[300px]">
-          <AnimatePresence mode="wait" initial={false} custom={direction}>
-            <motion.div
-              key={selectedIndex}
-              custom={direction}
-              initial={
-                reduce ? { opacity: 0 } : { opacity: 0, x: direction * 16 }
-              }
-              animate={reduce ? { opacity: 1 } : { opacity: 1, x: 0 }}
-              exit={
-                reduce ? { opacity: 0 } : { opacity: 0, x: direction * -16 }
-              }
-              transition={SLIDE_TRANSITION}
-              className="absolute inset-0 min-h-[200px] md:min-h-[260px] lg:min-h-[300px]"
-            >
-              {banner.text ? (
-                <BannerWithText
-                  banner={banner}
-                  priorityImage={selectedIndex === 0}
-                />
-              ) : (
-                <BannerImageOnly
-                  banner={banner}
-                  priorityImage={selectedIndex === 0}
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+      <div className="relative min-h-[220px] md:min-h-[260px] lg:min-h-[300px]">
+        <AnimatePresence mode="wait" initial={false} custom={direction}>
+          <motion.div
+            key={selectedIndex}
+            custom={direction}
+            initial={
+              reduce ? { opacity: 0 } : { opacity: 0, x: direction * 16 }
+            }
+            animate={reduce ? { opacity: 1 } : { opacity: 1, x: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, x: direction * -16 }}
+            transition={SLIDE_TRANSITION}
+            className="absolute inset-0"
+          >
+            {banner.text ? (
+              <BannerWithText
+                banner={banner}
+                priorityImage={selectedIndex === 0}
+              />
+            ) : (
+              <BannerImageOnly
+                banner={banner}
+                priorityImage={selectedIndex === 0}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
 
         {slideCount > 1 && (
           <BannerNav
@@ -135,22 +131,18 @@ export function HeroBannerCarousel({ slides }: Props) {
 
 function BannerClickable({
   href,
-  className,
   children,
 }: {
   href?: string;
-  className?: string;
   children: React.ReactNode;
 }) {
-  const merged = cn(linkSurfaceClass, className);
-
   if (!href) {
-    return <div className={merged}>{children}</div>;
+    return <div className={linkSurfaceClass}>{children}</div>;
   }
 
   if (href.startsWith("/")) {
     return (
-      <Link href={href} className={merged}>
+      <Link href={href} className={linkSurfaceClass}>
         {children}
       </Link>
     );
@@ -160,7 +152,7 @@ function BannerClickable({
     return (
       <a
         href={href}
-        className={merged}
+        className={linkSurfaceClass}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -170,7 +162,7 @@ function BannerClickable({
   }
 
   return (
-    <a href={href} className={merged}>
+    <a href={href} className={linkSurfaceClass}>
       {children}
     </a>
   );
@@ -183,66 +175,26 @@ function BannerWithText({
   banner: HeroBannerSlide;
   priorityImage: boolean;
 }) {
-  const patternUid = React.useId().replace(/:/g, "");
-  const patternId = `kardi-bg-pattern-${patternUid}`;
-
   return (
-    <BannerClickable href={banner.href} className="min-h-[inherit]">
-      <div className="bg-kardi-green border border-border/50 relative flex min-h-[200px] overflow-hidden rounded-3xl md:min-h-[260px] lg:min-h-[300px]">
-        <svg
-          aria-hidden
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
-        >
-          <defs>
-            <pattern
-              id={patternId}
-              width="180"
-              height="360"
-              patternUnits="userSpaceOnUse"
-            >
-              <image
-                href="/kardi-bg-pattern.png"
-                x="0"
-                y="0"
-                width="180"
-                height="180"
-              />
-              <image
-                href="/kardi-bg-pattern.png"
-                x="-90"
-                y="180"
-                width="180"
-                height="180"
-              />
-              <image
-                href="/kardi-bg-pattern.png"
-                x="90"
-                y="180"
-                width="180"
-                height="180"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
-        </svg>
+    <BannerClickable href={banner.href}>
+      <div className="bg-kardi-green border-border/50 relative grid h-full grid-rows-[1fr_160px] overflow-hidden rounded-3xl border md:grid-cols-[1fr_40%] md:grid-rows-1">
+        <BgPattern />
 
-        <div className="relative z-10 flex w-full flex-col md:flex-row md:items-stretch">
-          <div className="flex flex-1 flex-col justify-start px-6 pt-6 pb-16 md:px-10 md:py-10 md:pb-16 lg:px-10 lg:py-8 lg:pb-4">
-            <p className="text-lg leading-snug font-medium whitespace-pre-line text-white md:text-xl lg:text-2xl">
-              {banner.text}
-            </p>
-          </div>
+        <div className="relative z-10 flex min-w-0 flex-col px-5 pt-5 pb-12 md:px-8 md:pt-8 md:pb-12 lg:pt-8 lg:pb-4 lg:pl-10">
+          <p className="text-base leading-snug font-medium whitespace-pre-line text-white md:text-xl lg:text-2xl">
+            {banner.text}
+          </p>
+        </div>
 
-          <div className="mx-4 mb-4 h-[180px] shrink-0 md:mx-0 md:mb-0 md:h-auto md:w-[45%] lg:w-[38.5%]">
-            <Image
-              src={banner.imageUrl}
-              alt={banner.imageAlt}
-              fill
-              className="object-contain relative!"
-              sizes="(max-width: 768px) 90vw, 45vw"
-              priority={priorityImage}
-            />
-          </div>
+        <div className="relative z-10 h-full min-h-[160px] md:min-h-0">
+          <Image
+            src={banner.imageUrl}
+            alt={banner.imageAlt}
+            fill
+            className="object-cover object-right"
+            sizes="(max-width: 1024px) 40vw, 38vw"
+            priority={priorityImage}
+          />
         </div>
       </div>
     </BannerClickable>
@@ -257,18 +209,62 @@ function BannerImageOnly({
   priorityImage: boolean;
 }) {
   return (
-    <BannerClickable href={banner.href} className="min-h-[inherit]">
-      <div className="relative h-full min-h-[200px] overflow-hidden rounded-3xl md:min-h-[260px] lg:min-h-[300px]">
+    <BannerClickable href={banner.href}>
+      <div className="relative h-full overflow-hidden rounded-3xl">
         <Image
           src={banner.imageUrl}
           alt={banner.imageAlt}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 100vw"
+          sizes="100vw"
           priority={priorityImage}
         />
       </div>
     </BannerClickable>
+  );
+}
+
+function BgPattern() {
+  const uid = React.useId().replace(/:/g, "");
+  const patternId = `kardi-bg-pattern-${uid}`;
+
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0 h-full w-full opacity-60"
+    >
+      <defs>
+        <pattern
+          id={patternId}
+          width="180"
+          height="360"
+          patternUnits="userSpaceOnUse"
+        >
+          <image
+            href="/kardi-bg-pattern.png"
+            x="0"
+            y="0"
+            width="180"
+            height="180"
+          />
+          <image
+            href="/kardi-bg-pattern.png"
+            x="-90"
+            y="180"
+            width="180"
+            height="180"
+          />
+          <image
+            href="/kardi-bg-pattern.png"
+            x="90"
+            y="180"
+            width="180"
+            height="180"
+          />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+    </svg>
   );
 }
 
@@ -286,7 +282,7 @@ function BannerNav({
   onSelect: (index: number) => void;
 }) {
   return (
-    <div className="absolute bottom-4 left-6 z-20 flex items-center gap-2 md:bottom-5 md:left-10 lg:bottom-6 lg:left-14">
+    <div className="absolute bottom-4 left-5 z-20 flex items-center gap-2 md:bottom-5 md:left-8 lg:bottom-6 lg:left-14">
       <div className="flex items-center gap-2 rounded-full bg-black/25 px-1.5 py-1 backdrop-blur-sm">
         <Button
           variant="ghost"

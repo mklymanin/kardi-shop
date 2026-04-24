@@ -28,7 +28,7 @@ export function HeaderSiteNav() {
 
   return (
     <>
-      <div className="shrink-0 md:hidden">
+      <div className="shrink-0 lg:hidden">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
@@ -50,6 +50,7 @@ export function HeaderSiteNav() {
           <DialogContent
             id="site-nav-mobile-panel"
             showCloseButton
+            onCloseAutoFocus={(event) => event.preventDefault()}
             className={cn(
               "fixed inset-y-0 top-0 right-0 left-auto h-dvh max-h-dvh w-[min(100vw-1rem,20rem)] max-w-none translate-x-0 translate-y-0 rounded-none rounded-l-xl p-6",
               "gap-0",
@@ -77,7 +78,7 @@ export function HeaderSiteNav() {
               <DialogClose asChild>
                 <Link
                   href="/cart"
-                  className="text-foreground hover:bg-muted -mx-2 flex items-center gap-2 rounded-md px-2 py-3 transition-colors"
+                  className="text-foreground hover:bg-muted -mx-2 flex items-center gap-2 rounded-md px-3 py-1 transition-colors"
                 >
                   Корзина
                   {totalItems > 0 && (
@@ -93,14 +94,14 @@ export function HeaderSiteNav() {
       </div>
 
       <nav
-        className="font-display hidden flex-wrap gap-6 text-sm md:flex md:gap-10"
+        className="font-display hidden flex-wrap gap-6 text-sm md:gap-4 lg:flex"
         aria-label="Основная навигация"
       >
         {SITE_NAV_LINKS.map(({ href, label }) => (
           <a
             key={href}
             href={href}
-            className="text-white/90 duration-200 hover:text-white"
+            className="rounded-md px-3 py-1 text-white/90 duration-200 hover:bg-white/10 hover:text-white"
           >
             {label}
           </a>

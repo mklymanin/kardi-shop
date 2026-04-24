@@ -162,6 +162,8 @@ export type Category = {
   slug: string;
 };
 
+const EXCLUDED_CATEGORY_SLUGS = new Set(["rental"]);
+
 export async function getCategories(): Promise<Category[]> {
   const payload = await fetchFromStrapi<StrapiListResponse<any>>(
     "/api/categories?status=published&sort=title:asc"
@@ -176,6 +178,7 @@ export async function getCategories(): Promise<Category[]> {
     }))
     .filter((c) => {
       if (!c.slug || !c.title || seen.has(c.slug)) return false;
+      if (EXCLUDED_CATEGORY_SLUGS.has(c.slug)) return false;
       seen.add(c.slug);
       return true;
     });

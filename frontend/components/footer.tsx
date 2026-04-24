@@ -34,8 +34,10 @@ export function Footer() {
           </div> */}
         </div>
 
-        <div className="font-display flex gap-8 border-t border-white/50 py-4 text-white/40">
-          <p>KARDI {new Date().getFullYear()}©</p>
+        <div className="font-display flex flex-col gap-x-8 gap-y-4 border-t border-white/50 py-4 text-white/40 md:flex-row">
+          <a href="https://ronix.ru" target="_blank" rel="noopener noreferrer">
+            @ Разработка сайта ООО "Роникс Системс"
+          </a>
           <a href="#">Политика конфиденциальности</a>
           <a href="#">Обработка персональных данных</a>
         </div>

@@ -15,7 +15,7 @@ export function CartLink({ className }: { className?: string }) {
       href="/cart"
       aria-label="Корзина"
       className={cn(
-        "relative inline-flex items-center justify-center rounded-full p-2 text-white transition hover:text-white",
+        "relative inline-flex items-center justify-center rounded-md p-2 px-3 py-1 text-white/90 transition hover:bg-white/10 hover:text-white",
         className
       )}
     >

@@ -6,6 +6,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type ProductImageCarouselProps = {
   images?: string[];
@@ -16,6 +17,7 @@ type ProductImageCarouselProps = {
   sizes?: string;
   priorityFirst?: boolean;
   controlsOnHover?: boolean;
+  link?: string;
 };
 
 export function ProductImageCarousel({
@@ -27,6 +29,7 @@ export function ProductImageCarousel({
   sizes,
   priorityFirst = false,
   controlsOnHover = false,
+  link,
 }: ProductImageCarouselProps) {
   const normalizedImages = Array.from(
     new Set(
@@ -43,14 +46,16 @@ export function ProductImageCarousel({
       <div
         className={cn("bg-surface-accent relative h-full w-full", className)}
       >
-        <Image
-          src={normalizedImages[0]}
-          alt={title}
-          fill
-          className={cn("object-contain", imageClassName)}
-          sizes={sizes}
-          priority={priorityFirst}
-        />
+        <Link href={link ?? ""}>
+          <Image
+            src={normalizedImages[0]}
+            alt={title}
+            fill
+            className={cn("object-contain", imageClassName)}
+            sizes={sizes}
+            priority={priorityFirst}
+          />
+        </Link>
       </div>
     );
   }
@@ -65,6 +70,7 @@ export function ProductImageCarousel({
       sizes={sizes}
       priorityFirst={priorityFirst}
       controlsOnHover={controlsOnHover}
+      link={link}
     />
   );
 }
@@ -80,6 +86,7 @@ function ProductImageCarouselSlider({
   sizes,
   priorityFirst,
   controlsOnHover,
+  link,
 }: {
   normalizedImages: string[];
   title: string;
@@ -89,6 +96,7 @@ function ProductImageCarouselSlider({
   sizes?: string;
   priorityFirst: boolean;
   controlsOnHover: boolean;
+  link?: string;
 }) {
   const slideCount = normalizedImages.length;
 
@@ -244,41 +252,43 @@ function ProductImageCarouselSlider({
         pointerIdRef.current = null;
       }}
     >
-      <div
-        className="flex h-full"
-        style={{
-          width: `${totalSlides * 100}%`,
-          transform: `translate3d(-${position * slideWidthPercent}%, 0, 0)`,
-          transition: withTransition
-            ? `transform ${TRANSITION_MS}ms cubic-bezier(0.22, 0.61, 0.36, 1)`
-            : "none",
-          willChange: "transform",
-        }}
-        onTransitionEnd={handleTransitionEnd}
-      >
-        {slides.map((imageUrl, index) => {
-          const altIndex =
-            (((index - 1) % slideCount) + slideCount) % slideCount;
-          return (
-            <div
-              key={`${imageUrl}-${index}`}
-              aria-hidden={index !== position}
-              className={cn("relative h-full shrink-0", slideClassName)}
-              style={{ width: `${slideWidthPercent}%` }}
-            >
-              <Image
-                src={imageUrl}
-                alt={`${title} — изображение ${altIndex + 1}`}
-                fill
-                className={cn("object-contain", imageClassName)}
-                sizes={sizes}
-                priority={priorityFirst && index === 1}
-                draggable={false}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <Link href={link ?? ""}>
+        <div
+          className="flex h-full"
+          style={{
+            width: `${totalSlides * 100}%`,
+            transform: `translate3d(-${position * slideWidthPercent}%, 0, 0)`,
+            transition: withTransition
+              ? `transform ${TRANSITION_MS}ms cubic-bezier(0.22, 0.61, 0.36, 1)`
+              : "none",
+            willChange: "transform",
+          }}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          {slides.map((imageUrl, index) => {
+            const altIndex =
+              (((index - 1) % slideCount) + slideCount) % slideCount;
+            return (
+              <div
+                key={`${imageUrl}-${index}`}
+                aria-hidden={index !== position}
+                className={cn("relative h-full shrink-0", slideClassName)}
+                style={{ width: `${slideWidthPercent}%` }}
+              >
+                <Image
+                  src={imageUrl}
+                  alt={`${title} — изображение ${altIndex + 1}`}
+                  fill
+                  className={cn("object-contain", imageClassName)}
+                  sizes={sizes}
+                  priority={priorityFirst && index === 1}
+                  draggable={false}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </Link>
 
       <div
         className="pointer-events-none absolute right-0 bottom-2.5 left-0 z-30 flex justify-center px-4"
@@ -303,37 +313,41 @@ function ProductImageCarouselSlider({
         </div>
       </div>
 
-      <Button
+      <button
         type="button"
-        variant="outline"
-        size="icon-sm"
         onClick={goPrev}
+        className="group/btn absolute top-0 bottom-0 left-0 flex h-auto w-auto cursor-pointer items-center justify-center bg-none px-4"
         aria-label="Предыдущее изображение"
-        className={cn(
-          "text-muted-foreground absolute top-1/2 left-3 z-40 -translate-y-1/2! touch-manipulation rounded-full border-white/65 bg-black/25 shadow-sm backdrop-blur-sm transition-[background-color,opacity] duration-200 hover:bg-black/35",
-          controlsOnHover &&
-            "pointer-events-none opacity-0 duration-250 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
-        )}
       >
-        <ChevronLeftIcon />
+        <div
+          className={cn(
+            "text-muted-foreground touch-manipulation rounded-full border-white/65 bg-white/10 p-2 shadow-sm backdrop-blur-sm transition-[background-color,opacity] duration-200 group-hover/btn:bg-black/10 group-hover/btn:text-black",
+            controlsOnHover &&
+              "pointer-events-none opacity-0 duration-250 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
+          )}
+        >
+          <ChevronLeftIcon size={18} />
+        </div>
         <span className="sr-only">Предыдущее изображение</span>
-      </Button>
+      </button>
 
-      <Button
+      <button
         type="button"
-        variant="outline"
-        size="icon-sm"
         onClick={goNext}
+        className="group/btn absolute top-0 right-0 bottom-0 flex h-auto w-auto cursor-pointer items-center justify-center bg-none px-4"
         aria-label="Следующее изображение"
-        className={cn(
-          "text-muted-foreground absolute top-1/2 right-3 z-40 -translate-y-1/2! touch-manipulation rounded-full border-white/65 bg-black/25 shadow-sm backdrop-blur-sm transition-[background-color,opacity] duration-200 hover:bg-black/35",
-          controlsOnHover &&
-            "pointer-events-none opacity-0 duration-250 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
-        )}
       >
-        <ChevronRightIcon />
+        <div
+          className={cn(
+            "text-muted-foreground touch-manipulation rounded-full border-white/65 bg-white/10 p-2 shadow-sm backdrop-blur-sm transition-[background-color,opacity] duration-200 group-hover/btn:bg-black/10 group-hover/btn:text-black",
+            controlsOnHover &&
+              "pointer-events-none opacity-0 duration-250 group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100"
+          )}
+        >
+          <ChevronRightIcon size={18} />
+        </div>
         <span className="sr-only">Следующее изображение</span>
-      </Button>
+      </button>
     </div>
   );
 }
