@@ -170,16 +170,16 @@ export function useCart() {
       product: Product,
       quantity = 1,
       lineType: LineType = "purchase"
-    ) => {
+    ): boolean => {
       if ((product.stock ?? 0) <= 0) {
-        return;
+        return false;
       }
       if (lineType === "rent") {
         if (
           !product.rentalAvailable ||
           !(product.rentalPriceValue && product.rentalPriceValue > 0)
         ) {
-          return;
+          return false;
         }
       }
 
@@ -193,7 +193,7 @@ export function useCart() {
           : product.price;
 
       if (!priceValue || priceValue <= 0) {
-        return;
+        return false;
       }
 
       updateItems((prev) => {
@@ -222,6 +222,7 @@ export function useCart() {
         }
         return [...prev, base];
       });
+      return true;
     },
     setQuantity: (slug: string, lineType: LineType, quantity: number) => {
       updateItems((prev) =>

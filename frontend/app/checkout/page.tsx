@@ -419,7 +419,7 @@ export default function CheckoutPage() {
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Комментарий к заказу (необязательно)"
-                    className="min-h-24"
+                    className="min-h-24 resize-none"
                   />
                 </label>
               </div>
@@ -491,7 +491,7 @@ export default function CheckoutPage() {
                     value={deliveryAddress}
                     onChange={(e) => setDeliveryAddress(e.target.value)}
                     placeholder="Город, улица, дом, квартира"
-                    className="min-h-24"
+                    className="min-h-24 resize-none"
                   />
                 </label>
               ) : null}

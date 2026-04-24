@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ShoppingCart } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { useCart } from "@/components/cart/cart-provider";
@@ -36,20 +37,14 @@ function IdleLabel({
   );
 }
 
-function DoneLabel({
-  compact,
-  lineType,
-}: {
-  compact: boolean;
-  lineType: LineType;
-}) {
-  const done = lineType === "rent" ? "Добавлено" : "Готово";
-  const doneFull =
-    lineType === "rent" ? "Аренда в корзине" : "Добавлено в корзину";
+function GoToCartLabel({ compact }: { compact: boolean }) {
   return (
     <>
-      <Check strokeWidth={2.5} className={compact ? undefined : "size-5"} />
-      {compact ? done : doneFull}
+      <ShoppingCart
+        strokeWidth={2}
+        className={compact ? undefined : "size-5"}
+      />
+      Перейти в корзину
     </>
   );
 }
@@ -67,16 +62,34 @@ export function AddToCartButton({
   variant?: VariantProps<typeof buttonVariants>["variant"];
   className?: string;
 }) {
+  const router = useRouter();
   const { addItem } = useCart();
-  const [added, setAdded] = useState(false);
+  const [goToCart, setGoToCart] = useState(false);
+  const addCommittedRef = useRef(false);
   const reduce = useReducedMotion();
+
+  useEffect(() => {
+    setGoToCart(false);
+    addCommittedRef.current = false;
+  }, [lineType]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem(product, 1, lineType);
-    setAdded(true);
-    window.setTimeout(() => setAdded(false), 1200);
+    if (goToCart) {
+      router.push("/cart");
+      return;
+    }
+    if (addCommittedRef.current) {
+      return;
+    }
+    addCommittedRef.current = true;
+    const ok = addItem(product, 1, lineType);
+    if (!ok) {
+      addCommittedRef.current = false;
+      return;
+    }
+    setGoToCart(true);
   };
 
   return (
@@ -84,6 +97,7 @@ export function AddToCartButton({
       type="button"
       variant={variant}
       onClick={handleClick}
+      aria-label={goToCart ? "Перейти в корзину" : undefined}
       className={cn(
         compact
           ? "h-9 rounded-xl px-3 text-xs"
@@ -93,15 +107,15 @@ export function AddToCartButton({
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
-          key={added ? "done" : "idle"}
+          key={goToCart ? "cart" : "idle"}
           initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 3 }}
           animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
           exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: -3 }}
           transition={LABEL_TRANSITION}
           className="inline-flex items-center gap-1.5"
         >
-          {added ? (
-            <DoneLabel compact={compact} lineType={lineType} />
+          {goToCart ? (
+            <GoToCartLabel compact={compact} />
           ) : (
             <IdleLabel compact={compact} lineType={lineType} />
           )}
