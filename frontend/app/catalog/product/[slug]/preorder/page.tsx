@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
-import { PreorderForm } from "@/app/catalog/[slug]/preorder/preorder-form";
+import { PreorderForm } from "@/app/catalog/product/[slug]/preorder/preorder-form";
 import { Container } from "@/components/ui/container";
 import { getProductBySlug } from "@/lib/api/products";
 
@@ -32,7 +32,7 @@ export default async function PreorderPage({ params }: PageParams) {
   }
 
   if (product.stock > 0) {
-    redirect(`/catalog/${slug}`);
+    redirect(`/catalog/product/${slug}`);
   }
 
   return (

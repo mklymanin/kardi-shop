@@ -105,13 +105,13 @@ export function PreorderForm({ product }: PreorderFormProps) {
       setError(result.error.message);
       return;
     }
-    router.push(`/catalog/${product.slug}/preorder/success`);
+    router.push(`/catalog/product/${product.slug}/preorder/success`);
   };
 
   return (
     <div className="py-8 md:py-10">
       <Link
-        href={`/catalog/${product.slug}`}
+        href={`/catalog/product/${product.slug}`}
         className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1.5 text-sm transition"
       >
         <ArrowLeft className="size-4" />К товару
@@ -235,7 +235,7 @@ export function PreorderForm({ product }: PreorderFormProps) {
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Пожелания по срокам и способу связи"
-                  className="min-h-24"
+                  className="min-h-24 resize-none"
                 />
               </label>
             </div>
@@ -327,7 +327,7 @@ export function PreorderForm({ product }: PreorderFormProps) {
               )}
             </Button>
             <ButtonLink
-              href={`/catalog/${product.slug}`}
+              href={`/catalog/product/${product.slug}`}
               variant="outline"
               className="h-11 rounded-xl border-black px-6"
             >

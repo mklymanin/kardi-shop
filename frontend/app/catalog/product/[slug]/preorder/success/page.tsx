@@ -30,7 +30,7 @@ export default async function PreorderSuccessPage({ params }: PageParams) {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           {product ? (
             <ButtonLink
-              href={`/catalog/${slug}`}
+              href={`/catalog/product/${slug}`}
               className="h-11 rounded-xl px-6"
             >
               К карточке товара

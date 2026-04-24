@@ -54,7 +54,7 @@ function createBreadcrumbData(
       ? [
           {
             label: product.category,
-            href: `/catalog?section=${encodeURIComponent(product.categorySlug)}`,
+            href: `/catalog/${encodeURIComponent(product.categorySlug)}`,
           },
         ]
       : []),
@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
   const breadcrumbs = createBreadcrumbData(product);
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shop.kardi.ru";
-  const absoluteProductUrl = `${baseUrl}/catalog/${product.slug}`;
+  const absoluteProductUrl = `${baseUrl}/catalog/product/${product.slug}`;
   const breadcrumbListJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -150,7 +150,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
   const shortLead = product.excerpt || product.subtitle;
 
   return (
-    <Container className="py-8 md:py-12">
+    <Container className="py-6 md:py-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -166,10 +166,10 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
       <FadeInSection
         as="section"
-        className="mt-6 flex flex-col gap-3 sm:gap-4"
+        className="mt-4 flex flex-col gap-2.5 sm:mt-6 sm:gap-4"
         amount={0.1}
       >
-        <div className="text-primary text-sm tracking-[0.3em] uppercase">
+        <div className="text-primary text-xs tracking-[0.24em] uppercase sm:text-sm sm:tracking-[0.3em]">
           {product.category}
         </div>
         <h1 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
@@ -178,7 +178,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
         <div className="border-b border-black/50" aria-hidden />
       </FadeInSection>
 
-      <section className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr] lg:items-start lg:gap-8">
+      <section className="mt-6 grid gap-5 lg:mt-8 lg:grid-cols-[1.2fr_1fr] lg:items-start lg:gap-8">
         <FadeInSection
           className="relative aspect-4/5 w-full overflow-hidden rounded-xl border border-black"
           amount={0.1}
@@ -193,7 +193,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
         <FadeInSection
           as="aside"
-          className="font-display flex flex-col gap-5 rounded-xl border border-black p-5 sm:p-6"
+          className="font-display flex flex-col gap-4 rounded-xl border border-black p-4 sm:gap-5 sm:p-6"
           amount={0.1}
           delay={0.1}
         >
@@ -225,27 +225,30 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
       <FadeInSection
         as="section"
-        className="mt-12 flex flex-col gap-3 sm:gap-4"
+        className="mt-10 flex flex-col gap-2.5 sm:mt-12 sm:gap-4"
         amount={0.15}
       >
         <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
           ОПИСАНИЕ
         </h2>
         <div className="border-b border-black/50" aria-hidden />
-        <div className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-4 py-5 text-sm leading-relaxed sm:px-6 sm:py-6">
+        <div className="font-display flex w-full flex-col gap-3 rounded-xl border border-black px-3.5 py-4 text-sm leading-relaxed sm:px-6 sm:py-6">
           {buildProductDescription(product.description, product.excerpt)}
         </div>
       </FadeInSection>
 
       {relatedProducts.length > 0 ? (
-        <section className="mt-12 flex flex-col gap-3 sm:gap-4">
-          <FadeInSection className="flex flex-col gap-3 sm:gap-4" amount={0.15}>
+        <section className="mt-10 flex flex-col gap-2.5 sm:mt-12 sm:gap-4">
+          <FadeInSection
+            className="flex flex-col gap-2.5 sm:gap-4"
+            amount={0.15}
+          >
             <h2 className="font-display text-3xl tracking-tight text-balance uppercase sm:text-4xl lg:text-5xl">
               ЕЩЕ ИЗ ЭТОГО РАЗДЕЛА
             </h2>
             <div className="border-b border-black/50" aria-hidden />
           </FadeInSection>
-          <StaggerList className="mt-4 grid auto-rows-fr grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          <StaggerList className="mt-3 grid auto-rows-fr grid-cols-1 gap-3.5 sm:mt-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {relatedProducts.map((relatedProduct) => (
               <StaggerItem key={relatedProduct.id} className="h-full">
                 <ProductCard product={relatedProduct} />
