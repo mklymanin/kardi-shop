@@ -21,7 +21,7 @@ export function ProductOrderActions({ product }: { product: Product }) {
 
   if (!inStock) {
     return (
-      <div className="mt-auto flex flex-col gap-5 border-t border-black/30 pt-5">
+      <div className="mt-auto flex flex-col gap-4 border-t border-black/30 pt-4 sm:gap-5 sm:pt-5">
         <div className="text-muted-foreground flex items-center gap-2 text-xs font-medium tracking-wide uppercase">
           <span
             aria-hidden
@@ -37,17 +37,17 @@ export function ProductOrderActions({ product }: { product: Product }) {
           </p>
         ) : null}
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1">
           <div className="text-muted-foreground text-xs tracking-wide uppercase">
             Ориентировочная цена
           </div>
-          <div className="text-4xl leading-none font-semibold tracking-tight">
+          <div className="text-3xl leading-none font-semibold tracking-tight sm:text-4xl">
             {product.price}
           </div>
         </div>
 
         <ButtonLink
-          href={`/catalog/${product.slug}/preorder`}
+          href={`/catalog/product/${product.slug}/preorder`}
           className="h-11 w-full rounded-xl text-base"
         >
           <Package className="size-5" strokeWidth={2} aria-hidden />
@@ -94,7 +94,7 @@ export function ProductOrderActions({ product }: { product: Product }) {
   }
 
   return (
-    <div className="mt-auto flex flex-col gap-5 border-t border-black/30 pt-5">
+    <div className="mt-auto flex flex-col gap-4 border-t border-black/30 pt-4 sm:gap-5 sm:pt-5">
       <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-green-700 uppercase">
         <span
           aria-hidden
@@ -107,7 +107,7 @@ export function ProductOrderActions({ product }: { product: Product }) {
         <div
           role="radiogroup"
           aria-label="Способ оформления"
-          className="grid grid-cols-2 rounded-xl border border-black p-1 text-sm"
+          className="grid grid-cols-2 rounded-xl border border-black p-1 text-xs sm:text-sm"
         >
           <ModeOption
             label="Купить"
@@ -122,12 +122,12 @@ export function ProductOrderActions({ product }: { product: Product }) {
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1">
         <div className="text-muted-foreground text-xs tracking-wide uppercase">
           {priceLabel}
         </div>
         <div className="flex items-baseline gap-2">
-          <div className="text-4xl leading-none font-semibold tracking-tight">
+          <div className="text-3xl leading-none font-semibold tracking-tight sm:text-4xl">
             {activePrice}
           </div>
           {isRent && product.rentalPeriodLabel ? (
@@ -202,6 +202,7 @@ function ModeOption({
       aria-checked={active}
       onClick={onSelect}
       variant={active ? "default" : "outline"}
+      className="min-h-10"
     >
       {label}
     </Button>

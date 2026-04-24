@@ -18,7 +18,7 @@ export function ProductCard({ product }: { product: Product }) {
         ? [product.imageUrl]
         : [];
 
-  const productHref = `/catalog/${product.slug}`;
+  const productHref = `/catalog/product/${product.slug}`;
   const showRentalHint =
     product.rentalAvailable === true &&
     (product.rentalPriceValue ?? 0) > 0 &&
@@ -43,6 +43,7 @@ export function ProductCard({ product }: { product: Product }) {
           images={productImages}
           title={product.title}
           controlsOnHover
+          link={productHref}
           slideClassName="transition-transform duration-300 group-hover:scale-[1.03]"
         />
         <div
@@ -63,13 +64,13 @@ export function ProductCard({ product }: { product: Product }) {
           <ArrowRightIcon className="size-3" />
         </Link>
       </div>
-      <div className="bg-surface-accent shrink-0 py-3">
-        <div className="text-muted-foreground font-display text-sm uppercase">
+      <div className="bg-surface-accent shrink-0 py-1.5 sm:py-2">
+        <div className="text-muted-foreground font-display text-xs uppercase sm:text-sm">
           {product.sku}
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-4">
-        <h3 className="text-md font-display line-clamp-2 text-sm leading-tight">
+      <div className="flex flex-1 flex-col gap-1.5 sm:gap-2">
+        <h3 className="text-md font-display line-clamp-2 text-sm leading-snug">
           <Link
             href={productHref}
             className="underline-offset-2 transition-colors group-hover:underline hover:underline"
@@ -77,11 +78,13 @@ export function ProductCard({ product }: { product: Product }) {
             {product.title}
           </Link>
         </h3>
-        <div className="mt-auto flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-1">
-            <div className="font-display font-semibold">{product.price}</div>
+        <div className="mt-auto flex flex-col gap-1.5 sm:gap-2">
+          <div className="flex items-start justify-between gap-2">
+            <div className="font-display text-sm font-semibold sm:text-base">
+              {product.price}
+            </div>
             {showRentalHint ? (
-              <p className="text-muted-foreground font-display text-xs leading-snug">
+              <p className="text-muted-foreground font-display max-w-[55%] text-right text-[11px] leading-snug sm:max-w-none sm:text-xs">
                 Аренда: {product.rentalPrice}
                 {product.rentalPeriodLabel
                   ? ` (${product.rentalPeriodLabel})`
@@ -91,7 +94,7 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
           {!inStock ? (
             <ButtonLink
-              href={`/catalog/${product.slug}/preorder`}
+              href={`/catalog/product/${product.slug}/preorder`}
               className="h-9 w-full rounded-xl px-3 text-xs"
             >
               <Package strokeWidth={2} aria-hidden />

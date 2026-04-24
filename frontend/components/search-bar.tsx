@@ -98,7 +98,7 @@ export function SearchBar({ className }: SearchBarProps) {
   const goToProduct = React.useCallback(
     (slug: string) => {
       setOpen(false);
-      router.push(`/catalog/${slug}`);
+      router.push(`/catalog/product/${slug}`);
     },
     [router]
   );
